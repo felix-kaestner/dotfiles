@@ -1,0 +1,39 @@
+[alias]
+	a = add
+	s = status
+	c = commit
+	b = branch
+	co = checkout
+	cb = checkout -b
+	re = remote
+	us = submodule update --remote --recursive --rebase --force
+	d = diff
+	dc = diff --cached
+	ls = ls-files
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	cd = !"branch=$(git branch --show-current); git checkout $1; git branch -D ${branch}; #"
+	pu = !"git push -u origin $(git branch --show-current)"
+	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/master; #"
+[core]
+    editor = nvim
+    autocrlf = input
+	excludesfile = ~/.gitignore
+[color]
+	ui = true
+[init]
+	defaultBranch = main
+[merge]
+    tool = vscode
+[mergetool "vscode"]
+    cmd = code --wait $MERGED
+[diff]
+    tool = vscode
+[difftool "vscode"]
+    cmd = code --wait --diff $LOCAL $REMOTE
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[include]
+	path = ~/.gitconfig.local

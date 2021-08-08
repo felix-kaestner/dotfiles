@@ -1,0 +1,218 @@
+#!/usr/bin/env bash
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &> /dev/null && pwd)"
+
+set -eu
+cd "$DIR" || exit 1
+
+info () {
+  printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+}
+
+ask () {
+  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+}
+
+success () {
+  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+}
+
+fail () {
+  printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
+  echo ''
+  exit 1
+}
+
+# Based on https://github.com/holman/dotfiles/blob/master/script/bootstrap#L53
+link_file () {
+  local src=$1 dst=$2
+
+  local overwrite= backup= skip=
+  local action=
+
+  if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
+  then
+
+    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
+    then
+
+      local currentSrc="$(readlink $dst)"
+
+      if [ "$currentSrc" == "$src" ]
+      then
+
+        skip=true;
+
+      else
+
+        ask "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
+        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+        read -n 1 action
+
+        case "$action" in
+          o )
+            overwrite=true;;
+          O )
+            overwrite_all=true;;
+          b )
+            backup=true;;
+          B )
+            backup_all=true;;
+          s )
+            skip=true;;
+          S )
+            skip_all=true;;
+          * )
+            ;;
+        esac
+
+      fi
+
+    fi
+
+    overwrite=${overwrite:-$overwrite_all}
+    backup=${backup:-$backup_all}
+    skip=${skip:-$skip_all}
+
+    if [ "$overwrite" == "true" ]
+    then
+      rm -rf "$dst"
+      success "Removed $dst"
+    fi
+
+    if [ "$backup" == "true" ]
+    then
+      mv "$dst" "${dst}.backup"
+      success "Moved $dst to ${dst}.backup"
+    fi
+
+    if [ "$skip" == "true" ]
+    then
+      success "Skipped $src"
+    fi
+  fi
+
+  if [ "$skip" != "true" ]  # "false" or empty
+  then
+    ln -s "$1" "$2"
+    success "Successfully linked $1 to $2"
+  fi
+}
+
+install_dotfiles () {
+  info 'Installing dotfiles'
+
+  local overwrite_all=false backup_all=false skip_all=false
+
+  for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+  do
+    dst="$HOME/.$(basename "${src%.*}")"
+    link_file "$src" "$dst"
+  done
+
+  if [ -f ~/.bashrc ]
+  then
+    cat <<EOT >> ~/.bashrc
+
+if [ -f ~/.profile ]; then
+    . ~/.profile
+fi
+EOT
+  fi
+}
+
+setup_gitconfig () {
+  if ! [ -f git/gitconfig.local.symlink ]
+  then
+    info 'Setup git/gitconfig.local.symlink'
+
+    ask ' - What is your GitHub name?'
+    read -e GIT_USER_NAME
+    ask ' - What is your GitHub email?'
+    read -e GIT_USER_EMAIL
+
+    sed -e "s/GIT_USER_NAME/$GIT_USER_NAME/g" -e "s/GIT_USER_EMAIL/$GIT_USER_EMAIL/g" git/.gitconfig.local.template > git/gitconfig.local.symlink
+
+    ask ' - Do you want to sign commits using gpg? (Y/n)'
+    read -e GIT_GPGSIGN
+    case $GIT_GPGSIGN in
+        [Yy]* ) sed -i "s/GIT_GPGSIGN/true/g" git/gitconfig.local.symlink; ask ' - What is your GPG signing key?'; read -e GIT_USER_SIGNING_KEY; sed -i "/\[user\]/c\\[user\]\n    signingkey = ${GIT_USER_SIGNING_KEY}" git/gitconfig.local.symlink;;
+        * ) sed -i "s/GIT_GPGSIGN/false/g" git/gitconfig.local.symlink;;
+    esac
+
+    success 'Created git/gitconfig.local.symlink'
+  fi
+}
+
+setup_keychain() {
+  ask ' - What is your GPG key?'
+  read -e GPGKEY
+
+  if [ -f profile.local.symlink ]
+  then
+    rm profile.local.symlink
+  fi
+  
+  touch profile.local.symlink
+
+  cat <<EOT >> profile.local.symlink
+
+## GPG Settings
+
+# Set prefered gpg signing key
+export GPGKEY=${GPGKEY}
+
+# Start GPG-Agent upon login
+keychain --nogui --quiet --agents gpg --gpg2 \$GPGKEY
+. $HOME/.keychain/$HOSTNAME-sh-gpg
+EOT
+}
+
+setup_wsl () {
+  ask ' - What is your Windows username?'
+  read -e WINDOWS_USERNAME
+
+  PWSH_DIR="/mnt/c/Users/${WINDOWS_USERNAME}/Documents/PowerShell"
+  if ! [ -d "$PWSH_DIR" ]
+  then
+    mkdir -p "$PWSH_DIR"
+    success "created $PWSH_DIR"
+  fi
+
+  if ! [ -f "${PWSH_DIR}/Microsoft.PowerShell_profile.ps1" ]
+  then
+    cp powershell/Microsoft.PowerShell_profile.ps1 "${PWSH_DIR}/"
+    success "created $PWSH_DIR/Microsoft.PowerShell_profile.ps1"
+  fi
+
+  cat <<EOT >> profile.local.symlink
+
+## WSL Settings
+
+# Windows Android SDK to use with React Native
+export ANDROID_SDK="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/Android/Sdk"
+export PATH="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/Android/Sdk/platform-tools:$PATH"
+
+# CAROOT for https://github.com/FiloSottile/mkcert
+export CAROOT="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/mkcert"
+EOT
+}
+
+setup_gitconfig
+setup_keychain
+
+# If we're on WSL, let's install and setup some windows config.
+uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/p'
+if [ $? -eq 0 ]
+then
+  info 'Detected Windows Subsystem for Linux'
+
+  ask ' - Do you want configure your windows host operating system? (Y/n)'
+  read -e WSL_CONFIG
+  if [[ $WSL_CONFIG =~ ^[Yy]$ ]]
+  then
+    setup_wsl
+  fi
+fi
+
+install_dotfiles
