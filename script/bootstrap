@@ -196,6 +196,11 @@ export PATH="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/Android/Sdk/platform
 # CAROOT for https://github.com/FiloSottile/mkcert
 export CAROOT="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/mkcert"
 EOT
+
+  cat <<EOT >> git/gitconfig.local.symlink
+[credential]
+helper = "/mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
+EOT
 }
 
 setup_gitconfig
