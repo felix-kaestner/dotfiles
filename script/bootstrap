@@ -162,9 +162,9 @@ setup_keychain() {
 # Set prefered gpg signing key
 export GPGKEY=${GPGKEY}
 
-# Start GPG-Agent upon login
-keychain --nogui --quiet --agents gpg --gpg2 \$GPGKEY
-. $HOME/.keychain/$HOSTNAME-sh-gpg
+gpgconf --launch gpg-agent 
+export GPG_TTY=\$(tty) 
+export SSH_AUTH_SOCK=\$(gpgconf --list-dirs agent-ssh-socket)
 EOT
 }
 
