@@ -93,3 +93,6 @@ eval "$(gh completion -s bash)"
 
 # set GPG prompt
 export GPG_TTY=$(tty)
+
+## Default Node.js Settings
+export NODE_OPTIONS="--experimental-json-modules"
