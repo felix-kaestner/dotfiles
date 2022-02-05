@@ -23,3 +23,6 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Add shortcut for invoking git
 alias g="git"
+
+# Alias for python http server
+alias serve="python3 -m http.server"
