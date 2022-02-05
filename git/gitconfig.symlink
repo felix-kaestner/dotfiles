@@ -3,6 +3,7 @@
 	s = status
 	c = commit
 	b = branch
+	f = fetch
 	co = checkout
 	cb = checkout -b
 	re = remote
