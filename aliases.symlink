@@ -26,3 +26,6 @@ alias g="git"
 
 # Alias for python http server
 alias serve="python3 -m http.server"
+
+# Alias for `exit 0`
+alias close="exit 0"
