@@ -121,6 +121,65 @@ EOT
   fi
 }
 
+function generate_keys () {
+    info 'Generating GPG keys..'
+
+    ask ' - Please provide your name.'
+    read -e NAME
+
+    ask ' - Please provide your email.'
+    read -e MAIL
+
+    info ' - Generate a Master GPG key..'
+    gpg --quick-generate-key "${NAME} <${MAIL}>" rsa4096
+    success 'GPG key generated.'
+
+    info 'Retrieve Fingerprint..'
+    FPR=$(gpg --with-colons --fingerprint "${NAME} <${MAIL}>" 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}')
+    success 'Fingerprint retrieved.'
+
+    # Generate subkeys
+    ask ' - Do you want to create a subkey for signing? (Y/n)'
+    read -e REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        info 'Generate Signing Subkey..'
+        gpg --quick-add-key $FPR rsa4096 sign
+        success 'Signing Subkey generated.'
+    fi
+
+    ask ' - Do you want to create a subkey for authentication? (Y/n)'
+    read -e REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        info 'Generate Authentication Subkey..'
+        gpg --quick-add-key $FPR rsa4096 auth
+        success 'Authentication Subkey generated.'
+    fi
+
+    ask ' - Do you want to create a subkey for encryption? (Y/n)'
+    read -e REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        info 'Generate Encryption Subkey.'
+        gpg --quick-add-key $FPR rsa4096 encr
+        success 'Encryption Subkey generated.'
+    fi
+
+    info 'Print Keys..'
+    gpg --list-secret-keys --keyid-format LONG
+
+    success 'Key(s) generated.'
+
+    info 'Updating ~/.gnupg/gpg-agent.conf..'
+    cat <<EOT >> ~/.gnupg/gpg-agent.conf
+enable-ssh-support
+default-cache-ttl 86400
+max-cache-ttl 86400
+EOT
+  success 'Updated ~/.gnupg/gpg-agent.conf.'
+}
+
 setup_gitconfig () {
   if ! [ -f git/gitconfig.local.symlink ]
   then
@@ -144,28 +203,13 @@ setup_gitconfig () {
   fi
 }
 
-setup_keychain() {
-  ask ' - What is your GPG key?'
-  read -e GPGKEY
-
+setup_profile() {
   if [ -f profile.local.symlink ]
   then
     rm profile.local.symlink
   fi
   
   touch profile.local.symlink
-
-  cat <<EOT >> profile.local.symlink
-
-## GPG Settings
-
-# Set prefered gpg signing key
-export GPGKEY=${GPGKEY}
-
-gpgconf --launch gpg-agent 
-export GPG_TTY=\$(tty) 
-export SSH_AUTH_SOCK=\$(gpgconf --list-dirs agent-ssh-socket)
-EOT
 }
 
 setup_wsl () {
@@ -203,8 +247,15 @@ helper = "/mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-man
 EOT
 }
 
+ask ' - Do you want to create GPG key(s)? (Y/n)'
+read -e KEY_GEN
+if [[ $KEY_GEN =~ ^[Yy]$ ]]
+then
+    generate_keys
+fi
+
 setup_gitconfig
-setup_keychain
+setup_profile
 
 # If we're on WSL, let's install and setup some windows config.
 uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/p'
