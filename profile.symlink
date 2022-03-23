@@ -6,50 +6,50 @@
 PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/") \$ '
 
 # set user id environment variable
-if [ -z "$UID" ] ; then
+if [ -z "$UID" ]; then
     UID="$(id -u)"
 fi
 export UID
 
 # set group id environment variable
-if [ -z "$GID" ] ; then
+if [ -z "$GID" ]; then
     GID=$(id -g)
 fi
 export GID
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
+if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
+if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
 # set PATH so it includes golang's bin
-if [ -d "/usr/local/go/bin" ] ; then
+if [ -d "/usr/local/go/bin" ]; then
     PATH="/usr/local/go/bin:$PATH"
 fi
 
 GOPATH=$(go env GOPATH)
 # set PATH so it includes golang's user bin
-if [ -d "$GOPATH/bin" ] ; then
+if [ -d "$GOPATH/bin" ]; then
     PATH="$GOPATH/bin:$PATH"
 fi
 
 # set PATH so it includes user's cargo bin if it exists
-if [ -d "$HOME/.cargo/bin" ] ; then
+if [ -d "$HOME/.cargo/bin" ]; then
     PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 # set PATH so it includes user's yarn bin if it exists
-if [ -d "$HOME/.yarn/bin" ] ; then
+if [ -d "$HOME/.yarn/bin" ]; then
     PATH="$HOME/.yarn/bin:$PATH"
 fi
 
 # set PATH so it includes user's symfony bin directory if it exists
-if [ -d "$HOME/.symfony/bin" ] ; then
+if [ -d "$HOME/.symfony/bin" ]; then
    PATH="$HOME/.symfony/bin:$PATH"
 fi
 
