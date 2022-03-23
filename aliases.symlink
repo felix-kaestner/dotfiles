@@ -14,15 +14,17 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-# Get Software Updates and update installed  packages
-alias update='sudo apt update; sudo apt upgrade -y; yarn global upgrade'
-alias update-time='sudo hwclock -s'
-
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 
 # Add shortcut for invoking git
 alias g="git"
+
+# Alias for invoking minikube
+alias mk="minikube"
+
+# Alias for lima-vm
+alias lctl="limactl"
 
 # Alias for python http server
 alias serve="python3 -m http.server"
