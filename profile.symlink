@@ -84,6 +84,15 @@ export DOCKER_BUILDKIT=1
 # use docker cli command to build with docker-compose -> buildkit
 export COMPOSE_DOCKER_CLI_BUILD=1
 
+# automatically set docker host if lima-vm is running
+if [ -x "$(command -v limactl)" ]; then
+  source <(limactl completion bash)
+  lima_docker_vm=$(limactl list --json | jq -r 'select(.message | contains("docker"))|.name')
+  if [ ! -z "$lima_docker_vm" ]; then
+    export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
+  fi
+fi
+
 ## Github CLI
 
 # Autocompletion
