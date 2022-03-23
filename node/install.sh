@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-if [ -f /etc/os-release ]
-then
-    awk -F= '/^ID=/{print $2}' /etc/os-release | grep -Eiq 'debian|ubuntu|mint'
-    if [ $? -eq 0 ]
-    then
+case $(uname -s) in
+  'Linux')
+    if [ -f /etc/os-release ] && awk -F= '/^ID=/{print $2}' /etc/os-release | grep -Eiq 'debian|ubuntu|mint'; then
         curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo apt install -y nodejs
         sudo npm install -g yarn
     fi
-fi
+    ;;
+  'Darwin') 
+    brew install node
+    ;;
+  *) ;;
+esac

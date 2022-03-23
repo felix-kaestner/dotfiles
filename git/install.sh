@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -f /etc/os-release ]
-then
-    awk -F= '/^ID=/{print $2}' /etc/os-release | grep -Eiq 'debian|ubuntu|mint'
-    if [ $? -eq 0 ]
-    then
+case $(uname -s) in
+  'Linux')
+    if [ -f /etc/os-release ] && awk -F= '/^ID=/{print $2}' /etc/os-release | grep -Eiq 'debian|ubuntu|mint'; then
         git config --file ~/.gitconfig.local gpg.program gpg2
 
         curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
@@ -12,4 +10,9 @@ then
         sudo apt update
         sudo apt install gh
     fi
-fi
+    ;;
+  'Darwin') 
+    brew install gh
+    ;;
+  *) ;;
+esac
