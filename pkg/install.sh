@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-
-WINGET=$(command -v winget.exe)
-if [ "$WINGET" != "" ]
-then
+if [ -x "$(command -v winget.exe)" ] ; then
+    DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
     "${WINGET}" import -i "${DIR}/pkgs.json"
 fi
