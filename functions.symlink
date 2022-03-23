@@ -3,3 +3,19 @@
 keys () {
   gpg --list-secret-keys --keyid-format LONG
 }
+
+update () {
+  if [ -x "$(command -v apt)" ] ; then
+      sudo apt update
+      sudo apt upgrade -y
+  fi
+
+  # if [ -x "$(command -v brew)" ] ; then
+  #     brew update
+  #     brew upgrade
+  # fi
+
+  if [ -x "$(command -v yarn)" ] ; then
+      yarn global upgrade
+  fi
+}
