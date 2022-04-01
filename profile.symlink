@@ -98,7 +98,9 @@ fi
 ## Github CLI
 
 # Autocompletion
-eval "$(gh completion -s bash)"
+if [ -x "$(command -v gh)" ]; then
+  eval "$(gh completion -s bash)"
+fi
 
 ## GPG Settings
 
