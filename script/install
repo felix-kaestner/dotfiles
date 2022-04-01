@@ -26,4 +26,4 @@ fi
 update
 
 # find the installers and run them iteratively
-find . -name install.sh | while read installer ; do info "Executing ${installer}"; sh -c "${installer}" ; done
+for installer in $(find . -name install.sh); do info "Executing ${installer}"; sh -c "${installer}"; done
