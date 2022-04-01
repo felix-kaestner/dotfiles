@@ -3,7 +3,9 @@
 # exists.
 
 # set terminal style
-PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/") \$ '
+if [ ! -z "$BASH_VERSION" ]; then
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/") \$ '
+fi
 
 # set user id environment variable
 if [ -z "$UID" ]; then
