@@ -1,0 +1,9 @@
+# Github CLI
+if [ -x "$(command -v gh)" ]; then
+  source <(gh completion -s bash)
+fi
+
+# lima-vm
+if [ -x "$(command -v limactl)" ]; then
+  source <(limactl completion bash)
+fi
