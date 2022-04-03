@@ -2,11 +2,6 @@
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
 
-# set terminal style
-if [ ! -z "$BASH_VERSION" ]; then
-    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/") \$ '
-fi
-
 # set user id environment variable
 if [ -z "$UID" ]; then
     UID="$(id -u)"
@@ -71,12 +66,14 @@ if [ -f ~/.profile.local ]; then
 fi
 
 # Set Editor to nvim
-alias vim='nvim'
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vi'
 else
   export EDITOR='nvim'
 fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 ## Docker Settings
 
@@ -88,18 +85,10 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 # automatically set docker host if lima-vm is running
 if [ -x "$(command -v limactl)" ]; then
-  source <(limactl completion bash)
   lima_docker_vm=$(limactl list --json | jq -r 'select(.message | contains("docker"))|.name')
   if [ ! -z "$lima_docker_vm" ]; then
     export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
   fi
-fi
-
-## Github CLI
-
-# Autocompletion
-if [ -x "$(command -v gh)" ]; then
-  eval "$(gh completion -s bash)"
 fi
 
 ## GPG Settings
@@ -110,5 +99,5 @@ fi
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent
 
-## Default Node.js Settings
+## Node.js Settings
 export NODE_OPTIONS="--experimental-json-modules"
