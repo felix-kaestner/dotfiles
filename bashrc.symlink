@@ -8,6 +8,11 @@ case $- in
       *) return;;
 esac
 
+# Fig pre block. Keep at the top of this file.
+if [ -x "$(command -v fig)" ]; then
+    eval "$(fig init bash pre)"
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -63,6 +68,9 @@ case "$TERM" in
     xterm*|rxvt*) PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1";;
 esac
 
+# disable bash deprecation warning on MacOS
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -72,6 +80,11 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+fi
+
+# Fig post block. Keep at the bottom of this file.
+if [ -x "$(command -v fig)" ]; then
+    eval "$(fig init bash post)"
 fi
 
 # enable user profile
