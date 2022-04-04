@@ -1,0 +1,4 @@
+# load .bashrc on MacOS
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
