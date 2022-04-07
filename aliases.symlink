@@ -43,8 +43,3 @@ alias serve="python3 -m http.server"
 
 # Alias for invoking minikube
 alias mk="minikube"
-
-if [ $(uname -s) == 'Darwin' ]; then
-    # Alias for invoking pinentry
-    alias pinentry='pinentry-mac'
-fi
