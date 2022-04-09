@@ -8,6 +8,9 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+# Correct system time under WSL
+alias update-time='sudo hwclock -s'
+
 # Always enable colored `ls` and `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
 if [ -x /usr/bin/dircolors ]; then
