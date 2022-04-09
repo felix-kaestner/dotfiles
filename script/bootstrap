@@ -109,16 +109,6 @@ install_dotfiles () {
     dst="$HOME/.$(basename "${src%.*}")"
     link_file "$src" "$dst"
   done
-
-  if [ -f ~/.bashrc ]
-  then
-    cat <<EOT >> ~/.bashrc
-
-if [ -f ~/.profile ]; then
-    . ~/.profile
-fi
-EOT
-  fi
 }
 
 function generate_keys () {
