@@ -9,8 +9,8 @@ case $- in
 esac
 
 # Fig pre block. Keep at the top of this file.
-if [ -x "$(command -v fig)" ]; then
-    eval "$(fig init bash pre)"
+if [ -f ~/.fig/shell/bashrc.pre.bash ]; then
+    . "$HOME/.fig/shell/bashrc.pre.bash"
 fi
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -82,12 +82,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Fig post block. Keep at the bottom of this file.
-if [ -x "$(command -v fig)" ]; then
-    eval "$(fig init bash post)"
-fi
-
 # enable user profile
 if [ -f ~/.profile ]; then
     . ~/.profile
+fi
+
+# Fig post block. Keep at the bottom of this file.
+if [ -f ~/.fig/shell/bashrc.post.bash ]; then
+    . "$HOME/.fig/shell/bashrc.post.bash"
 fi
