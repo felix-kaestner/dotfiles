@@ -4,11 +4,11 @@ keys () {
   gpg --list-secret-keys --keyid-format LONG
 }
 
-exists() {
+exists () {
   command -v "$1" >/dev/null 2>&1
 }
 
-update() {
+update () {
   case $(uname -s) in
     'Linux')
       if [ -x "$(command -v apt)" ]; then
@@ -27,3 +27,8 @@ update() {
       yarn global upgrade
   fi
 }
+
+reloadgpg () {
+  gpg-connect-agent updatestartuptty /bye >/dev/null
+}
+
