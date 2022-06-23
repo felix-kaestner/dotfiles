@@ -9,7 +9,7 @@ case $- in
 esac
 
 # Fig pre block. Keep at the top of this file.
-if [ -f ~/.fig/shell/bashrc.pre.bash ]; then
+if [ -f "$HOME/.fig/shell/bashrc.pre.bash" ]; then
     . "$HOME/.fig/shell/bashrc.pre.bash"
 fi
 
@@ -88,6 +88,6 @@ if [ -f ~/.profile ]; then
 fi
 
 # Fig post block. Keep at the bottom of this file.
-if [ -f ~/.fig/shell/bashrc.post.bash ]; then
+if [ -f "$HOME/.fig/shell/bashrc.post.bash" ]; then
     . "$HOME/.fig/shell/bashrc.post.bash"
 fi
