@@ -46,3 +46,7 @@ alias serve="python3 -m http.server"
 
 # Alias for invoking minikube
 alias mk="minikube"
+
+# Alias for invoking terraform
+alias tf="terraform"
+
