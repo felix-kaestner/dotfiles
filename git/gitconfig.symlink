@@ -4,17 +4,13 @@
 	c = commit
 	b = branch
 	f = fetch
-	co = checkout
-	cb = checkout -b
 	r = remote
-	us = submodule update --remote --recursive --rebase --force
 	d = diff
-	dc = diff --cached
-	ls = ls-files
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	cd = !"branch=$(git branch --show-current); git checkout $1; git branch -D ${branch}; #"
 	pu = !"git push -u origin $(git branch --show-current)"
-	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/master; #"
+	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/main; #"
+    undo = reset --soft HEAD~1
 [core]
     editor = nvim
     autocrlf = input
