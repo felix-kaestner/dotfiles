@@ -34,7 +34,7 @@ if [ -d "/usr/local/go/bin" ]; then
     PATH="/usr/local/go/bin:$PATH"
 fi
 
-if [ $(uname -s) == 'Darwin' ]; then
+if [[ "$(uname -s)" == "Darwin" ]]; then
     export GOPATH="$HOME/Projects/Go"
 fi
 
@@ -64,12 +64,12 @@ if [ -d "$HOME/.flutter/bin" ]; then
    PATH="$HOME/.flutter/bin:$PATH"
 fi
 
-# set bash aliases
+# set aliases
 if [ -f ~/.aliases ]; then
     . ~/.aliases
 fi
 
-# set bash functions
+# set functions
 if [ -f ~/.functions ]; then
     . ~/.functions
 fi

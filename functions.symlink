@@ -4,8 +4,8 @@ keys () {
   gpg --list-secret-keys --keyid-format LONG
 }
 
-exists () {
-  command -v "$1" >/dev/null 2>&1
+reloadgpg () {
+  gpg-connect-agent updatestartuptty /bye >/dev/null
 }
 
 update () {
@@ -16,7 +16,7 @@ update () {
         sudo apt upgrade -y
       fi
       ;;
-    'Darwin') 
+    'Darwin')
       brew update
       brew upgrade
       ;;
@@ -28,7 +28,7 @@ update () {
   fi
 }
 
-reloadgpg () {
-  gpg-connect-agent updatestartuptty /bye >/dev/null
+testssl () {
+  docker run --rm -ti  drwetter/testssl.sh $@
 }
 
