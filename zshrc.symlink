@@ -29,10 +29,13 @@ case "$TERM" in
         ;;
 esac
 
+# enable substitution in the prompt
+setopt prompt_subst
+
 if [ "$color_prompt" = yes ]; then
-    PROMPT="${debian_chroot:+($debian_chroot)}%B%F{green}%n@%m%f:%F{blue}%3~%b%f$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ "
+    PROMPT='${debian_chroot:+($debian_chroot)}%B%F{green}%n@%m%f:%F{blue}%3~%b%f$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
 else
-    PROMPT="${debian_chroot:+($debian_chroot)}%B%n@%m:%3~%b$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ "
+    PROMPT='${debian_chroot:+($debian_chroot)}%B%n@%m:%3~%b$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
 fi
 
 unset color_prompt
