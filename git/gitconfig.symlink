@@ -12,7 +12,7 @@
 	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/main; #"
     undo = reset --soft HEAD~1
 [core]
-    editor = nvim
+	editor = code --wait
     autocrlf = input
 	excludesfile = ~/.gitignore
 [color]
