@@ -1,13 +1,12 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;
 esac
 
-# Fig pre block. Keep at the top of this file.
-if [ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]; then
-    . "$HOME/.fig/shell/zshrc.pre.zsh"
-fi
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
@@ -46,6 +45,4 @@ bindkey "^[b" backward-word
 bindkey '^[f' forward-word
 
 # Fig post block. Keep at the bottom of this file.
-if [ -f "$HOME/.fig/shell/zshrc.post.zsh" ]; then
-    . "$HOME/.fig/shell/zshrc.post.zsh"
-fi
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
