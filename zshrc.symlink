@@ -44,5 +44,11 @@ bindkey -e
 bindkey "^[b" backward-word
 bindkey '^[f' forward-word
 
+# Enable completions
+autoload -Uz compinit
+compinit
+
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
