@@ -121,3 +121,5 @@ export NODE_OPTIONS="--experimental-json-modules"
 
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/profile.post.bash" ]] && builtin source "$HOME/.fig/shell/profile.post.bash"
+
+source /Users/felix.kaestner/.docker/init-bash.sh || true # Added by Docker Desktop
