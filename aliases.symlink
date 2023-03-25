@@ -49,4 +49,3 @@ alias mk="minikube"
 
 # Alias for invoking terraform
 alias tf="terraform"
-

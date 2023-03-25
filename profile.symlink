@@ -19,7 +19,7 @@ export GID
 
 # Fix brew on MacOS
 if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
-  eval $(/opt/homebrew/bin/brew shellenv)
+    eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
 # set PATH so it includes user's private bin if it exists
@@ -59,12 +59,12 @@ fi
 
 # set PATH so it includes user's symfony bin directory if it exists
 if [ -d "$HOME/.symfony/bin" ]; then
-   PATH="$HOME/.symfony/bin:$PATH"
+    PATH="$HOME/.symfony/bin:$PATH"
 fi
 
 # set PATH so it includes user's flutter bin directory if it exists
 if [ -d "$HOME/.flutter/bin" ]; then
-   PATH="$HOME/.flutter/bin:$PATH"
+    PATH="$HOME/.flutter/bin:$PATH"
 fi
 
 # set aliases
@@ -84,9 +84,9 @@ fi
 
 # Set Editor to nvim
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vi'
+    export EDITOR='vi'
 else
-  export EDITOR='nvim'
+    export EDITOR='nvim'
 fi
 
 # colored GCC warnings and errors
@@ -102,16 +102,16 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 # automatically set docker host if lima-vm is running
 if [ -x "$(command -v limactl)" ]; then
-  lima_docker_vm=$(limactl list --json | jq -r 'select(.message | contains("docker"))|.name')
-  if [ ! -z "$lima_docker_vm" ]; then
-    export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
-  fi
+    lima_docker_vm=$(limactl list --json | jq -r 'select(.message | contains("docker"))|.name')
+    if [ ! -z "$lima_docker_vm" ]; then
+        export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
+    fi
 fi
 
 ## GPG Settings
 unset SSH_AGENT_PID
 if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 fi
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent

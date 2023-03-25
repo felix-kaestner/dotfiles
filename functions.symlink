@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-keys () {
-  gpg --list-secret-keys --keyid-format LONG
+keys() {
+    gpg --list-secret-keys --keyid-format LONG
 }
 
-reloadgpg () {
-  gpg-connect-agent updatestartuptty /bye >/dev/null
+reloadgpg() {
+    gpg-connect-agent updatestartuptty /bye >/dev/null
 }
