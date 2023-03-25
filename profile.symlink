@@ -119,6 +119,8 @@ gpgconf --launch gpg-agent
 ## Node.js Settings
 export NODE_OPTIONS="--experimental-json-modules"
 
+source /Users/felix.kaestner/.docker/init-bash.sh || true # Added by Docker Desktop
+
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/profile.post.bash" ]] && builtin source "$HOME/.fig/shell/profile.post.bash"
 

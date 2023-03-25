@@ -6,10 +6,11 @@ case $(uname -s) in
         curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
         sudo apt install -y nodejs
         sudo npm install -g yarn
+        sudo npm install -g pnpm
     fi
     ;;
-  'Darwin') 
-    brew install node
+  'Darwin')
+    brew install node yarn pnpm
     ;;
   *) ;;
 esac

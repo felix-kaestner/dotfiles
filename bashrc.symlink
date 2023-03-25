@@ -73,6 +73,8 @@ if [ -f ~/.profile ]; then
     . ~/.profile
 fi
 
+source /Users/felix.kaestner/.docker/init-bash.sh || true # Added by Docker Desktop
+
 # Fig post block. Keep at the bottom of this file.
 [[ -f "$HOME/.fig/shell/bashrc.post.bash" ]] && builtin source "$HOME/.fig/shell/bashrc.post.bash"
 

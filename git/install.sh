@@ -11,8 +11,8 @@ case $(uname -s) in
         sudo apt install gh
     fi
     ;;
-  'Darwin') 
-    brew install gh
+  'Darwin')
+    brew install git gh
     ;;
   *) ;;
 esac

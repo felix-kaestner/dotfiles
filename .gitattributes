@@ -1,5 +1,12 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
 
+# Go source files always have LF line endings.
+*.go text eol=lf diff=golang
+
 # Powershell source files always have CRLF line endings.
 *.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# JAR files are truly binary and should not be modified.
+*.jar binary

@@ -35,14 +35,14 @@ if [ -x "$(command -v notify-send)" ]; then
     alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi
 
-# Use neovim instead of vim
-alias vim='nvim'
-
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
 
 # Alias for python http server
 alias serve="python3 -m http.server"
+
+# Alias for invoking kubectl
+alias kc="kubectl"
 
 # Alias for invoking minikube
 alias mk="minikube"

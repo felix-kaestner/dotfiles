@@ -7,28 +7,3 @@ keys () {
 reloadgpg () {
   gpg-connect-agent updatestartuptty /bye >/dev/null
 }
-
-update () {
-  case $(uname -s) in
-    'Linux')
-      if [ -x "$(command -v apt)" ]; then
-        sudo apt update
-        sudo apt upgrade -y
-      fi
-      ;;
-    'Darwin')
-      brew update
-      brew upgrade
-      ;;
-    *) ;;
-  esac
-
-  if [ -x "$(command -v yarn)" ]; then
-      yarn global upgrade
-  fi
-}
-
-testssl () {
-  docker run --rm -ti  drwetter/testssl.sh $@
-}
-

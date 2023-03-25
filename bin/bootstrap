@@ -194,12 +194,10 @@ setup_gitconfig () {
 }
 
 setup_profile() {
-  if [ -f profile.local.symlink ]
+  if ! [ -f profile.local.symlink ]
   then
     rm profile.local.symlink
   fi
-  
-  touch profile.local.symlink
 }
 
 setup_wsl () {
