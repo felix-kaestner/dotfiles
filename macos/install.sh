@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+if [ "$(uname -s)" != "Darwin" ]; then
+    exit 0
+fi
+
+# Dock
+defaults write com.apple.dock "tilesize" -int "48"
+defaults write com.apple.dock "show-recents" -bool "false"
+defaults write com.apple.dock "mru-spaces" -bool "false"
+
+killall Dock
+
+# Finder
+defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
+defaults write NSGlobalDomain "NSDocumentSaveNewDocumentsToCloud" -bool "false"
+
+defaults write com.apple.finder "FXEnableExtensionChangeWarning" -bool "false"
+defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
+defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
+defaults write com.apple.finder "FXRemoveOldTrashItems" -bool "true"
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool "true"
+
+defaults write com.apple.finder "ShowPathbar" -bool "true"
+defaults write com.apple.finder "ShowExternalHardDrivesOnDesktop" -bool "false"
+defaults write com.apple.finder "ShowRemovableMediaOnDesktop" -bool "false"
+
+killall Finder
+
+# SystemUIServer
+defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots"
+
+killall SystemUIServer
