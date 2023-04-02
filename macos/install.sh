@@ -12,7 +12,6 @@ defaults write com.apple.dock "mru-spaces" -bool "false"
 killall Dock
 
 # Finder
-defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
 defaults write NSGlobalDomain "NSDocumentSaveNewDocumentsToCloud" -bool "false"
 
 defaults write com.apple.finder "FXEnableExtensionChangeWarning" -bool "false"
@@ -31,3 +30,6 @@ killall Finder
 defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots"
 
 killall SystemUIServer
+
+# Visual Studio Code
+defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
