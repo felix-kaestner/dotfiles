@@ -193,7 +193,7 @@ setup_gitconfig() {
 
 setup_profile() {
     if ! [ -f profile.local.symlink ]; then
-        rm profile.local.symlink
+        touch profile.local.symlink
     fi
 }
 
