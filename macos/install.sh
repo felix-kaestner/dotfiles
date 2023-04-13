@@ -8,6 +8,8 @@ fi
 defaults write com.apple.dock "tilesize" -int "48"
 defaults write com.apple.dock "show-recents" -bool "false"
 defaults write com.apple.dock "mru-spaces" -bool "false"
+defaults write com.apple.dock "autohide" -bool "true"
+defaults write com.apple.dock "autohide-time-modifier" -float "0.25"
 
 killall Dock
 
@@ -25,11 +27,6 @@ defaults write com.apple.finder "ShowExternalHardDrivesOnDesktop" -bool "false"
 defaults write com.apple.finder "ShowRemovableMediaOnDesktop" -bool "false"
 
 killall Finder
-
-# SystemUIServer
-defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots"
-
-killall SystemUIServer
 
 # Visual Studio Code
 defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
