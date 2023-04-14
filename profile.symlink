@@ -1,6 +1,3 @@
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/profile.pre.bash" ]] && builtin source "$HOME/.fig/shell/profile.pre.bash"
-
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
@@ -102,7 +99,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 # automatically set docker host if lima-vm is running
 if [ -x "$(command -v limactl)" ]; then
-    lima_docker_vm=$(limactl list --json | jq -r 'select(.message | contains("docker"))|.name')
+    lima_docker_vm=$(limactl list --json 2>/dev/null | jq -r 'select(.message != null ) | select(.message | contains("docker")) | .name')
     if [ ! -z "$lima_docker_vm" ]; then
         export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
     fi
@@ -118,10 +115,3 @@ gpgconf --launch gpg-agent
 
 ## Node.js Settings
 export NODE_OPTIONS="--experimental-json-modules"
-
-source /Users/felix.kaestner/.docker/init-bash.sh || true # Added by Docker Desktop
-
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/profile.post.bash" ]] && builtin source "$HOME/.fig/shell/profile.post.bash"
-
-source /Users/felix.kaestner/.docker/init-bash.sh || true # Added by Docker Desktop
