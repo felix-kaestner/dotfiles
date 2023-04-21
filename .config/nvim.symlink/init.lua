@@ -9,14 +9,14 @@ vim.g.maplocalleader = ' '
 -- See `:help lazy.nvim.txt`
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  }
+    vim.fn.system {
+        'git',
+        'clone',
+        '--filter=blob:none',
+        'https://github.com/folke/lazy.nvim.git',
+        '--branch=stable', -- latest stable release
+        lazypath,
+    }
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -28,8 +28,11 @@ require('lazy').setup({
         'neovim/nvim-lspconfig',
         dependencies = {
             -- Automatically install LSPs to stdpath for neovim.
-            'williamboman/mason.nvim',
+            { 'williamboman/mason.nvim', config = true },
             'williamboman/mason-lspconfig.nvim',
+
+            -- Useful status updates for LSP
+            { 'j-hui/fidget.nvim', opts = {} },
 
             -- Additional lua configuration for Neovim setup and plugin development.
             'folke/neodev.nvim'
@@ -72,12 +75,7 @@ require('lazy').setup({
     },
 
     -- Highlight, edit, and navigate code using a fast incremental parsing library.
-    {
-        'nvim-treesitter/nvim-treesitter',
-        config = function()
-            pcall(require('nvim-treesitter.install').update { with_sync = true })
-        end,
-    },
+    { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
 
     -- Show the local context of the currently visible buffer contents.
     'nvim-treesitter/nvim-treesitter-context',
@@ -89,10 +87,28 @@ require('lazy').setup({
     { 'nvim-lualine/lualine.nvim', opts = { options = { icons_enabled = false } } },
 
     -- Catppuccin Theme
-    { 'catppuccin/nvim', name = 'catppuccin', config = function() vim.cmd.colorscheme 'catppuccin-frappe' end },
+    { 'catppuccin/nvim', name = 'catppuccin', config = function() vim.cmd.colorscheme 'catppuccin-mocha' end },
 
-    -- Add indentation guides to all lines (including empty lines).
+    -- Add indentation guides.
     { 'lukas-reineke/indent-blankline.nvim', opts = { show_trailing_blankline_indent = false } },
+
+    -- Git Integration
+    'tpope/vim-fugitive',
+    'tpope/vim-rhubarb',
+
+    -- Git Decorations
+    {
+        'lewis6991/gitsigns.nvim',
+        opts = {
+            signs = {
+                add = { text = '+' },
+                change = { text = '~' },
+                delete = { text = '_' },
+                topdelete = { text = '‾' },
+                changedelete = { text = '~' },
+            }
+        }
+    },
 }, {})
 
 -- [[ Setting options ]]
@@ -118,6 +134,9 @@ vim.o.breakindent = true
 
 -- Enable smart indent
 vim.opt.smartindent = true
+
+-- Disable line wrapping
+vim.wo.wrap = false
 
 -- Save undo history
 vim.o.undofile = true
@@ -164,11 +183,11 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-  group = highlight_group,
-  pattern = '*',
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+    group = highlight_group,
+    pattern = '*',
 })
 
 -- [[ Configure Telescope ]]
@@ -203,20 +222,17 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagn
 
 -- [[ LSP ]]
 
--- Setup neovim lua configuration
-require('neodev').setup()
-
--- Setup mason so it can manage external tooling
-require('mason').setup()
-
--- Setup mason-lspconfig
-local mason_lspconfig = require('mason-lspconfig')
-
-mason_lspconfig.setup()
-
--- nvim-cmp supports additional completion capabilities
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+-- Language Server Configuration
+local servers = {
+    gopls = {},
+    tsserver = {},
+    lua_ls = {
+        Lua = {
+            workspace = { checkthirdparty = false },
+            telemetry = { enable = false },
+        }
+    }
+}
 
 -- Executed when the LSP connects to a particular buffer.
 local on_attach = function(_, bufnr)
@@ -254,12 +270,33 @@ local on_attach = function(_, bufnr)
 
     -- Command to format local to the LSP buffer
     nmap('<leader>f', vim.lsp.buf.format, '[F]ormat current buffer')
+
+    -- Automatically organize imports on save using goimports
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = '*.go',
+        callback = function()
+            vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+        end
+    })
 end
+
+-- nvim-cmp supports additional completion capabilities
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
+-- Setup neovim lua configuration
+require('neodev').setup()
+
+-- Setup mason-lspconfig so it can manage external tooling
+local mason_lspconfig = require('mason-lspconfig')
+
+mason_lspconfig.setup({ ensure_installed = vim.tbl_keys(servers) })
 
 mason_lspconfig.setup_handlers({
     function(server_name)
         require('lspconfig')[server_name].setup({
-            capabilities = capabilities,
+            settings = servers[server_name],
+            apabilities = capabilities,
             on_attach = on_attach,
         })
     end,
