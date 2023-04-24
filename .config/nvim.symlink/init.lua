@@ -74,6 +74,24 @@ require('lazy').setup({
         end,
     },
 
+    -- Telescope File Browser Extension
+    {
+        'nvim-telescope/telescope-file-browser.nvim',
+        config = function()
+            -- Enable file browser
+            pcall(require('telescope').load_extension, 'file_browser')
+        end
+    },
+
+    -- Telescope Integration for GitHub
+    {
+        'nvim-telescope/telescope-github.nvim',
+        config = function()
+            -- Enable github integration
+            pcall(require('telescope').load_extension, 'gh')
+        end
+    },
+
     -- Highlight, edit, and navigate code using a fast incremental parsing library.
     { 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate" },
 
@@ -196,11 +214,27 @@ vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc =
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', require('telescope.builtin').current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer'  })
 
+vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files, { desc = 'Search Git Files' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = '[G]it [C]ommits' })
+vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = '[G]it [B]ranches' })
+vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = '[G]it [S]tatus' })
+
+vim.keymap.set('n', '<leader>gi', require('telescope').extensions.gh.issues, { desc = '[G]itHub [I]ssues' })
+vim.keymap.set('n', '<leader>gp', require('telescope').extensions.gh.pull_request, { desc = '[G]itHub [P]ull Request' })
+vim.keymap.set('n', '<leader>gr', require('telescope').extensions.gh.run, { desc = '[G]itHub Workflow [R]un' })
+
+vim.keymap.set('n', '<leader>fb', function()
+    require('telescope').extensions.file_browser.file_browser({
+        path = '%:p:h',
+        select_buffer = true,
+    })
+end, { desc = '[F]ile [B]rowser'  })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
