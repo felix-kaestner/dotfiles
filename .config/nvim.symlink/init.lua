@@ -83,6 +83,15 @@ require('lazy').setup({
         end
     },
 
+    -- Telescope Project Switcher
+    {
+        'nvim-telescope/telescope-project.nvim',
+        config = function()
+            -- Enable project switcher
+            pcall(require('telescope').load_extension, 'project')
+        end
+    },
+
     -- Telescope Integration for GitHub
     {
         'nvim-telescope/telescope-github.nvim',
@@ -224,6 +233,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = '[G]it [C]ommits' })
 vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = '[G]it [B]ranches' })
 vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = '[G]it [S]tatus' })
+
+vim.keymap.set('n', '<leader>sp', require('telescope').extensions.project.project, { desc = '[S]earch [P]rojects' })
 
 vim.keymap.set('n', '<leader>gi', require('telescope').extensions.gh.issues, { desc = '[G]itHub [I]ssues' })
 vim.keymap.set('n', '<leader>gp', require('telescope').extensions.gh.pull_request, { desc = '[G]itHub [P]ull Request' })
