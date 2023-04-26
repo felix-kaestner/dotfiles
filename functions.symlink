@@ -11,3 +11,28 @@ reloadgpg() {
 dind() {
     docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock:ro -v $(pwd):/workspace -w /workspace docker /bin/ash
 }
+
+wo() {
+    timer 50m
+    if [ $? = 0 ]; then
+        case $(uname -s) in
+        'Darwin')
+            osascript -e 'display notification with title "Work Timer is up!" subtitle "Take a Break 😊" sound name "Crystal"'
+            ;;
+        *) ;;
+        esac
+    fi
+}
+
+br() {
+    timer 10m
+    if [ $? = 0 ]; then
+        case $(uname -s) in
+        'Darwin')
+            osascript -e 'display notification with title "Break is over!" subtitle "Get back to work 🫡" sound name "Crystal"'
+            ;;
+        *) ;;
+        esac
+    fi
+}
+
