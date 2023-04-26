@@ -119,6 +119,12 @@ require('lazy').setup({
     -- Add indentation guides.
     { 'lukas-reineke/indent-blankline.nvim', opts = { show_trailing_blankline_indent = false } },
 
+    -- Source Code Comments
+    'tpope/vim-commentary',
+
+    -- Add/Change/Delte parentheses/quotes/tags with ease
+    'tpope/vim-surround',
+
     -- Git Integration
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
@@ -223,8 +229,15 @@ vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc =
 vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', require('telescope.builtin').current_buffer_fuzzy_find, { desc = '[/] Fuzzily search in current buffer'  })
 
-vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files, { desc = 'Search Git Files' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sf', function()
+    -- See https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
+    vim.fn.system('git rev-parse --is-inside-work-tree')
+    if vim.v.shell_error == 0 then
+        require('telescope.builtin').git_files()
+    else
+        require('telescope.builtin').find_files({ hidden = true })
+    end
+end, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -233,8 +246,6 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>gc', require('telescope.builtin').git_commits, { desc = '[G]it [C]ommits' })
 vim.keymap.set('n', '<leader>gb', require('telescope.builtin').git_branches, { desc = '[G]it [B]ranches' })
 vim.keymap.set('n', '<leader>gs', require('telescope.builtin').git_status, { desc = '[G]it [S]tatus' })
-
-vim.keymap.set('n', '<leader>sp', require('telescope').extensions.project.project, { desc = '[S]earch [P]rojects' })
 
 vim.keymap.set('n', '<leader>gi', require('telescope').extensions.gh.issues, { desc = '[G]itHub [I]ssues' })
 vim.keymap.set('n', '<leader>gp', require('telescope').extensions.gh.pull_request, { desc = '[G]itHub [P]ull Request' })
@@ -246,6 +257,12 @@ vim.keymap.set('n', '<leader>fb', function()
         select_buffer = true,
     })
 end, { desc = '[F]ile [B]rowser'  })
+
+vim.keymap.set('n', '<leader>sp', function()
+    require('telescope').extensions.project.project({
+        display_type = 'full'
+    })
+end, { desc = '[S]earch [P]rojects' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
