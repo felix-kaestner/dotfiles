@@ -1,7 +1,7 @@
-# Set prefix to Ctrl+l
+# Set prefix to Ctrl+j
 unbind C-b
-set-option -g prefix C-l
-bind-key C-l send-prefix
+set-option -g prefix C-j
+bind-key C-j send-prefix
 
 # Enable mouse mode
 setw -g mouse on
