@@ -125,6 +125,9 @@ require('lazy').setup({
     -- Add/Change/Delte parentheses/quotes/tags with ease
     'tpope/vim-surround',
 
+    -- Detect tabstop and shiftwidth automatically
+    'tpope/vim-sleuth',
+
     -- Git Integration
     'tpope/vim-fugitive',
     'tpope/vim-rhubarb',
@@ -377,6 +380,8 @@ cmp.setup({
         end,
     },
     mapping = cmp.mapping.preset.insert({
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<CR>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
