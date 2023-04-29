@@ -36,6 +36,8 @@ fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
     export GOPATH="$HOME/Projects/Go"
+elif [[ "$(uname -s)" == "Linux" ]]; then
+    export GOPATH="$HOME/Developer/go"
 fi
 
 GOPATH=$(go env GOPATH)
