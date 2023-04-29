@@ -102,8 +102,13 @@ install_dotfiles() {
 
     local overwrite_all=false backup_all=false skip_all=false
 
-    for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*'); do
+    for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -type f); do
         dst="$HOME/.$(basename "${src%.*}")"
+        link_file "$src" "$dst"
+    done
+
+    for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -type d); do
+        dst="$HOME/$(echo "$src" | sed -e "s|${DIR}/||" -e "s|.symlink||")"
         link_file "$src" "$dst"
     done
 }
@@ -191,12 +196,6 @@ setup_gitconfig() {
     fi
 }
 
-setup_profile() {
-    if ! [ -f profile.local.symlink ]; then
-        touch profile.local.symlink
-    fi
-}
-
 setup_wsl() {
     ask ' - What is your Windows username?'
     read -e WINDOWS_USERNAME
@@ -237,7 +236,6 @@ if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
 fi
 
 setup_gitconfig
-setup_profile
 
 # If we're on WSL, let's install and setup some windows config.
 uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/p'
