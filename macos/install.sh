@@ -28,5 +28,3 @@ defaults write com.apple.finder "ShowRemovableMediaOnDesktop" -bool "false"
 
 killall Finder
 
-# Visual Studio Code
-defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
