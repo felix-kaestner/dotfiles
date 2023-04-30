@@ -58,7 +58,7 @@ require('lazy').setup({
     'github/copilot.vim',
 
     -- Fuzzy Finder (files, lsp, etc)
-    { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim' } },
+    { 'nvim-telescope/telescope.nvim', branch = '0.1.x', dependencies = { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' } },
 
     -- Fuzzy Finder Algorithm which requires local dependencies to be built.
     {
@@ -241,6 +241,7 @@ vim.keymap.set('n', '<leader>sf', function()
         require('telescope.builtin').find_files({ hidden = true })
     end
 end, { desc = '[S]earch [F]iles' })
+
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
@@ -334,7 +335,7 @@ local on_attach = function(_, bufnr)
     end, '[W]orkspace [L]ist Folders')
 
     -- Command to format local to the LSP buffer
-    nmap('<leader>f', vim.lsp.buf.format, '[F]ormat current buffer')
+    nmap('<leader>ff', vim.lsp.buf.format, '[F]ormat current buffer')
 
     -- Automatically organize imports on save using goimports
     vim.api.nvim_create_autocmd('BufWritePre', {
@@ -408,5 +409,8 @@ cmp.setup({
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
+        { name = 'buffer' },
+        { name = 'path' },
     },
 })
+
