@@ -287,6 +287,15 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
 
+-- GitHub Copilot
+-- See `:help copilot`
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true
+
+vim.keymap.set('i', '<C-[>', 'copilot#Accept("")', { silent = true, expr = true, replace_keycodes = false })
+vim.keymap.set('i', '<C-H>', 'copilot#Previous()', { silent = true, expr = true })
+vim.keymap.set('i', '<C-K>', 'copilot#Next()', { silent = true, expr = true })
+
 -- [[ LSP ]]
 
 -- Language Server Configuration
@@ -384,15 +393,21 @@ cmp.setup({
     mapping = cmp.mapping.preset.insert({
         ['<C-n>'] = cmp.mapping.select_next_item(),
         ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-[>'] = cmp.mapping(function()
+            vim.api.nvim_feedkeys(vim.fn['copilot#Accept'](vim.api.nvim_replace_termcodes('<Tab>', true, true, true)), 'n', true)
+        end),
         ['<CR>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         }),
         ['<Tab>'] = cmp.mapping(function(fallback)
+            local copilot_keys = vim.fn['copilot#Accept']()
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
+            elseif copilot_keys ~= '' then
+                vim.api.nvim_feedkeys(copilot_keys, 'i', true)
             else
                 fallback()
             end
@@ -412,6 +427,9 @@ cmp.setup({
         { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
+    },
+    experimental = {
+        ghost_text = true,
     },
 })
 
