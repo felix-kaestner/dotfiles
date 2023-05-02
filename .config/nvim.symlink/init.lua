@@ -392,21 +392,15 @@ cmp.setup({
     mapping = cmp.mapping.preset.insert({
         ['<C-n>'] = cmp.mapping.select_next_item(),
         ['<C-p>'] = cmp.mapping.select_prev_item(),
-        ['<C-[>'] = cmp.mapping(function()
-            vim.api.nvim_feedkeys(vim.fn['copilot#Accept'](vim.api.nvim_replace_termcodes('<Tab>', true, true, true)), 'n', true)
-        end),
         ['<CR>'] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
         }),
         ['<Tab>'] = cmp.mapping(function(fallback)
-            local copilot_keys = vim.fn['copilot#Accept']()
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
-            elseif copilot_keys ~= '' then
-                vim.api.nvim_feedkeys(copilot_keys, 'i', true)
             else
                 fallback()
             end
