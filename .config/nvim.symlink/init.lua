@@ -262,6 +262,7 @@ require('lazy').setup({
                 }),
                 sources = {
                     { name = 'nvim_lsp' },
+                    { name = 'nvim_lua' },
                     { name = 'luasnip' },
                     { name = 'buffer' },
                     { name = 'path' },
@@ -425,9 +426,7 @@ require('lazy').setup({
         'lukas-reineke/indent-blankline.nvim',
         event = { 'BufReadPost', 'BufNewFile' },
         opts = {
-            char = "│",
             show_trailing_blankline_indent = false,
-            show_current_context = false,
         },
     },
 
