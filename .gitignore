@@ -1,2 +1,3 @@
 *.local.symlink
 *-lock.json
+.luarc.json
