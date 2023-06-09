@@ -1,7 +1,5 @@
 # Set prefix to Ctrl+j
-unbind C-b
 set-option -g prefix C-j
-bind-key C-j send-prefix
 
 # Enable mouse mode
 setw -g mouse on
@@ -19,6 +17,8 @@ set -g @catppuccin_host 'on'
 
 set -g @catppuccin_left_separator '█'
 set -g @catppuccin_right_separator '█'
+
+bind-key -r f run-shell "tmux neww ~/.local/bin/tmux-sessionizer"
 
 # Initialize Plugin Manager
 run '~/.tmux/plugins/tpm/tpm'

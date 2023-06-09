@@ -117,3 +117,6 @@ gpgconf --launch gpg-agent
 
 ## Node.js Settings
 export NODE_OPTIONS="--experimental-json-modules"
+
+## Projects
+bindkey -s ^f "tmux-sessionizer\n"

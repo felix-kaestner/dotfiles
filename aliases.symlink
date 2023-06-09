@@ -56,5 +56,3 @@ alias mk="minikube"
 # Alias for invoking terraform
 alias tf="terraform"
 
-# Alias for running tmux-sessionizer
-alias ts="tmux-sessionizer"
