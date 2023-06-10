@@ -62,6 +62,9 @@ vim.o.termguicolors = true
 vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 0
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- [[ Basic Keymaps ]]
 -- See `:help vim.keymap.set()`
 
@@ -75,6 +78,20 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Automatically center the cursor when moving up or down
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- Tabs
+vim.keymap.set("n", "<C-t>", "<cmd>tabnew<cr>")
+vim.keymap.set("n", "<C-n>", "<cmd>tabnext<cr>")
+vim.keymap.set("n", "<C-p>", "<cmd>tabprevious<cr>")
+
+-- Search & Replace
+vim.keymap.set(
+    { "n", "c" },
+    "<C-r>",
+    [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
+    { desc = "[S]earch & [R]eplace" }
+)
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -152,6 +169,11 @@ local on_attach = function(client, bufnr)
     -- Command to format local to the LSP buffer
     nmap("<leader>ff", vim.lsp.buf.format, "[F]ormat current buffer")
 
+    if client.name == "gopls" then
+        -- Remap to quickly run tests in Go
+        nmap("<leader>gt", "<cmd>!go test -v %:p:h<cr>", "Run [G]o [T]test")
+    end
+
     -- Automatically organize imports on save using goimports
     vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = "*.go",
@@ -200,7 +222,7 @@ require("lazy").setup({
             "williamboman/mason-lspconfig.nvim",
 
             -- Useful status updates for LSP
-            { "j-hui/fidget.nvim", config = true },
+            { "j-hui/fidget.nvim", opts = { window = { blend = 0 } } },
 
             -- Additional lua configuration for Neovim setup and plugin development.
             { "folke/neodev.nvim", config = true },
@@ -433,6 +455,26 @@ require("lazy").setup({
         end,
     },
 
+    -- File Explorer
+    {
+        "nvim-tree/nvim-tree.lua",
+        cmd = "NvimTreeFindFileToggle",
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+        },
+        keys = {
+            { "<leader>fe", "<cmd>NvimTreeFindFileToggle<cr>", desc = "[F]ile [E]xplorer" },
+        },
+        opts = {
+            view = {
+                width = 40,
+            },
+            update_focused_file = {
+                enable = true,
+            },
+        },
+    },
+
     -- Highlight, edit, and navigate code using a fast incremental parsing library.
     {
         "nvim-treesitter/nvim-treesitter",
@@ -463,14 +505,26 @@ require("lazy").setup({
         config = true,
     },
 
+    -- Session Management
+    {
+        "folke/persistence.nvim",
+        event = "BufReadPre",
+        config = true,
+        keys = {
+            { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
+        },
+    },
+
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
         event = "VeryLazy",
         opts = {
             options = {
+                globalstatus = true,
                 icons_enabled = false,
                 component_separators = "|",
+                extensions = { "nvim-tree", "lazy" },
             },
         },
     },
@@ -479,7 +533,11 @@ require("lazy").setup({
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        config = function()
+        opts = {
+            transparent_background = true,
+        },
+        config = function(_, opts)
+            require("catppuccin").setup(opts)
             vim.cmd.colorscheme("catppuccin")
         end,
     },
