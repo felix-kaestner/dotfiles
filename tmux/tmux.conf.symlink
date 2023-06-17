@@ -12,12 +12,6 @@ set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'catppuccin/tmux'
 
-set -g @catppuccin_user 'on'
-set -g @catppuccin_host 'on'
-
-set -g @catppuccin_left_separator '█'
-set -g @catppuccin_right_separator '█'
-
 bind-key -r f run-shell "tmux neww ~/.local/bin/tmux-sessionizer"
 
 # Initialize Plugin Manager
