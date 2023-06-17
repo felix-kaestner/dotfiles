@@ -469,6 +469,9 @@ require("lazy").setup({
             view = {
                 width = 40,
             },
+            filters = {
+                custom = { '^\\.git' },
+            },
             update_focused_file = {
                 enable = true,
             },
