@@ -87,7 +87,7 @@ vim.keymap.set("n", "<C-p>", "<cmd>tabprevious<cr>")
 -- Search & Replace
 vim.keymap.set(
     { "n", "c" },
-    "<C-r>",
+    "<C-S>",
     [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]],
     { desc = "[S]earch & [R]eplace" }
 )
@@ -222,7 +222,7 @@ require("lazy").setup({
             "williamboman/mason-lspconfig.nvim",
 
             -- Useful status updates for LSP
-            { "j-hui/fidget.nvim", opts = { window = { blend = 0 } } },
+            { "j-hui/fidget.nvim", tag = 'legacy', opts = { window = { blend = 0 } } },
 
             -- Additional lua configuration for Neovim setup and plugin development.
             { "folke/neodev.nvim", config = true },
@@ -521,8 +521,10 @@ require("lazy").setup({
         event = "VeryLazy",
         opts = {
             options = {
+                theme = "catppuccin",
                 globalstatus = true,
                 icons_enabled = false,
+                section_separators = '',
                 component_separators = "|",
                 extensions = { "nvim-tree", "lazy" },
             },
