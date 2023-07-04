@@ -119,7 +119,9 @@ local servers = {
             fieldalignment = true,
         },
     },
+
     tsserver = {},
+
     lua_ls = {
         settings = {
             Lua = {
@@ -257,7 +259,7 @@ require("lazy").setup({
     },
 
     -- Automatically install LSPs to stdpath for neovim.
-    { "williamboman/mason.nvim", cmd = "Mason", config = true },
+    { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
 
     -- Autocompletion
     {
@@ -595,10 +597,22 @@ require("lazy").setup({
                 nmap("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
                 nmap("<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
                 nmap("<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
+                nmap("<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
                 nmap("<leader>hp", gitsigns.preview_hunk_inline, "Preview Hunk Inline")
                 nmap("<leader>hb", gitsigns.blame_line, "Blame Line")
                 nmap("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
             end,
+        },
+    },
+
+    -- Edit/Review Issues and Pull Requests
+    {
+        "pwntester/octo.nvim",
+        cmd = "Octo",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+            "nvim-tree/nvim-web-devicons",
         },
     },
 }, {})
