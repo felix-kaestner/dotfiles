@@ -29,6 +29,12 @@ if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# set PATH so it includes pnpm home
+export PNPM_HOME="$HOME/.local/share/pnpm"
+if [ -d "$PNPM_HOME" ]; then
+    PATH="$PNPM_HOME:$PATH"
+fi
+
 # set PATH so it includes golang's bin
 if [ -d "/usr/local/go/bin" ]; then
     PATH="/usr/local/go/bin:$PATH"
