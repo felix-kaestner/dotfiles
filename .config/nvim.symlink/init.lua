@@ -48,7 +48,6 @@ vim.o.scrolloff = 8
 
 -- Decrease update time
 vim.o.updatetime = 250
-vim.o.timeout = true
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
@@ -176,21 +175,19 @@ local on_attach = function(client, bufnr)
         nmap("<leader>gt", "<cmd>!go test -v %:p:h<cr>", "Run [G]o [T]test")
     end
 
-    -- Automatically organize imports on save using goimports
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function()
-            vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
-        end,
-    })
-
     -- Automatically format source code on save
     if client.supports_method("textDocument/formatting") then
         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
             group = augroup,
             buffer = bufnr,
-            callback = function()
+            callback = function(args)
+                -- Automatically organize imports in .go files using goimports
+                if args.file:sub(-3) == ".go" then
+                    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports" } }, apply = true })
+                end
+
+                -- Format the buffer
                 vim.lsp.buf.format({ bufnr = bufnr })
             end,
         })
@@ -506,7 +503,7 @@ require("lazy").setup({
     -- Show pending keybindings.
     {
         "folke/which-key.nvim",
-        event = "VeryLazy",
+        event = { "BufReadPost", "BufNewFile" },
         config = true,
     },
 
@@ -516,14 +513,14 @@ require("lazy").setup({
         event = "BufReadPre",
         config = true,
         keys = {
-            { "<leader>ql", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
+            { "<leader>rs", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
         },
     },
 
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
-        event = "VeryLazy",
+        event = { "BufReadPost", "BufNewFile" },
         opts = {
             options = {
                 theme = "catppuccin",
@@ -570,6 +567,12 @@ require("lazy").setup({
     -- Git Integration
     "tpope/vim-fugitive",
     "tpope/vim-rhubarb",
+    {
+        "shumphrey/fugitive-gitlab.vim",
+        init = function()
+            vim.g.fugitive_gitlab_domains = { "https://git.flow-d.de" }
+        end,
+    },
 
     -- Git Decorations
     {
