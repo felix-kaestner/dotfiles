@@ -28,3 +28,8 @@ defaults write com.apple.finder "ShowRemovableMediaOnDesktop" -bool "false"
 
 killall Finder
 
+# MacOS-only Software
+brew install --cask rectangle
+brew install --cask monitorcontrol
+brew install --cask logi-options-plus
+brew install --cask devtoys
