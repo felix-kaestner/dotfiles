@@ -31,8 +31,8 @@ fi
 
 # set PATH so it includes pnpm home
 export PNPM_HOME="$HOME/.local/share/pnpm"
-if [ -d "$PNPM_HOME" ]; then
-    PATH="$PNPM_HOME:$PATH"
+if [ -d "$HOME/.local/share/pnpm" ]; then
+    PATH="$HOME/.local/share/pnpm:$PATH"
 fi
 
 # set PATH so it includes golang's bin
