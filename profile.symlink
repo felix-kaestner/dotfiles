@@ -20,11 +20,6 @@ if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
 fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ]; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"
 fi
@@ -35,19 +30,8 @@ if [ -d "$HOME/.local/share/pnpm" ]; then
     PATH="$HOME/.local/share/pnpm:$PATH"
 fi
 
-# set PATH so it includes golang's bin
-if [ -d "/usr/local/go/bin" ]; then
-    PATH="/usr/local/go/bin:$PATH"
-fi
-
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    export GOPATH="$HOME/Projects/Go"
-elif [[ "$(uname -s)" == "Linux" ]]; then
-    export GOPATH="$HOME/Developer/go"
-fi
-
-GOPATH=$(go env GOPATH)
 # set PATH so it includes golang's user bin
+export GOPATH="$HOME/.go"
 if [ -d "$GOPATH/bin" ]; then
     PATH="$GOPATH/bin:$PATH"
 fi
@@ -55,11 +39,6 @@ fi
 # set PATH so it includes user's cargo bin if it exists
 if [ -d "$HOME/.cargo/bin" ]; then
     PATH="$HOME/.cargo/bin:$PATH"
-fi
-
-# set PATH so it includes user's yarn bin if it exists
-if [ -d "$HOME/.yarn/bin" ]; then
-    PATH="$HOME/.yarn/bin:$PATH"
 fi
 
 # set PATH so it includes user's symfony bin directory if it exists
@@ -93,9 +72,6 @@ if [[ -n $SSH_CONNECTION ]]; then
 else
     export EDITOR='nvim'
 fi
-
-# colored GCC warnings and errors
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 ## Docker Settings
 
