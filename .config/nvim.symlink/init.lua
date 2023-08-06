@@ -168,7 +168,7 @@ local on_attach = function(client, bufnr)
 
     -- Remap to quickly run tests in Go
     if vim.bo.filetype == "go" then
-        vim.keymap.set("n", "<leader>gt", "<cmd>!go test -v %:p:h<cr>", { buffer = bufnr, desc = "[G]o [R]un" })
+        vim.keymap.set("n", "<leader>gt", "<cmd>!go test -v %:p:h<cr>", { buffer = bufnr, desc = "[G]o [T]est" })
     end
 
     -- Automatically format source code on save
