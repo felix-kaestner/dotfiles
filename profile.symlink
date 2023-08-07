@@ -14,42 +14,39 @@ if [ -z "$GID" ]; then
 fi
 export GID
 
-# Fix brew on MacOS
+# fix brew on MacOS
 if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
     eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
+# helper function to add a directory to the PATH
+add_to_path() {
+    if [[ -d "$1" && "$PATH" != *"$1"* ]]; then
+        export PATH="$PATH:$1"
+    fi
+}
+
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
+add_to_path "$HOME/.local/bin"
 
-# set PATH so it includes pnpm home
+# set PATH so it includes pnpm home if it exists
 export PNPM_HOME="$HOME/.local/share/pnpm"
-if [ -d "$HOME/.local/share/pnpm" ]; then
-    PATH="$HOME/.local/share/pnpm:$PATH"
-fi
+add_to_path "$HOME/.local/share/pnpm"
 
-# set PATH so it includes golang's user bin
+# set PATH so it includes golang's user bin if it exists
 export GOPATH="$HOME/.go"
-if [ -d "$GOPATH/bin" ]; then
-    PATH="$GOPATH/bin:$PATH"
-fi
+add_to_path "$GOPATH/bin"
 
 # set PATH so it includes user's cargo bin if it exists
-if [ -d "$HOME/.cargo/bin" ]; then
-    PATH="$HOME/.cargo/bin:$PATH"
-fi
+add_to_path "$HOME/.cargo/bin"
 
 # set PATH so it includes user's symfony bin directory if it exists
-if [ -d "$HOME/.symfony/bin" ]; then
-    PATH="$HOME/.symfony/bin:$PATH"
-fi
+add_to_path "$HOME/.symfony/bin"
 
 # set PATH so it includes user's flutter bin directory if it exists
-if [ -d "$HOME/.flutter/bin" ]; then
-    PATH="$HOME/.flutter/bin:$PATH"
-fi
+add_to_path "$HOME/.flutter/bin"
+
+unset -f add_to_path
 
 # set aliases
 if [ -f ~/.aliases ]; then
@@ -61,12 +58,12 @@ if [ -f ~/.functions ]; then
     . ~/.functions
 fi
 
-# set local profile
+# include local profile
 if [ -f ~/.profile.local ]; then
     . ~/.profile.local
 fi
 
-# Set Editor to nvim
+# set editor to nvim
 if [[ -n $SSH_CONNECTION ]]; then
     export EDITOR='vi'
 else
