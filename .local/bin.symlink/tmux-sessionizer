@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find ~/Projects ~/Developer ~/Projects/Go/src/github.com/lovoo ~/Projects/Go/src/github.com/lovoo/workspace ~/Projects/Go/src/github.com/lovoo/workspace/pkg ~/Projects/Go/src/github.com/lovoo/workspace/services -mindepth 1 -maxdepth 1 -type d | fzf)
+    selected=$(find ~/Developer ~/Projects ~/Projects/Workspace ~/Projects/Workspace/pkg ~/Projects/Workspace/services -mindepth 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then
