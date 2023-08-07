@@ -58,8 +58,8 @@ vim.o.completeopt = "menuone,noselect"
 vim.o.termguicolors = true
 
 -- Netrw settings
-vim.g.netrw_banner = 0
-vim.g.netrw_browse_split = 0
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- [[ Basic Keymaps ]]
 -- See `:help vim.keymap.set()`
@@ -81,6 +81,7 @@ vim.keymap.set("n", "<C-n>", "<cmd>tabnext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>tabprevious<cr>")
 
 -- Search & Replace
+-- stylua: ignore
 vim.keymap.set({ "n", "c" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
 -- Move selected line / block of text in visual mode
@@ -162,9 +163,6 @@ local on_attach = function(client, bufnr)
     -- See `:help K` for why this keymap
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
     nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-    -- Format the buffer using the LSP
-    nmap("<leader>fb", vim.lsp.buf.format, "[F]ormat [B]uffer")
 
     -- Remap to quickly run tests in Go
     if vim.bo.filetype == "go" then
@@ -360,8 +358,16 @@ require("lazy").setup({
         keys = {
             -- Buffers & Files
             { "<leader>?", "<cmd>Telescope oldfiles<cr>", desc = "[?] Find recently opened files" },
-            { "<leader><space>", "<cmd>Telescope buffers show_all_buffers=true<cr>", desc = "[ ] Find existing buffers" },
-            { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "[/] Fuzzily search in current buffer" },
+            {
+                "<leader><space>",
+                "<cmd>Telescope buffers show_all_buffers=true<cr>",
+                desc = "[ ] Find existing buffers",
+            },
+            {
+                "<leader>/",
+                "<cmd>Telescope current_buffer_fuzzy_find<cr>",
+                desc = "[/] Fuzzily search in current buffer",
+            },
             {
                 "<leader>sf",
                 function()
@@ -445,10 +451,9 @@ require("lazy").setup({
     -- Session Management
     {
         "folke/persistence.nvim",
-        event = "BufReadPre",
         config = true,
         keys = {
-            { "<leader>rs", function() require("persistence").load({ last = true }) end, desc = "[R]estore [S]ession" },
+            { "<leader>rs", "<cmd>lua require('persistence').load()<cr>", desc = "[R]estore [S]ession", },
         },
     },
 
@@ -459,10 +464,19 @@ require("lazy").setup({
             options = {
                 theme = "catppuccin",
                 globalstatus = true,
-                icons_enabled = false,
+                icons_enabled = true,
                 section_separators = "",
                 component_separators = "|",
-                extensions = { "nvim-tree", "lazy" },
+                extensions = { "fugitive", "nvim-tree", "lazy" },
+            },
+            sections = {
+                lualine_a = { "mode" },
+                lualine_b = { "branch", "diff", "diagnostics" },
+                lualine_c = { { "filename", path = 1 } },
+
+                lualine_x = { "encoding", "fileformat", "filetype" },
+                lualine_y = { "progress" },
+                lualine_z = { "location" },
             },
         },
     },
