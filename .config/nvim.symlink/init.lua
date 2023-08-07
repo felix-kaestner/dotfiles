@@ -347,37 +347,40 @@ require("lazy").setup({
                 cond = function()
                     return vim.fn.executable("make") == 1
                 end,
-                config = function()
-                    require("telescope").load_extension("fzf")
-                end,
             },
         },
+        -- See: https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#file-and-text-search-in-hidden-files-and-directories
+        opts = function()
+            local config = require("telescope.config")
+            local vimgrep_arguments = { unpack(config.values.vimgrep_arguments) }
+
+            table.insert(vimgrep_arguments, "--hidden")
+            table.insert(vimgrep_arguments, "--no-ignore-vcs")
+            table.insert(vimgrep_arguments, "--glob")
+            table.insert(vimgrep_arguments, "!**/.git/*")
+
+            return {
+                defaults = {
+                    vimgrep_arguments = vimgrep_arguments,
+                },
+                pickers = {
+                    find_files = {
+                        find_command = { "rg", "--files", "--hidden", "--no-ignore-vcs", "--glob", "!**/.git/*" },
+                    },
+                },
+            }
+        end,
+        config = function(_, opts)
+            require("telescope").setup(opts)
+            require("telescope").load_extension("fzf")
+        end,
+        -- stylua: ignore
         keys = {
             -- Buffers & Files
             { "<leader>?", "<cmd>Telescope oldfiles<cr>", desc = "[?] Find recently opened files" },
-            {
-                "<leader><space>",
-                "<cmd>Telescope buffers show_all_buffers=true<cr>",
-                desc = "[ ] Find existing buffers",
-            },
-            {
-                "<leader>/",
-                "<cmd>Telescope current_buffer_fuzzy_find<cr>",
-                desc = "[/] Fuzzily search in current buffer",
-            },
-            {
-                "<leader>sf",
-                function()
-                    -- See https://github.com/nvim-telescope/telescope.nvim/wiki/Configuration-Recipes#falling-back-to-find_files-if-git_files-cant-find-a-git-directory
-                    vim.fn.system("git rev-parse --is-inside-work-tree")
-                    if vim.v.shell_error == 0 then
-                        require("telescope.builtin").git_files({ recurse_submodules = true })
-                    else
-                        require("telescope.builtin").find_files({ hidden = true })
-                    end
-                end,
-                desc = "[S]earch [F]iles",
-            },
+            { "<leader><space>", "<cmd>Telescope buffers show_all_buffers=true<cr>", desc = "[ ] Find existing buffers" },
+            { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "[/] Fuzzily search in current buffer" },
+            { "<leader>sf", "<cmd>Telescope find_files<cr>", desc = "[S]earch [F]iles" },
             -- Search
             { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "[S]earch [H]elp" },
             { "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "[S]earch [W]ord" },
