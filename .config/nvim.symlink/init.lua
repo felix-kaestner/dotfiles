@@ -221,6 +221,7 @@ require("lazy").setup({
             { "]d", vim.diagnostic.goto_next, desc = "Go to next diagnostic message" },
             { "<leader>e", vim.diagnostic.open_float, desc = "Open floating diagnostic message" },
             { "<leader>q", vim.diagnostic.setloclist, desc = "Open diagnostics list" },
+            { "<leader>dd", vim.diagnostic.disable, desc = "Open diagnostics list" },
         },
         config = function()
             -- nvim-cmp supports additional completion capabilities
@@ -328,9 +329,9 @@ require("lazy").setup({
             vim.g.copilot_no_tab_map = true
         end,
         keys = {
-            { "<C-[>", 'copilot#Accept("")', mode = "i", silent = true, expr = true, replace_keycodes = false },
-            { "<C-H>", "copilot#Previous()", mode = "i", silent = true, expr = true },
-            { "<C-K>", "copilot#Next()", mode = "i", silent = true, expr = true },
+            { "<C-K>", 'copilot#Accept("")', mode = "i", silent = true, expr = true, replace_keycodes = false },
+            { "<C-[>", "copilot#Previous()", mode = "i", silent = true, expr = true },
+            { "<C-]>", "copilot#Next()", mode = "i", silent = true, expr = true },
         },
     },
 
