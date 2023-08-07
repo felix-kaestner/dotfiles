@@ -13,9 +13,13 @@ dind() {
 }
 
 pr() {
-    gh pr create -a @me -f $@
+    case $(git config --get remote.origin.url) in
+        git@github.com*) gh pr create $@ ;;
+        *) ;;
+    esac
 }
 
+# Taken from: https://github.com/ohmybash/oh-my-bash/blob/master/lib/base.sh#L88
 extract() {
     if [ -f $1 ]; then
         case $1 in
@@ -37,9 +41,16 @@ extract() {
     fi
 }
 
+adba() {
+    adb shell settings put global window_animation_scale $1
+    adb shell settings put global transition_animation_scale $1
+    adb shell settings put global animator_duration_scale $1
+}
+
 wo() {
-    timer 50m
-    if [ $? = 0 ]; then
+	[ -x "$(command -v timer)" ] || go install github.com/caarlos0/timer@latest
+    timer 50m -n "Work"
+    if " $? = 0 "; then
         case $(uname -s) in
         'Darwin')
             osascript -e 'display notification with title "Work Timer is up!" subtitle "Take a Break 😊" sound name "Crystal"'
@@ -50,7 +61,8 @@ wo() {
 }
 
 br() {
-    timer 10m
+	[ -x "$(command -v timer)" ] || go install github.com/caarlos0/timer@latest
+    timer 10m -n "Break"
     if [ $? = 0 ]; then
         case $(uname -s) in
         'Darwin')
