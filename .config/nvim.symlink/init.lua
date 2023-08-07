@@ -57,10 +57,6 @@ vim.o.completeopt = "menuone,noselect"
 -- NOTE: Make sure the terminal supports this
 vim.o.termguicolors = true
 
--- Netrw settings
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 -- [[ Basic Keymaps ]]
 -- See `:help vim.keymap.set()`
 
