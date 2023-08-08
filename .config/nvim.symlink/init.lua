@@ -104,6 +104,7 @@ local servers = {
         gopls = {
             gofumpt = true,
             staticcheck = true,
+            semanticTokens = true,
             usePlaceholders = true,
             completeUnimported = true,
             analyses = {
