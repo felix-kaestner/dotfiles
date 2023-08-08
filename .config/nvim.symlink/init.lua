@@ -457,6 +457,19 @@ require("lazy").setup({
         },
     },
 
+    {
+        "folke/flash.nvim",
+        opts = {
+            modes = {
+                char = { enabled = false },
+                search = { enabled = false },
+            },
+        },
+        keys = {
+            { "<leader>j", mode = { "n", "x", "o" }, "<cmd>lua require('flash').jump()<cr>", desc = "[J]ump" },
+        },
+    },
+
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
