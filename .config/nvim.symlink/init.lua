@@ -101,16 +101,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Language Server Configuration
 local servers = {
     gopls = {
-        gofumpt = true,
-        staticcheck = true,
-        usePlaceholders = true,
-        completeUnimported = true,
-        analyses = {
-            shadow = true,
-            unusedwrite = true,
-            unusedparams = true,
-            unusedvariable = true,
-            fieldalignment = true,
+        gopls = {
+            gofumpt = true,
+            staticcheck = true,
+            usePlaceholders = true,
+            completeUnimported = true,
+            analyses = {
+                shadow = true,
+                unusedwrite = true,
+                unusedparams = true,
+                unusedvariable = true,
+                fieldalignment = true,
+            },
         },
     },
 
