@@ -359,7 +359,7 @@ require("lazy").setup({
             table.insert(vimgrep_arguments, "--hidden")
             table.insert(vimgrep_arguments, "--no-ignore-vcs")
             table.insert(vimgrep_arguments, "--glob")
-            table.insert(vimgrep_arguments, "!**/.git/*")
+            table.insert(vimgrep_arguments, "!**/{.git,node_modules}/*")
 
             return {
                 defaults = {
@@ -367,7 +367,7 @@ require("lazy").setup({
                 },
                 pickers = {
                     find_files = {
-                        find_command = { "rg", "--files", "--hidden", "--no-ignore-vcs", "--glob", "!**/.git/*" },
+                        find_command = { "rg", "--files", "--hidden", "--no-ignore-vcs", "--glob", "!**/{.git,node_modules}/*" },
                     },
                 },
             }
