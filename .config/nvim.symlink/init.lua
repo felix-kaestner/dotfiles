@@ -161,7 +161,7 @@ local on_attach = function(client, bufnr)
 
     -- See `:help K` for why this keymap
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-    nmap("<C-k>", vim.lsp.buf.signature_help, "Signature Documentation")
+    nmap("<C-K>", vim.lsp.buf.signature_help, "Signature Documentation")
 
     -- Remap to quickly run tests in Go
     if vim.bo.filetype == "go" then
@@ -357,10 +357,10 @@ require("lazy").setup({
             local config = require("telescope.config")
             local vimgrep_arguments = { unpack(config.values.vimgrep_arguments) }
 
-            table.insert(vimgrep_arguments, "--hidden")
-            table.insert(vimgrep_arguments, "--no-ignore-vcs")
-            table.insert(vimgrep_arguments, "--glob")
-            table.insert(vimgrep_arguments, "!**/{.git,node_modules}/*")
+            local args = { "--hidden", "--no-ignore-vcs", "--glob", "!**/{.git,.next,node_modules}/*" }
+            for _, arg in ipairs(args) do
+                table.insert(vimgrep_arguments, arg)
+            end
 
             return {
                 defaults = {
@@ -368,7 +368,7 @@ require("lazy").setup({
                 },
                 pickers = {
                     find_files = {
-                        find_command = { "rg", "--files", "--hidden", "--no-ignore-vcs", "--glob", "!**/{.git,node_modules}/*" },
+                        find_command = { "rg", "--files", unpack(args) },
                     },
                 },
             }
@@ -456,7 +456,7 @@ require("lazy").setup({
         "folke/persistence.nvim",
         config = true,
         keys = {
-            { "<leader>rs", "<cmd>lua require('persistence').load()<cr>", desc = "[R]estore [S]ession", },
+            { "<leader>rs", "<cmd>lua require('persistence').load()<cr>", desc = "[R]estore [S]ession" },
         },
     },
 
