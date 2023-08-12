@@ -71,10 +71,10 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- Tabs
-vim.keymap.set("n", "<C-t>", "<cmd>tabnew<cr>")
-vim.keymap.set("n", "<C-n>", "<cmd>tabnext<cr>")
-vim.keymap.set("n", "<C-p>", "<cmd>tabprevious<cr>")
+-- Buffers
+vim.keymap.set("n", "<C-N>", "<cmd>bnext<cr>")
+vim.keymap.set("n", "<C-P>", "<cmd>bprevious<cr>")
+vim.keymap.set("n", "<C-X>", "<cmd>bdelete<cr>")
 
 -- Search & Replace
 -- stylua: ignore
@@ -486,13 +486,9 @@ require("lazy").setup({
                 extensions = { "fugitive", "nvim-tree", "lazy" },
             },
             sections = {
-                lualine_a = { "mode" },
-                lualine_b = { "branch", "diff", "diagnostics" },
-                lualine_c = { { "filename", path = 1 } },
-
-                lualine_x = { "encoding", "fileformat", "filetype" },
-                lualine_y = { "progress" },
-                lualine_z = { "location" },
+                lualine_a = { { "mode", icon = "" } },
+                lualine_b = { "buffers" },
+                lualine_c = { "branch", "diff", "diagnostics" },
             },
         },
     },
