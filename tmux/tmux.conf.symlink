@@ -4,6 +4,21 @@ set-option -g prefix C-j
 # Enable mouse mode
 setw -g mouse on
 
+# Set window title to application name
+set -g @catppuccin_window_default_text "#W"
+set -g @catppuccin_window_current_text "#W"
+
+# Set slanted gabs between windows and status
+set -g @catppuccin_window_left_separator "█"
+set -g @catppuccin_window_middle_separator "█ "
+set -g @catppuccin_window_right_separator "█"
+set -g @catppuccin_status_left_separator "█"
+
+# Set status modules
+set -g @catppuccin_status_modules "directory"
+set -g @catppuccin_directory_text "#{pane_current_path}"
+set -g @catppuccin_directory_color "#89b4fa"
+
 # Plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
