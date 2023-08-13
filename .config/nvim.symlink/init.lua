@@ -393,6 +393,34 @@ require("lazy").setup({
             { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "[G]it [C]ommits" },
             { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "[G]it [B]ranches" },
             { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "[G]it [S]tatus" },
+            -- Theme
+            { "<leader>st", function ()
+                local actions = require("telescope.actions")
+                local action_state = require("telescope.actions.state")
+                local finders = require("telescope.finders")
+                local pickers = require("telescope.pickers")
+                local conf = require("telescope.config").values
+                local Job = require("plenary.job")
+
+                pickers.new({}, {
+                    prompt_title = "Switch Theme",
+                    finder = finders.new_table { results = { "latte", "frappe", "macchiato", "mocha" } },
+                    sorter = conf.generic_sorter({}),
+                    attach_mappings = function(prompt_bufnr)
+                        actions.select_default:replace(function()
+                            actions.close(prompt_bufnr)
+                            local selection = action_state.get_selected_entry()
+                            vim.cmd("colorscheme catppuccin-" .. selection.value)
+                            Job:new({
+                                command = vim.loop.os_homedir() .. "/.local/bin/theme-switcher",
+                                args = { selection.value },
+                            }):sync()
+                        end)
+
+                        return true
+                    end,
+                }):find()
+            end, desc = "[S]witch [T]heme" },
         },
     },
 

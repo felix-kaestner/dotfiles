@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(echo "latte frappe macchiato mocha" | tr ' ' '\n' | fzf)
+fi
+
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+tmux_running=$(pgrep tmux)
+
+if [ -x "$(command -v kitty)" ]; then
+    kitty +kitten themes Catppuccin-$(echo "$selected" | awk '{ print toupper(substr($0, 1, 1)) substr($0, 2); }')
+fi
+
+if [[ ! -z $TMUX ]] && [[ ! -z $tmux_running ]]; then
+    tmux set -g @catppuccin_flavour $selected
+    tmux source-file ~/.tmux.conf
+fi
+
