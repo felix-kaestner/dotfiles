@@ -71,10 +71,11 @@ vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
--- Buffers
-vim.keymap.set("n", "<C-N>", "<cmd>bnext<cr>")
-vim.keymap.set("n", "<C-P>", "<cmd>bprevious<cr>")
-vim.keymap.set("n", "<C-X>", "<cmd>bdelete<cr>")
+-- Tabs
+vim.keymap.set("n", "<C-T>", "<cmd>tabnew<cr>")
+vim.keymap.set("n", "<C-N>", "<cmd>tabnext<cr>")
+vim.keymap.set("n", "<C-P>", "<cmd>tabprevious<cr>")
+vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 
 -- Search & Replace
 -- stylua: ignore
@@ -162,11 +163,6 @@ local on_attach = function(client, bufnr)
     -- See `:help K` for why this keymap
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
     nmap("<C-K>", vim.lsp.buf.signature_help, "Signature Documentation")
-
-    -- Remap to quickly run tests in Go
-    if vim.bo.filetype == "go" then
-        vim.keymap.set("n", "<leader>gt", "<cmd>!go test -v %:p:h<cr>", { buffer = bufnr, desc = "[G]o [T]est" })
-    end
 
     -- Automatically format source code on save
     if client.supports_method("textDocument/formatting") then
@@ -440,7 +436,6 @@ require("lazy").setup({
     -- File Explorer
     {
         "nvim-tree/nvim-tree.lua",
-        cmd = "NvimTreeFindFileToggle",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
         },
@@ -488,19 +483,6 @@ require("lazy").setup({
         },
     },
 
-    {
-        "folke/flash.nvim",
-        opts = {
-            modes = {
-                char = { enabled = false },
-                search = { enabled = false },
-            },
-        },
-        keys = {
-            { "<leader>j", mode = { "n", "x", "o" }, "<cmd>lua require('flash').jump()<cr>", desc = "[J]ump" },
-        },
-    },
-
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
@@ -514,8 +496,8 @@ require("lazy").setup({
                 extensions = { "fugitive", "nvim-tree", "lazy" },
             },
             sections = {
-                lualine_a = { { "mode", icon = "" } },
-                lualine_b = { "buffers" },
+                lualine_a = { { "mode", icon = "" } },
+                lualine_b = { { "filename", path = 1 } },
                 lualine_c = { "branch", "diff", "diagnostics" },
             },
         },
@@ -581,8 +563,8 @@ require("lazy").setup({
                     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
                 end
 
-                nmap("]h", gitsigns.next_hunk, "Next Hunk")
-                nmap("[h", gitsigns.prev_hunk, "Prev Hunk")
+                nmap("]c", gitsigns.next_hunk, "Next Hunk")
+                nmap("[c", gitsigns.prev_hunk, "Prev Hunk")
                 nmap("<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
                 nmap("<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
                 nmap("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
@@ -593,17 +575,6 @@ require("lazy").setup({
                 nmap("<leader>hb", gitsigns.blame_line, "Blame Line")
                 nmap("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
             end,
-        },
-    },
-
-    -- Edit/Review Issues and Pull Requests
-    {
-        "pwntester/octo.nvim",
-        cmd = "Octo",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-telescope/telescope.nvim",
-            "nvim-tree/nvim-web-devicons",
         },
     },
 }, {})
