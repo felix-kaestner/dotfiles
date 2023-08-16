@@ -196,39 +196,6 @@ setup_gitconfig() {
     fi
 }
 
-setup_wsl() {
-    ask ' - What is your Windows username?'
-    read -e WINDOWS_USERNAME
-
-    PWSH_DIR="/mnt/c/Users/${WINDOWS_USERNAME}/Documents/PowerShell"
-    if ! [ -d "$PWSH_DIR" ]; then
-        mkdir -p "$PWSH_DIR"
-        success "created $PWSH_DIR"
-    fi
-
-    if ! [ -f "${PWSH_DIR}/Microsoft.PowerShell_profile.ps1" ]; then
-        cp powershell/Microsoft.PowerShell_profile.ps1 "${PWSH_DIR}/"
-        success "created $PWSH_DIR/Microsoft.PowerShell_profile.ps1"
-    fi
-
-    cat <<EOT >>profile.local.symlink
-
-## WSL Settings
-
-# Windows Android SDK to use with React Native
-export ANDROID_SDK="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/Android/Sdk"
-export PATH="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/Android/Sdk/platform-tools:$PATH"
-
-# CAROOT for https://github.com/FiloSottile/mkcert
-export CAROOT="/mnt/c/Users/${WINDOWS_USERNAME}/AppData/Local/mkcert"
-EOT
-
-    cat <<EOT >>git/gitconfig.local.symlink
-[credential]
-helper = "/mnt/c/Program\\ Files/Git/mingw64/libexec/git-core/git-credential-manager.exe"
-EOT
-}
-
 ask ' - Do you want to create GPG key(s)? (Y/n)'
 read -e KEY_GEN
 if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
@@ -236,17 +203,5 @@ if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
 fi
 
 setup_gitconfig
-
-# If we're on WSL, let's install and setup some windows config.
-uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/p'
-if [ $? -eq 0 ]; then
-    info 'Detected Windows Subsystem for Linux'
-
-    ask ' - Do you want configure your windows host operating system? (Y/n)'
-    read -e WSL_CONFIG
-    if [[ $WSL_CONFIG =~ ^[Yy]$ ]]; then
-        setup_wsl
-    fi
-fi
 
 install_dotfiles
