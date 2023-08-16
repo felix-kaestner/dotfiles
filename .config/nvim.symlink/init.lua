@@ -278,11 +278,7 @@ require("lazy").setup({
                     ["<C-n>"] = cmp.mapping.select_next_item(),
                     ["<C-p>"] = cmp.mapping.select_prev_item(),
                     ["<C-e>"] = cmp.mapping.abort(),
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<CR>"] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Replace,
-                        select = true,
-                    }),
+                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
@@ -297,6 +293,22 @@ require("lazy").setup({
                             cmp.select_prev_item()
                         elseif luasnip.locally_jumpable(-1) then
                             luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<C-Space>"] = cmp.mapping(function(fallback)
+                        if not cmp.visible() then
+                            cmp.complete()
+                        elseif luasnip.expandable() then
+                            luasnip.expand()
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<C-L>"] = cmp.mapping(function(fallback)
+                        if luasnip.choice_active() then
+                            luasnip.change_choice(1)
                         else
                             fallback()
                         end
