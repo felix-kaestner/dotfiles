@@ -178,7 +178,7 @@ setup_gitconfig() {
         ask ' - What is your GitHub email?'
         read -e GIT_USER_EMAIL
 
-        sed -e "s/GIT_USER_NAME/$GIT_USER_NAME/g" -e "s/GIT_USER_EMAIL/$GIT_USER_EMAIL/g" git/.gitconfig.local.template >git/gitconfig.local.symlink
+        sed -e "s/GIT_USER_NAME/$GIT_USER_NAME/g" -e "s/GIT_USER_EMAIL/$GIT_USER_EMAIL/g" git/gitconfig.local.template >git/gitconfig.local.symlink
 
         ask ' - Do you want to sign commits using gpg? (Y/n)'
         read -e GIT_GPGSIGN
