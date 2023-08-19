@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
+branch=$(git branch --show-current)
 git checkout -b dev-branch-marquee
 git pu -f
+git cd "$branch"
