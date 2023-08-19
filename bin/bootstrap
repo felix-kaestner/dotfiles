@@ -83,17 +83,17 @@ link_file() {
 
         if [ "$backup" == "true" ]; then
             mv "$dst" "${dst}.backup"
-            success "Moved $dst to ${dst}.backup"
+            success "Moved $dst -> ${dst}.backup"
         fi
 
         if [ "$skip" == "true" ]; then
-            success "Skipped $src"
+            success "Skipped $src -> $dst"
         fi
     fi
 
     if [ "$skip" != "true" ]; then # "false" or empty
         ln -s "$1" "$2"
-        success "Successfully linked $1 to $2"
+        success "Successfully linked $1 -> $2"
     fi
 }
 
@@ -107,9 +107,12 @@ install_dotfiles() {
         link_file "$src" "$dst"
     done
 
-    for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -type d); do
-        dst="$HOME/$(echo "$src" | sed -e "s|${DIR}/||" -e "s|.symlink||")"
-        link_file "$src" "$dst"
+    for dir in $(find -H "$DIR" -maxdepth 1 -name '.*' -not -path '*.git*' -type d); do
+        mkdir -p "$HOME/${dir##$DIR/}"
+        for dir in $(find -H "$dir" -maxdepth 1 -not -path "$dir" -type d); do
+            dst="$HOME/${dir##$DIR/}"
+            link_file "$dir" "$dst"
+        done
     done
 }
 
