@@ -113,7 +113,14 @@ install_dotfiles() {
     done
 }
 
+NAME=
+MAIL=
+SIGN_KEY=
+
 function generate_keys() {
+    export GPG_TTY=$(tty)
+    local SSH_KEYGRIP=
+
     info 'Generating GPG keys..'
 
     ask ' - Please provide your name.'
@@ -127,7 +134,7 @@ function generate_keys() {
     success 'GPG key generated.'
 
     info 'Retrieve Fingerprint..'
-    FPR=$(gpg --with-colons --fingerprint "${NAME} <${MAIL}>" 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}')
+    FPR=$(gpg --with-colons --fingerprint "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}')
     success 'Fingerprint retrieved.'
 
     # Generate subkeys
@@ -137,6 +144,8 @@ function generate_keys() {
         info 'Generate Signing Subkey..'
         gpg --quick-add-key $FPR rsa4096 sign
         success 'Signing Subkey generated.'
+
+        SIGN_KEY=$(gpg --list-secret-keys --keyid-format LONG $MAIL | sed -n '/\[S\]/{s/.*\/\([A-Z0-9]*\).*/\1/;p}')
     fi
 
     ask ' - Do you want to create a subkey for authentication? (Y/n)'
@@ -145,6 +154,8 @@ function generate_keys() {
         info 'Generate Authentication Subkey..'
         gpg --quick-add-key $FPR rsa4096 auth
         success 'Authentication Subkey generated.'
+
+        SSH_KEYGRIP=$(gpg --list-secret-keys --with-keygrip $MAIL | sed -n '/\[A\]/{n;s/^.*Keygrip\s=\s//;p}')
     fi
 
     ask ' - Do you want to create a subkey for encryption? (Y/n)'
@@ -161,33 +172,48 @@ function generate_keys() {
     success 'Key(s) generated.'
 
     info 'Updating ~/.gnupg/gpg-agent.conf..'
-    cat <<EOT >>~/.gnupg/gpg-agent.conf
-enable-ssh-support
+    cat <<EOT >~/.gnupg/gpg-agent.conf
 default-cache-ttl 86400
 max-cache-ttl 86400
 EOT
     success 'Updated ~/.gnupg/gpg-agent.conf.'
+
+    if ! [ -z "$SSH_KEYGRIP" ]; then
+        echo 'enable-ssh-support' >> ~/.gnupg/gpg-agent.conf
+
+        info 'Updating ~/.gnupg/sshcontrol..'
+        ssh-add -L &> /dev/null || true
+        echo $SSH_KEYGRIP >> ~/.gnupg/sshcontrol
+        success 'Updated ~/.gnupg/sshcontrol.'
+    fi
 }
 
 setup_gitconfig() {
     if ! [ -f git/gitconfig.local.symlink ]; then
         info 'Setup git/gitconfig.local.symlink'
 
-        ask ' - What is your GitHub name?'
-        read -e GIT_USER_NAME
-        ask ' - What is your GitHub email?'
-        read -e GIT_USER_EMAIL
+        if [ -z "$NAME" ]; then
+            ask ' - What is your name?'
+            read -e NAME
+        fi
 
-        sed -e "s/GIT_USER_NAME/$GIT_USER_NAME/g" -e "s/GIT_USER_EMAIL/$GIT_USER_EMAIL/g" git/gitconfig.local.template >git/gitconfig.local.symlink
+        if [ -z "$MAIL" ]; then
+            ask ' - What is your email?'
+            read -e MAIL
+        fi
+
+        sed -e "s/GIT_USER_NAME/$NAME/g" -e "s/GIT_USER_EMAIL/$MAIL/g" git/gitconfig.local.template >git/gitconfig.local.symlink
 
         ask ' - Do you want to sign commits using gpg? (Y/n)'
         read -e GIT_GPGSIGN
         case $GIT_GPGSIGN in
         [Yy]*)
             sed -i "s/GIT_GPGSIGN/true/g" git/gitconfig.local.symlink
-            ask ' - What is your GPG signing key?'
-            read -e GIT_USER_SIGNING_KEY
-            sed -i "/\[user\]/c\\[user\]\n    signingkey = ${GIT_USER_SIGNING_KEY}" git/gitconfig.local.symlink
+            if [ -z "$SIGN_KEY" ]; then
+                ask ' - What is your GPG signing key?'
+                read -e SIGN_KEY
+            fi
+            sed -i "/\[user\]/c\\[user\]\n    signingkey = $SIGN_KEY" git/gitconfig.local.symlink
             ;;
         *) sed -i "s/GIT_GPGSIGN/false/g" git/gitconfig.local.symlink ;;
         esac
@@ -201,7 +227,5 @@ read -e KEY_GEN
 if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
     generate_keys
 fi
-
 setup_gitconfig
-
 install_dotfiles
