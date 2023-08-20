@@ -109,7 +109,6 @@ local servers = {
             usePlaceholders = true,
             completeUnimported = true,
             analyses = {
-                shadow = true,
                 unusedwrite = true,
                 unusedparams = true,
                 unusedvariable = true,
@@ -137,7 +136,7 @@ local servers = {
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
--- Executed when the LSP connects to a particular buffer.
+-- Executed when the LSP connects to a particular buffer
 local on_attach = function(client, bufnr)
     local builtin = require("telescope.builtin")
 
@@ -207,7 +206,7 @@ require("lazy").setup({
             -- Useful status updates for LSP
             { "j-hui/fidget.nvim", tag = "legacy", event = "LspAttach", opts = { window = { blend = 0 } } },
 
-            -- Additional lua configuration for Neovim setup and plugin development.
+            -- Additional lua configuration for Neovim setup and plugin development
             { "folke/neodev.nvim", config = true },
         },
         keys = {
@@ -215,8 +214,8 @@ require("lazy").setup({
             { "[d", vim.diagnostic.goto_prev, desc = "Go to previous diagnostic message" },
             { "]d", vim.diagnostic.goto_next, desc = "Go to next diagnostic message" },
             { "<leader>e", vim.diagnostic.open_float, desc = "Open floating diagnostic message" },
-            { "<leader>q", vim.diagnostic.setloclist, desc = "Open diagnostics list" },
-            { "<leader>dd", vim.diagnostic.disable, desc = "Open diagnostics list" },
+            { "<leader>q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
+            { "<leader>dd", vim.diagnostic.disable, desc = "Disable diagnostic" },
         },
         config = function()
             -- nvim-cmp supports additional completion capabilities
@@ -240,7 +239,7 @@ require("lazy").setup({
         end,
     },
 
-    -- Automatically install LSPs to stdpath for neovim.
+    -- Automatically install LSPs to stdpath
     { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
 
     -- Autocompletion
@@ -257,7 +256,7 @@ require("lazy").setup({
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
             {
-                -- Set of preconfigured snippets for different languages.
+                -- Set of preconfigured snippets for different languages
                 "rafamadriz/friendly-snippets",
                 config = function()
                     require("luasnip.loaders.from_vscode").lazy_load()
@@ -345,13 +344,13 @@ require("lazy").setup({
     -- Fuzzy Finder (files, lsp, etc)
     {
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        version = false, -- branch = "0.1.x" / latest release is v0.1.2 from 2023-06-09, use HEAD for now
         cmd = "Telescope",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-tree/nvim-web-devicons",
 
-            -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+            -- Fuzzy Finder Algorithm
             {
                 "nvim-telescope/telescope-fzf-native.nvim",
                 build = "make",
@@ -461,26 +460,77 @@ require("lazy").setup({
         },
     },
 
-    -- Highlight, edit, and navigate code using a fast incremental parsing library.
+    -- Highlight, edit, and navigate code using a fast incremental parsing library
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            -- Show the local context of the currently visible buffer contents.
-            "nvim-treesitter/nvim-treesitter-context",
+            -- Syntax aware text-objects, select, move, swap, and peek support
+            "nvim-treesitter/nvim-treesitter-textobjects",
+
+            -- Show the local context of the currently visible buffer contents
+            {
+                "nvim-treesitter/nvim-treesitter-context",
+                config = function(_, opts)
+                    require("treesitter-context").setup(opts)
+                end,
+            },
         },
         opts = {
             ensure_installed = { "go", "lua", "dockerfile", "json", "tsx", "typescript", "vimdoc", "vim", "yaml" },
             highlight = { enable = true },
             indent = { enable = true },
+            textobjects = {
+                select = {
+                    enable = true,
+                    lookahead = true,
+                    keymaps = {
+                        ['aa'] = '@parameter.outer',
+                        ['ia'] = '@parameter.inner',
+                        ['af'] = '@function.outer',
+                        ['if'] = '@function.inner',
+                        ['ac'] = '@class.outer',
+                        ['ic'] = '@class.inner',
+                    }
+                },
+                move = {
+                    enable = true,
+                    set_jumps = true,
+                    goto_next_start = {
+                        [']m'] = '@function.outer',
+                        [']]'] = '@class.outer',
+                    },
+                    goto_next_end = {
+                        [']M'] = '@function.outer',
+                        [']['] = '@class.outer',
+                    },
+                    goto_previous_start = {
+                        ['[m'] = '@function.outer',
+                        ['[['] = '@class.outer',
+                    },
+                    goto_previous_end = {
+                        ['[M'] = '@function.outer',
+                        ['[]'] = '@class.outer',
+                    },
+                },
+                swap = {
+                    enable = true,
+                    swap_next = {
+                        ["<leader>a"] = "@parameter.inner",
+                    },
+                    swap_previous = {
+                        ["<leader>A"] = "@parameter.inner",
+                    },
+                },
+            },
         },
         config = function(_, opts)
             require("nvim-treesitter.configs").setup(opts)
         end,
     },
 
-    -- Show pending keybindings.
+    -- Show pending keybindings
     {
         "folke/which-key.nvim",
         config = true,
@@ -489,9 +539,33 @@ require("lazy").setup({
     -- Session Management
     {
         "folke/persistence.nvim",
+        event = "BufReadPre",
         config = true,
         keys = {
             { "<leader>rs", "<cmd>lua require('persistence').load()<cr>", desc = "[R]estore [S]ession" },
+        },
+    },
+
+    -- Zen-Mode
+    {
+        "folke/zen-mode.nvim",
+        cmd = "ZenMode",
+        config = true,
+        keys = {
+            { "<leader>z", "<cmd>lua require('zen-mode').toggle()<cr>", desc = "Toggle [Z]en-Mode" },
+        },
+    },
+
+    -- Refactoring
+    {
+        "ThePrimeagen/refactoring.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        keys = {
+            { "<leader>rr", "<cmd>lua require('refactoring').select_refactor()<cr>", desc = "[R]efactor" },
         },
     },
 
