@@ -12,21 +12,20 @@
 	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/main; #"
     undo = reset --soft HEAD~1
 [core]
-	editor = code --wait
+	editor = nvim
     autocrlf = input
 	excludesfile = ~/.gitignore
 [color]
 	ui = true
 [init]
 	defaultBranch = main
-[merge]
-    tool = vscode
-[mergetool "vscode"]
-    cmd = code --wait $MERGED
 [diff]
-    tool = vscode
-[difftool "vscode"]
-    cmd = code --wait --diff $LOCAL $REMOTE
+    tool = nvimdiff
+[merge]
+    tool = nvimdiff3
+[mergetool]
+    prompt = false
+    keepBackup = false
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
