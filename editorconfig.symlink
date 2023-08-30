@@ -1,3 +1,5 @@
+root = true
+
 [*]
 charset = utf-8
 end_of_line = lf
@@ -6,11 +8,11 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.md]
+insert_final_newline = false
+
 [*.{json,yaml,yml}]
 indent_size = 2
-
-[*.{md}]
-insert_final_newline = false
 
 [{Makefile, *.mk}]
 indent_style = tab
