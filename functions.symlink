@@ -12,6 +12,10 @@ dind() {
     docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock:ro -v $(pwd):/workspace -w /workspace docker /bin/ash
 }
 
+dr() {
+    docker run --rm -it -w /workspace -v $(pwd):/workspace $@
+}
+
 pr() {
     case $(git config --get remote.origin.url) in
         git@github.com*) gh pr create $@ ;;
