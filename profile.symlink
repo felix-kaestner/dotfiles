@@ -14,9 +14,9 @@ if [ -z "$GID" ]; then
 fi
 export GID
 
-# fix brew on MacOS
-if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
-    eval $(/opt/homebrew/bin/brew shellenv)
+# include brew shellenv
+if [ -x "$(command -v brew)" ]; then
+    eval $(brew shellenv)
 fi
 
 # helper function to add a directory to the PATH
@@ -99,3 +99,5 @@ export NODE_OPTIONS="--experimental-json-modules"
 
 ## Tmux Session Helper
 bindkey -s ^f "tmux-sessionizer\n"
+
+# vim: syntax=sh filetype=sh
