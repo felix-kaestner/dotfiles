@@ -15,8 +15,8 @@ fi
 export GID
 
 # include brew shellenv
-if [ -x "$(command -v brew)" ]; then
-    eval $(brew shellenv)
+if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
+    eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
 # helper function to add a directory to the PATH
