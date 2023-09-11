@@ -33,3 +33,4 @@ brew install --cask rectangle
 brew install --cask monitorcontrol
 brew install --cask logi-options-plus
 brew install --cask devtoys
+brew install --cask spotify
