@@ -8,3 +8,14 @@ export PNPM_HOME="$HOME/.local/share/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 pnpm env use --global lts
 
+case $(uname -s) in
+'Linux')
+    curl -fsSL https://bun.sh/install | bash
+	;;
+'Darwin')
+    brew tap oven-sh/bun
+    brew install bun
+	;;
+*) ;;
+esac
+
