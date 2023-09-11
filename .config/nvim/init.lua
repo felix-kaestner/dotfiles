@@ -50,6 +50,10 @@ vim.o.scrolloff = 8
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
+-- Enable spell checking
+vim.opt.spell = true
+vim.opt.spelllang = "en_us"
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = "menuone,noselect"
 
@@ -61,11 +65,11 @@ vim.o.termguicolors = true
 -- See `:help vim.keymap.set()`
 
 -- Remap <Space> to <Nop> to avoid conflicts with leader key
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
 
 -- Remap for dealing with word wrap
-vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
+vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 
 -- Automatically center the cursor when moving up or down
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -77,14 +81,31 @@ vim.keymap.set("n", "<C-N>", "<cmd>tabnext<cr>")
 vim.keymap.set("n", "<C-P>", "<cmd>tabprevious<cr>")
 vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 
--- Search & Replace
+-- Open/Close Quicklist
 -- stylua: ignore
-vim.keymap.set({ "n", "c" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
+vim.keymap.set("n", "<leader>co", "getqflist({'winid':0}).winid == 0 ? ':copen<cr>' : ':cclose<cr>'", { expr = true, silent = true })
+
+-- Resize with arrows
+vim.keymap.set("n", "<A-Up>", "<cmd>resize -10<cr>")
+vim.keymap.set("n", "<A-Down>", "<cmd>resize +10<cr>")
+vim.keymap.set("n", "<A-Left>", "<cmd>vertical resize -10<cr>")
+vim.keymap.set("n", "<A-Right>", "<cmd>vertical resize +10<cr>")
+
+-- Paste over without replacing default register
+vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
+
+-- Stay in visual mode while indenting
+vim.keymap.set("v", "<", "<gv")
+vim.keymap.set("v", ">", ">gv")
 
 -- Move selected line / block of text in visual mode
 -- See: https://vim.fandom.com/wiki/Moving_lines_up_or_down#Mappings_to_move_lines
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "J", ":m '>+1<cr>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
+
+-- Search & Replace
+-- stylua: ignore
+vim.keymap.set({ "c", "n", "v", "x" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -117,19 +138,21 @@ local servers = {
         },
     },
 
-    tsserver = {
-        completions = {
-            completeFunctionCalls = true,
+    tsserver = {},
+
+    terraformls = {
+        experimentalFeatures = {
+            validateOnSave = true,
+            prefillRequiredFields = true,
         },
     },
-
-    terraformls = {},
 
     lua_ls = {
         Lua = {
             format = { enable = false },
             telemetry = { enable = false },
             workspace = { checkThirdParty = false },
+            diagnostics = { disable = { "missing-fields" } },
         },
     },
 }
@@ -171,7 +194,7 @@ local on_attach = function(client, bufnr)
             buffer = bufnr,
             callback = function()
                 -- Format the buffer using the LSP
-                vim.lsp.buf.format({ bufnr = bufnr })
+                vim.lsp.buf.format({ async = false, bufnr = bufnr })
             end,
         })
     end
@@ -214,8 +237,8 @@ require("lazy").setup({
             { "[d", vim.diagnostic.goto_prev, desc = "Go to previous diagnostic message" },
             { "]d", vim.diagnostic.goto_next, desc = "Go to next diagnostic message" },
             { "<leader>e", vim.diagnostic.open_float, desc = "Open floating diagnostic message" },
-            { "<leader>q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
-            { "<leader>dd", vim.diagnostic.disable, desc = "Disable diagnostic" },
+            { "<leader>q", vim.diagnostic.setloclist, desc = "Open buffer diagnostics list" },
+            { "<leader>Q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
         },
         config = function()
             -- nvim-cmp supports additional completion capabilities
@@ -252,6 +275,8 @@ require("lazy").setup({
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lua",
 
+            "onsails/lspkind-nvim",
+
             -- Snippets
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
@@ -266,12 +291,25 @@ require("lazy").setup({
         opts = function()
             local cmp = require("cmp")
             local luasnip = require("luasnip")
+            local lspkind = require("lspkind")
 
             return {
                 snippet = {
                     expand = function(args)
                         luasnip.lsp_expand(args.body)
                     end,
+                },
+                formatting = {
+                    format = lspkind.cmp_format({
+                        mode = "symbol_text",
+                        menu = {
+                            buffer = "[Buf]",
+                            luasnip = "[Snip]",
+                            nvim_lsp = "[LSP]",
+                            nvim_lua = "[API]",
+                            path = "[Path]",
+                        },
+                    }),
                 },
                 mapping = cmp.mapping.preset.insert({
                     ["<C-n>"] = cmp.mapping.select_next_item(),
@@ -335,15 +373,99 @@ require("lazy").setup({
             vim.g.copilot_no_tab_map = true
         end,
         keys = {
-            { "<C-K>", 'copilot#Accept("")', mode = "i", silent = true, expr = true, replace_keycodes = false },
-            { "<C-[>", "copilot#Previous()", mode = "i", silent = true, expr = true },
-            { "<C-]>", "copilot#Next()", mode = "i", silent = true, expr = true },
+            { "<C-K>", 'copilot#Accept("")', mode = "i", expr = true, replace_keycodes = false },
+            { "<C-[>", "copilot#Previous()", mode = "i", expr = true },
+            { "<C-]>", "copilot#Next()", mode = "i", expr = true },
+        },
+    },
+
+    -- Highlight, edit, and navigate code using a fast incremental parsing library
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            -- Syntax aware text-objects, select, move, swap, and peek support
+            "nvim-treesitter/nvim-treesitter-textobjects",
+
+            -- Show the local context of the currently visible buffer contents
+            {
+                "nvim-treesitter/nvim-treesitter-context",
+                config = function(_, opts)
+                    require("treesitter-context").setup(opts)
+                end,
+            },
+        },
+        opts = {
+            ensure_installed = { "go", "lua", "dockerfile", "json", "tsx", "typescript", "vimdoc", "vim", "yaml" },
+            highlight = { enable = true },
+            indent = { enable = true },
+            textobjects = {
+                select = {
+                    enable = true,
+                    lookahead = true,
+                    keymaps = {
+                        ["aa"] = "@parameter.outer",
+                        ["ia"] = "@parameter.inner",
+                        ["af"] = "@function.outer",
+                        ["if"] = "@function.inner",
+                        ["ac"] = "@class.outer",
+                        ["ic"] = "@class.inner",
+                    },
+                },
+                move = {
+                    enable = true,
+                    set_jumps = true,
+                    goto_next_start = {
+                        ["]m"] = "@function.outer",
+                        ["]]"] = "@class.outer",
+                    },
+                    goto_next_end = {
+                        ["]M"] = "@function.outer",
+                        ["]["] = "@class.outer",
+                    },
+                    goto_previous_start = {
+                        ["[m"] = "@function.outer",
+                        ["[["] = "@class.outer",
+                    },
+                    goto_previous_end = {
+                        ["[M"] = "@function.outer",
+                        ["[]"] = "@class.outer",
+                    },
+                },
+                swap = {
+                    enable = true,
+                    swap_next = {
+                        ["<leader>a"] = "@parameter.inner",
+                    },
+                    swap_previous = {
+                        ["<leader>A"] = "@parameter.inner",
+                    },
+                },
+            },
+        },
+        config = function(_, opts)
+            require("nvim-treesitter.configs").setup(opts)
+        end,
+    },
+
+    -- Refactoring
+    {
+        "ThePrimeagen/refactoring.nvim",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        keys = {
+            { "<leader>rr", "<cmd>lua require('refactoring').select_refactor()<cr>", desc = "[R]efactor" },
         },
     },
 
     -- Fuzzy Finder (files, lsp, etc)
     {
         "nvim-telescope/telescope.nvim",
+        ---@diagnostic disable-next-line
         version = false, -- branch = "0.1.x" / latest release is v0.1.2 from 2023-06-09, use HEAD for now
         cmd = "Telescope",
         dependencies = {
@@ -364,7 +486,7 @@ require("lazy").setup({
             local config = require("telescope.config")
             local vimgrep_arguments = { unpack(config.values.vimgrep_arguments) }
 
-            local args = { "--hidden", "--no-ignore-vcs", "--glob", "!**/{.git,.next,node_modules}/*" }
+            local args = { "--hidden", "--glob", "!**/.git/*" }
             for _, arg in ipairs(args) do
                 table.insert(vimgrep_arguments, arg)
             end
@@ -457,77 +579,24 @@ require("lazy").setup({
             view = { width = 40 },
             filters = { custom = { "^\\.git" } },
             update_focused_file = { enable = true },
+            diagnostics = { enable = true },
         },
     },
 
-    -- Highlight, edit, and navigate code using a fast incremental parsing library
+    -- Quick Navigation
     {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-        event = { "BufReadPost", "BufNewFile" },
+        "ThePrimeagen/harpoon",
         dependencies = {
-            -- Syntax aware text-objects, select, move, swap, and peek support
-            "nvim-treesitter/nvim-treesitter-textobjects",
-
-            -- Show the local context of the currently visible buffer contents
-            {
-                "nvim-treesitter/nvim-treesitter-context",
-                config = function(_, opts)
-                    require("treesitter-context").setup(opts)
-                end,
-            },
+            "nvim-lua/plenary.nvim",
         },
-        opts = {
-            ensure_installed = { "go", "lua", "dockerfile", "json", "tsx", "typescript", "vimdoc", "vim", "yaml" },
-            highlight = { enable = true },
-            indent = { enable = true },
-            textobjects = {
-                select = {
-                    enable = true,
-                    lookahead = true,
-                    keymaps = {
-                        ['aa'] = '@parameter.outer',
-                        ['ia'] = '@parameter.inner',
-                        ['af'] = '@function.outer',
-                        ['if'] = '@function.inner',
-                        ['ac'] = '@class.outer',
-                        ['ic'] = '@class.inner',
-                    }
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true,
-                    goto_next_start = {
-                        [']m'] = '@function.outer',
-                        [']]'] = '@class.outer',
-                    },
-                    goto_next_end = {
-                        [']M'] = '@function.outer',
-                        [']['] = '@class.outer',
-                    },
-                    goto_previous_start = {
-                        ['[m'] = '@function.outer',
-                        ['[['] = '@class.outer',
-                    },
-                    goto_previous_end = {
-                        ['[M'] = '@function.outer',
-                        ['[]'] = '@class.outer',
-                    },
-                },
-                swap = {
-                    enable = true,
-                    swap_next = {
-                        ["<leader>a"] = "@parameter.inner",
-                    },
-                    swap_previous = {
-                        ["<leader>A"] = "@parameter.inner",
-                    },
-                },
-            },
+        keys = {
+            { "<C-a>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
+            { "<C-h>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "[Harpoon] Open Menu" },
+            { "<A-j>", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<A-k>", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<A-l>", "<cmd>lua require('harpoon.ui').nav_file(3)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<A-;>", "<cmd>lua require('harpoon.ui').nav_file(4)<cr>", desc = "[Harpoon] Navigate to File" },
         },
-        config = function(_, opts)
-            require("nvim-treesitter.configs").setup(opts)
-        end,
     },
 
     -- Show pending keybindings
@@ -536,42 +605,21 @@ require("lazy").setup({
         config = true,
     },
 
-    -- Session Management
-    {
-        "folke/persistence.nvim",
-        event = "BufReadPre",
-        config = true,
-        keys = {
-            { "<leader>rs", "<cmd>lua require('persistence').load()<cr>", desc = "[R]estore [S]ession" },
-        },
-    },
-
     -- Zen-Mode
     {
         "folke/zen-mode.nvim",
         cmd = "ZenMode",
-        config = true,
         keys = {
             { "<leader>z", "<cmd>lua require('zen-mode').toggle()<cr>", desc = "Toggle [Z]en-Mode" },
-        },
-    },
-
-    -- Refactoring
-    {
-        "ThePrimeagen/refactoring.nvim",
-        event = { "BufReadPost", "BufNewFile" },
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-        },
-        keys = {
-            { "<leader>rr", "<cmd>lua require('refactoring').select_refactor()<cr>", desc = "[R]efactor" },
         },
     },
 
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+        },
         opts = {
             options = {
                 theme = "catppuccin",
@@ -593,6 +641,7 @@ require("lazy").setup({
     {
         "catppuccin/nvim",
         name = "catppuccin",
+        priority = 1000,
         opts = {
             transparent_background = true,
         },
@@ -614,11 +663,8 @@ require("lazy").setup({
     -- Source Code Comments
     "tpope/vim-commentary",
 
-    -- Add/Change/Delte parentheses/quotes/tags with ease
+    -- Add/Change/Delte Parentheses/Quotes/Tags
     "tpope/vim-surround",
-
-    -- Detect tabstop and shiftwidth automatically
-    "tpope/vim-sleuth",
 
     -- Git Integration
     "tpope/vim-fugitive",
@@ -627,6 +673,33 @@ require("lazy").setup({
         "shumphrey/fugitive-gitlab.vim",
         init = function()
             vim.g.fugitive_gitlab_domains = { "https://git.flow-d.de" }
+        end,
+    },
+
+    -- Automatically insert closing tags
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        config = true,
+    },
+
+    -- Git Worktree Operations
+    {
+        "ThePrimeagen/git-worktree.nvim",
+        keys = {
+            {
+                "<leader>gwl",
+                "<cmd>lua require('telescope').extensions.git_worktree.git_worktrees()<cr>",
+                desc = "Switch [G]it [W]orktree",
+            },
+            {
+                "<leader>gwc",
+                "<cmd>lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>",
+                desc = "Create [G]it [W]orktree",
+            },
+        },
+        config = function()
+            require("telescope").load_extension("git_worktree")
         end,
     },
 
@@ -663,6 +736,11 @@ require("lazy").setup({
             end,
         },
     },
-}, {})
+}, {
+    defaults = {
+        -- Disable loading plugins inside VSCode by default
+        cond = not vim.g.vscode,
+    },
+})
 
 -- vim: expandtab shiftwidth=4 tabstop=4
