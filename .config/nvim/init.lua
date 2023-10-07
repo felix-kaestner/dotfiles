@@ -176,8 +176,8 @@ local on_attach = function(client, bufnr)
 
     nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
     nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
     nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
+    nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
     nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
@@ -391,11 +391,10 @@ require("lazy").setup({
             -- Show the local context of the currently visible buffer contents
             {
                 "nvim-treesitter/nvim-treesitter-context",
-                config = function(_, opts)
-                    require("treesitter-context").setup(opts)
-                end,
+                main = "treesitter-context",
             },
         },
+        main = "nvim-treesitter.configs",
         opts = {
             ensure_installed = { "go", "lua", "dockerfile", "json", "tsx", "typescript", "vimdoc", "vim", "yaml" },
             highlight = { enable = true },
@@ -444,9 +443,6 @@ require("lazy").setup({
                 },
             },
         },
-        config = function(_, opts)
-            require("nvim-treesitter.configs").setup(opts)
-        end,
     },
 
     -- Refactoring
@@ -518,6 +514,7 @@ require("lazy").setup({
             { "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "[S]earch [W]ord" },
             { "<leader>sg", "<cmd>Telescope live_grep<cr>", desc = "[S]earch by [G]rep" },
             { "<leader>sd", "<cmd>Telescope diagnostics<cr>", desc = "[S]earch [D]iagnostics" },
+            { "<leader>sr", "<cmd>Telescope resume<cr>", desc = "[S]earch [R]esume" },
             -- Git
             { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "[G]it [C]ommits" },
             { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "[G]it [B]ranches" },
@@ -655,8 +652,9 @@ require("lazy").setup({
     {
         "lukas-reineke/indent-blankline.nvim",
         event = { "BufReadPost", "BufNewFile" },
+        main = "ibl",
         opts = {
-            show_trailing_blankline_indent = false,
+            scope = { enabled = false },
         },
     },
 
@@ -718,12 +716,32 @@ require("lazy").setup({
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
 
-                local nmap = function(keys, func, desc)
-                    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+                local nmap = function(keys, func, desc, expr)
+                    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc, expr = expr })
                 end
 
-                nmap("]c", gitsigns.next_hunk, "Next Hunk")
-                nmap("[c", gitsigns.prev_hunk, "Prev Hunk")
+                -- Navigation
+                nmap("]c", function()
+                    if vim.wo.diff then
+                        return "]c"
+                    end
+                    vim.schedule(function()
+                        gitsigns.next_hunk()
+                    end)
+                    return "<Ignore>"
+                end, "Next Hunk", true)
+
+                nmap("[c", function()
+                    if vim.wo.diff then
+                        return "[c"
+                    end
+                    vim.schedule(function()
+                        gitsigns.prev_hunk()
+                    end)
+                    return "<Ignore>"
+                end, "Previous Hunk", true)
+
+                -- Actions
                 nmap("<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
                 nmap("<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
                 nmap("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
