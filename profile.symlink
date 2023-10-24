@@ -78,14 +78,6 @@ export DOCKER_BUILDKIT=1
 # use docker cli command to build with docker-compose -> buildkit
 export COMPOSE_DOCKER_CLI_BUILD=1
 
-# automatically set docker host if lima-vm is running
-if [ -x "$(command -v limactl)" ]; then
-    lima_docker_vm=$(limactl list --json 2>/dev/null | jq -r 'select(.message != null ) | select(.message | contains("docker")) | .name')
-    if [ ! -z "$lima_docker_vm" ]; then
-        export DOCKER_HOST=$(limactl list $lima_docker_vm --format 'unix://{{.Dir}}/sock/docker.sock')
-    fi
-fi
-
 ## GPG Settings
 unset SSH_AGENT_PID
 if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
