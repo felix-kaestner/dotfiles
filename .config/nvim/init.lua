@@ -573,7 +573,7 @@ require("lazy").setup({
             { "<leader>fe", "<cmd>NvimTreeFindFileToggle<cr>", desc = "[F]ile [E]xplorer" },
         },
         opts = {
-            view = { width = 40 },
+            view = { width = 50 },
             filters = { custom = { "^\\.git" } },
             update_focused_file = { enable = true },
             diagnostics = { enable = true },
@@ -587,7 +587,7 @@ require("lazy").setup({
             "nvim-lua/plenary.nvim",
         },
         keys = {
-            { "<C-o>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
+            { "<A-a>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
             { "<C-h>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "[Harpoon] Open Menu" },
             { "<A-j>", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "[Harpoon] Navigate to File" },
             { "<A-k>", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "[Harpoon] Navigate to File" },
