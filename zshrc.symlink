@@ -47,4 +47,6 @@ fi
 autoload -Uz compinit
 compinit
 
+[[ $commands[limactl] ]] && eval $(limactl completion zsh)
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+[[ $commands[glab] ]] && eval $(glab completion)
