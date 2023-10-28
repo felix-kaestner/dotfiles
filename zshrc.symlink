@@ -1,12 +1,6 @@
-# If not running interactively, don't do anything
-case $- in
-*i*) ;;
-*) return ;;
-esac
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+# enable user profile
+if [ -f ~/.profile ]; then
+    . ~/.profile
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
@@ -28,9 +22,9 @@ esac
 setopt prompt_subst
 
 if [ "$color_prompt" = yes ]; then
-    PROMPT='${debian_chroot:+($debian_chroot)}%B%F{green}%n@%m%f:%F{blue}%~%b%f$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
+    PROMPT='%B%F{green}%n@%m%f:%F{blue}%~%b%f$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
 else
-    PROMPT='${debian_chroot:+($debian_chroot)}%B%n@%m:%~%b$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
+    PROMPT='%B%n@%m:%~%b$(git branch --show-current 2> /dev/null | sed -e "s/\(.*\)/ (\1)/") $ '
 fi
 
 unset color_prompt
@@ -43,10 +37,18 @@ if [ -x "$(command -v brew)" ]; then
     FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
-# Enable completions
+# enable completions
 autoload -Uz compinit
 compinit
 
-[[ $commands[limactl] ]] && eval $(limactl completion zsh)
-[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
-[[ $commands[glab] ]] && eval $(glab completion)
+if [ -x "$(command -v limactl)" ]; then
+    source <$(limactl completion zsh)
+fi
+
+if [ -x "$(command -v kubectl)" ]; then
+    source <$(kubectl completion zsh)
+fi
+
+if [ -x "$(command -v glab)" ]; then
+    source <$(glab completion zsh)
+fi
