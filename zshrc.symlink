@@ -41,14 +41,3 @@ fi
 autoload -Uz compinit
 compinit
 
-if [ -x "$(command -v limactl)" ]; then
-    source <$(limactl completion zsh)
-fi
-
-if [ -x "$(command -v kubectl)" ]; then
-    source <$(kubectl completion zsh)
-fi
-
-if [ -x "$(command -v glab)" ]; then
-    source <$(glab completion zsh)
-fi
