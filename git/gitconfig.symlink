@@ -22,7 +22,7 @@
 [diff]
     tool = nvimdiff
 [merge]
-    tool = nvimdiff1
+    tool = nvimdiff3
 [mergetool]
     prompt = false
     keepBackup = false
