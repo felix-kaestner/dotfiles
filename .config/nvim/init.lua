@@ -25,9 +25,6 @@ vim.o.clipboard = "unnamedplus"
 -- Enable break indent
 vim.o.breakindent = true
 
--- Enable smart indent
-vim.opt.smartindent = true
-
 -- Disable line wrapping
 vim.wo.wrap = false
 
@@ -138,21 +135,19 @@ local servers = {
         },
     },
 
-    tsserver = {},
-
-    terraformls = {
-        experimentalFeatures = {
-            validateOnSave = true,
-            prefillRequiredFields = true,
-        },
-    },
-
     lua_ls = {
         Lua = {
             format = { enable = false },
             telemetry = { enable = false },
             workspace = { checkThirdParty = false },
             diagnostics = { disable = { "missing-fields" } },
+        },
+    },
+
+    terraformls = {
+        experimentalFeatures = {
+            validateOnSave = true,
+            prefillRequiredFields = true,
         },
     },
 }
@@ -174,11 +169,11 @@ local on_attach = function(client, bufnr)
     nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
     nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-    nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+    nmap("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
     nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
     nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
     nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
-    nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
+    nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
 
@@ -230,7 +225,7 @@ require("lazy").setup({
             { "j-hui/fidget.nvim", tag = "legacy", event = "LspAttach", opts = { window = { blend = 0 } } },
 
             -- Additional lua configuration for Neovim setup and plugin development
-            { "folke/neodev.nvim", config = true },
+            { "folke/neodev.nvim", opts = {} },
         },
         keys = {
             -- Diagnostic keymaps
@@ -263,7 +258,7 @@ require("lazy").setup({
     },
 
     -- Automatically install LSPs to stdpath
-    { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", config = true },
+    { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", opts = {} },
 
     -- Autocompletion
     {
@@ -314,6 +309,8 @@ require("lazy").setup({
                 mapping = cmp.mapping.preset.insert({
                     ["<C-n>"] = cmp.mapping.select_next_item(),
                     ["<C-p>"] = cmp.mapping.select_prev_item(),
+                    ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-d>"] = cmp.mapping.scroll_docs(4),
                     ["<C-e>"] = cmp.mapping.abort(),
                     ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<Tab>"] = cmp.mapping(function(fallback)
@@ -461,8 +458,7 @@ require("lazy").setup({
     -- Fuzzy Finder (files, lsp, etc)
     {
         "nvim-telescope/telescope.nvim",
-        ---@diagnostic disable-next-line
-        version = false, -- branch = "0.1.x" / latest release is v0.1.2 from 2023-06-09, use HEAD for now
+        branch = "0.1.x",
         cmd = "Telescope",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -509,6 +505,7 @@ require("lazy").setup({
             { "<leader><space>", "<cmd>Telescope buffers show_all_buffers=true<cr>", desc = "[ ] Find existing buffers" },
             { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "[/] Fuzzily search in current buffer" },
             { "<leader>sf", "<cmd>Telescope find_files<cr>", desc = "[S]earch [F]iles" },
+            { "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Search [G]it [F]iles" },
             -- Search
             { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "[S]earch [H]elp" },
             { "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "[S]earch [W]ord" },
@@ -599,7 +596,17 @@ require("lazy").setup({
     -- Show pending keybindings
     {
         "folke/which-key.nvim",
-        config = true,
+        config = function(_, opts)
+            require("which-key").setup(opts)
+            require("which-key").register({
+                ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
+                ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
+                ["<leader>g"] = { name = "[G]it", _ = "which_key_ignore" },
+                ["<leader>h"] = { name = "[H]unk", _ = "which_key_ignore" },
+                ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
+                ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
+            })
+        end,
     },
 
     -- Zen-Mode
@@ -667,18 +674,13 @@ require("lazy").setup({
     -- Git Integration
     "tpope/vim-fugitive",
     "tpope/vim-rhubarb",
-    {
-        "shumphrey/fugitive-gitlab.vim",
-        init = function()
-            vim.g.fugitive_gitlab_domains = { "https://git.flow-d.de" }
-        end,
-    },
+    "shumphrey/fugitive-gitlab.vim",
 
     -- Automatically insert closing tags
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
-        config = true,
+        opts = {},
     },
 
     -- Git Worktree Operations
@@ -716,12 +718,12 @@ require("lazy").setup({
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
 
-                local nmap = function(keys, func, desc, expr)
-                    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc, expr = expr })
+                local map = function(keys, func, desc, expr)
+                    vim.keymap.set({ "n", "v" }, keys, func, { buffer = bufnr, desc = desc, expr = expr })
                 end
 
                 -- Navigation
-                nmap("]c", function()
+                map("]c", function()
                     if vim.wo.diff then
                         return "]c"
                     end
@@ -731,7 +733,7 @@ require("lazy").setup({
                     return "<Ignore>"
                 end, "Next Hunk", true)
 
-                nmap("[c", function()
+                map("[c", function()
                     if vim.wo.diff then
                         return "[c"
                     end
@@ -742,15 +744,15 @@ require("lazy").setup({
                 end, "Previous Hunk", true)
 
                 -- Actions
-                nmap("<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
-                nmap("<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
-                nmap("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
-                nmap("<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
-                nmap("<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
-                nmap("<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
-                nmap("<leader>hp", gitsigns.preview_hunk_inline, "Preview Hunk Inline")
-                nmap("<leader>hb", gitsigns.blame_line, "Blame Line")
-                nmap("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
+                map("<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
+                map("<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
+                map("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
+                map("<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
+                map("<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
+                map("<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
+                map("<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
+                map("<leader>hb", gitsigns.blame_line, "Blame Line")
+                map("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
             end,
         },
     },
@@ -761,4 +763,4 @@ require("lazy").setup({
     },
 })
 
--- vim: expandtab shiftwidth=4 tabstop=4
+-- vim: ts=2 sts=4 sw=4 et
