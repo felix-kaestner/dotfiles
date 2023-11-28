@@ -29,12 +29,11 @@ fi
 
 unset color_prompt
 
-if [ -x "$(command -v kubectx)" ]; then
-    RPROMPT='$(kubectx -c 2>/dev/null)'
-fi
-
 if [ -x "$(command -v brew)" ]; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+   FPATH="$(brew --prefix)/share/zsh-completions:$FPATH"
+
+   source "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+   source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # enable completions
