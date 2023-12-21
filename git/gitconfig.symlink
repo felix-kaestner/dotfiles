@@ -6,6 +6,8 @@
 	f = fetch
 	r = remote
 	d = diff
+    ca = commit --amend
+    ce = commit --amend --no-edit
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	cd = !"branch=$(git branch --show-current); git checkout $1; git branch -D ${branch}; #"
 	pu = !"git push -u origin $(git branch --show-current)"
@@ -22,7 +24,7 @@
 [diff]
     tool = nvimdiff
 [merge]
-    tool = nvimdiff3
+    tool = nvimdiff2
 [mergetool]
     prompt = false
     keepBackup = false
