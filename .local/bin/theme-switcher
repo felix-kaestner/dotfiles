@@ -14,6 +14,7 @@ tmux_running=$(pgrep tmux)
 
 if [ -x "$(command -v kitty)" ]; then
     kitty +kitten themes --config-file-name kitty.local.conf Catppuccin-$(echo "$selected" | awk '{ print toupper(substr($0, 1, 1)) substr($0, 2); }')
+    rm -rf ~/.config/kitty/kitty.local.conf.bak
 fi
 
 if [[ ! -z $TMUX ]] && [[ ! -z $tmux_running ]]; then
