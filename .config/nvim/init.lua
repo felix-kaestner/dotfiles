@@ -115,6 +115,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     pattern = "*",
 })
 
+-- [[ Fold using Treesitter ]]
+-- See https://github.com/nvim-treesitter/nvim-treesitter#folding
+vim.opt.foldenable = false
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
 -- [[ LSP ]]
 
 -- Language Server Configuration
