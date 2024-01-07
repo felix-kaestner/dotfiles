@@ -623,7 +623,7 @@ require("lazy").setup({
             { "<leader>fe", "<cmd>NvimTreeFindFileToggle<cr>", desc = "[F]ile [E]xplorer" },
         },
         opts = {
-            view = { width = 50 },
+            view = { width = "30%" },
             filters = { custom = { "^\\.git" } },
             update_focused_file = { enable = true },
             diagnostics = { enable = true },
@@ -669,6 +669,11 @@ require("lazy").setup({
         keys = {
             { "<leader>z", "<cmd>lua require('zen-mode').toggle()<cr>", desc = "Toggle [Z]en-Mode" },
         },
+        opts = {
+            window = {
+                width = .395,
+            }
+       },
     },
 
     -- Set lualine as statusline
