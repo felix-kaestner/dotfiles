@@ -717,6 +717,17 @@ require("lazy").setup({
         },
     },
 
+    -- Automatically insert closing tags
+    {
+        "windwp/nvim-autopairs",
+        event = "InsertEnter",
+        dependencies = { "hrsh7th/nvim-cmp" },
+        config = function(_, opts)
+            require("nvim-autopairs").setup(opts)
+            require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
+        end,
+    },
+
     -- Source Code Comments
     "tpope/vim-commentary",
 
@@ -727,13 +738,6 @@ require("lazy").setup({
     "tpope/vim-fugitive",
     "tpope/vim-rhubarb",
     "shumphrey/fugitive-gitlab.vim",
-
-    -- Automatically insert closing tags
-    {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        opts = {},
-    },
 
     -- Git Worktree Operations
     {
