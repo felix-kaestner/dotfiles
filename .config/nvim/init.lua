@@ -138,8 +138,11 @@ local servers = {
                 unusedvariable = true,
                 fieldalignment = true,
             },
+            buildFlags = { "-tags=test" }
         },
     },
+
+    jsonls = {},
 
     lua_ls = {
         Lua = {
@@ -156,6 +159,10 @@ local servers = {
             prefillRequiredFields = true,
         },
     },
+
+    tsserver = {},
+
+    yamlls = {},
 }
 
 local augroup = vim.api.nvim_create_augroup("lsp-format", {})
@@ -269,6 +276,27 @@ require("lazy").setup({
 
             mason_lspconfig.setup_handlers({
                 function(server_name)
+                    if server_name == "gopls" then
+                        local Job = require("plenary.job")
+
+                        Job:new({
+                            command = "go",
+                            args = { "list", "-m", "-f", "'{{.Path}}'" },
+                            on_exit = function(job, code)
+                                if code ~= 0 then
+                                    return
+                                end
+
+                                local module = table.concat(job:result()):gsub("'", "")
+                                servers[server_name].gopls["local"] = module
+
+                                if module == "tadarida.aboutyou.com" then
+                                    servers[server_name].gopls.analyses.fieldalignment = false
+                                end
+                            end,
+                        }):sync()
+                    end
+
                     require("lspconfig")[server_name].setup({
                         settings = servers[server_name],
                         capabilities = capabilities,
