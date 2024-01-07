@@ -616,9 +616,7 @@ require("lazy").setup({
     -- File Explorer
     {
         "nvim-tree/nvim-tree.lua",
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         keys = {
             { "<leader>fe", "<cmd>NvimTreeFindFileToggle<cr>", desc = "[F]ile [E]xplorer" },
         },
@@ -633,9 +631,7 @@ require("lazy").setup({
     -- Quick Navigation
     {
         "ThePrimeagen/harpoon",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-        },
+        dependencies = { "nvim-lua/plenary.nvim" },
         keys = {
             { "<A-a>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
             { "<C-h>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "[Harpoon] Open Menu" },
@@ -679,9 +675,7 @@ require("lazy").setup({
     -- Set lualine as statusline
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = {
-            "nvim-tree/nvim-web-devicons",
-        },
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
             options = {
                 theme = "catppuccin",
