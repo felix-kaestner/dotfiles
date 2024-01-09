@@ -731,9 +731,6 @@ require("lazy").setup({
     -- Source Code Comments
     "tpope/vim-commentary",
 
-    -- Add/Change/Delte Parentheses/Quotes/Tags
-    "tpope/vim-surround",
-
     -- Git Integration
     "tpope/vim-fugitive",
     "tpope/vim-rhubarb",
