@@ -11,5 +11,7 @@ case $(uname -s) in
 *) ;;
 esac
 
-~/.local/bin/theme-switcher mocha
+if [ -f ~/.local/bin/theme-switcher ]; then
+    ~/.local/bin/theme-switcher mocha
+fi
 
