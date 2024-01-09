@@ -2,11 +2,11 @@
 
 case $(uname -s) in
 'Linux')
-	[ -x "$(command -v apt)" ] && sudo apt install -y neovim
-	[ -x "$(command -v dnf)" ] && sudo dnf install -y neovim
-	;;
+    [ -x "$(command -v apt)" ] && sudo apt install -y neovim
+    [ -x "$(command -v dnf)" ] && sudo dnf install -y neovim
+    ;;
 'Darwin')
-	brew install neovim
-	;;
+    brew install neovim
+    ;;
 *) ;;
 esac

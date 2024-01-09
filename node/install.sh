@@ -11,11 +11,10 @@ pnpm env use --global lts
 case $(uname -s) in
 'Linux')
     curl -fsSL https://bun.sh/install | bash
-	;;
+    ;;
 'Darwin')
     brew tap oven-sh/bun
     brew install bun
-	;;
+    ;;
 *) ;;
 esac
-

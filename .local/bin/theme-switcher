@@ -21,4 +21,3 @@ if [[ ! -z $TMUX ]] && [[ ! -z $tmux_running ]]; then
     tmux set -g @catppuccin_flavour $selected
     tmux source-file ~/.tmux.conf
 fi
-

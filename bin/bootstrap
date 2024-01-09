@@ -182,11 +182,11 @@ EOT
     success 'Updated ~/.gnupg/gpg-agent.conf.'
 
     if ! [ -z "$SSH_KEYGRIP" ]; then
-        echo 'enable-ssh-support' >> ~/.gnupg/gpg-agent.conf
+        echo 'enable-ssh-support' >>~/.gnupg/gpg-agent.conf
 
         info 'Updating ~/.gnupg/sshcontrol..'
-        ssh-add -L &> /dev/null || true
-        echo $SSH_KEYGRIP >> ~/.gnupg/sshcontrol
+        ssh-add -L &>/dev/null || true
+        echo $SSH_KEYGRIP >>~/.gnupg/sshcontrol
         success 'Updated ~/.gnupg/sshcontrol.'
     fi
 }
