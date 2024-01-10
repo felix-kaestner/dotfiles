@@ -15,7 +15,7 @@ fi
 export GID
 
 # include brew shellenv
-if [ ! -x "$(command -v brew)" ] && [ -x "/opt/homebrew/bin/brew" ]; then
+if [ -x "/opt/homebrew/bin/brew" ]; then
     eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
