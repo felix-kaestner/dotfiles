@@ -82,12 +82,6 @@ vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 -- stylua: ignore
 vim.keymap.set("n", "<leader>co", "getqflist({'winid':0}).winid == 0 ? ':copen<cr>' : ':cclose<cr>'", { expr = true, silent = true })
 
--- Resize with arrows
-vim.keymap.set("n", "<A-Up>", "<cmd>resize -10<cr>")
-vim.keymap.set("n", "<A-Down>", "<cmd>resize +10<cr>")
-vim.keymap.set("n", "<A-Left>", "<cmd>vertical resize -10<cr>")
-vim.keymap.set("n", "<A-Right>", "<cmd>vertical resize +10<cr>")
-
 -- Paste over without replacing default register
 vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
 
