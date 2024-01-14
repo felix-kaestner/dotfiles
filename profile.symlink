@@ -37,6 +37,10 @@ add_to_path "$HOME/.local/share/pnpm"
 export GOPATH="$HOME/.go"
 add_to_path "$GOPATH/bin"
 
+# set PATH so it includes user's ruby bin directory if it exists
+export GEM_HOME="$HOME/.gem"
+add_to_path "$GEM_HOME/bin"
+
 # set PATH so it includes user's cargo bin if it exists
 add_to_path "$HOME/.cargo/bin"
 
