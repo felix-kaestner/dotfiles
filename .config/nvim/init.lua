@@ -629,12 +629,12 @@ require("lazy").setup({
         "ThePrimeagen/harpoon",
         dependencies = { "nvim-lua/plenary.nvim" },
         keys = {
-            { "<A-a>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
+            { "<C-i>", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "[Harpoon] Add File" },
             { "<C-h>", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "[Harpoon] Open Menu" },
-            { "<A-j>", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "[Harpoon] Navigate to File" },
-            { "<A-k>", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "[Harpoon] Navigate to File" },
-            { "<A-l>", "<cmd>lua require('harpoon.ui').nav_file(3)<cr>", desc = "[Harpoon] Navigate to File" },
-            { "<A-;>", "<cmd>lua require('harpoon.ui').nav_file(4)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<leader>1", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<leader>2", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<leader>3", "<cmd>lua require('harpoon.ui').nav_file(3)<cr>", desc = "[Harpoon] Navigate to File" },
+            { "<leader>4", "<cmd>lua require('harpoon.ui').nav_file(4)<cr>", desc = "[Harpoon] Navigate to File" },
         },
     },
 
