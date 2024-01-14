@@ -291,7 +291,9 @@ require("lazy").setup({
                                 servers[server_name].gopls["local"] = module
 
                                 if module == "tadarida.aboutyou.com" then
+                                    servers[server_name].gopls.analyses.deprecated = false
                                     servers[server_name].gopls.analyses.fieldalignment = false
+                                    servers[server_name].gopls.analyses.unusedparams = false
                                 end
                             end,
                         }):sync()
