@@ -732,6 +732,10 @@ require("lazy").setup({
         end,
     },
 
+
+    -- Kitty config file syntax highlighting
+    "fladson/vim-kitty",
+
     -- Source Code Comments
     "tpope/vim-commentary",
 
