@@ -136,6 +136,8 @@ local servers = {
         },
     },
 
+    golangci_lint_ls = {},
+
     rust_analyzer = {},
 
     jsonls = {},
