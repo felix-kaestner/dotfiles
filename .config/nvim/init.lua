@@ -739,7 +739,7 @@ require("lazy").setup({
 
 
     -- Kitty config file syntax highlighting
-    "fladson/vim-kitty",
+    { "fladson/vim-kitty", ft = "kitty" },
 
     -- Source Code Comments
     "tpope/vim-commentary",
