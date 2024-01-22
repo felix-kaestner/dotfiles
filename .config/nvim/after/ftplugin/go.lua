@@ -1,5 +1,5 @@
 -- Remap to quickly run tests in Go
-vim.keymap.set("n", "<leader>gt", "<cmd>!go test -v %:p:h<cr>", { desc = "[G]o [T]est" })
+vim.keymap.set("n", "<leader>tp", "<cmd>!go test -v %:p:h<cr>", { desc = "[G]o [T]est" })
 
 -- Remap to quickly report test coverage in Go
 vim.keymap.set("n", "<leader>tc", function()
