@@ -9,11 +9,10 @@ set -g @catppuccin_window_default_text "#W"
 set -g @catppuccin_window_current_text "#W"
 
 # Set status modules
-set -g @catppuccin_status_modules_right "session date_time"
+set -g @catppuccin_status_modules_right "session"
 
 # Remove icons on status modules
 set -g @catppuccin_session_icon "null"
-set -g @catppuccin_date_time_icon "null"
 
 # Fill status indicator
 set -g @catppuccin_status_fill "all"
