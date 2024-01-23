@@ -5,6 +5,8 @@ vim.keymap.set("n", "<leader>tp", "<cmd>!go test -v %:p:h<cr>", { desc = "[G]o [
 vim.keymap.set("n", "<leader>tc", function()
     local Job = require("plenary.job")
 
+    print("Running tests and generating coverage report...")
+
     Job:new({
         command = "go",
         args = { "test", "-tags=test", "-coverprofile=c.out", vim.fn.expand("%:p:h") },
