@@ -173,6 +173,9 @@ local augroup = vim.api.nvim_create_augroup("lsp-format", {})
 local on_attach = function(client, bufnr)
     local builtin = require("telescope.builtin")
 
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
     local nmap = function(keys, func, desc)
         if desc then
             desc = "LSP: " .. desc
