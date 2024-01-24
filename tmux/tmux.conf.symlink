@@ -46,3 +46,5 @@ bind-key -r f run-shell "tmux neww ~/.local/bin/tmux-sessionizer"
 
 # Initialize Plugin Manager
 run '~/.tmux/plugins/tpm/tpm'
+
+# vim: syn=tmux ft=tmux

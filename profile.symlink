@@ -102,4 +102,4 @@ bindkey -s ^f "~/.local/bin/tmux-sessionizer\n"
 ## Command History Search
 bindkey ^r history-incremental-search-backward
 
-# vim: syntax=sh filetype=sh
+# vim: syn=sh ft=sh

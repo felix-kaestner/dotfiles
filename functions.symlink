@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# ~/.functions: set of predefined shell functions
 
 keys() {
     gpg --list-secret-keys --keyid-format LONG
@@ -82,3 +82,5 @@ br() {
         esac
     fi
 }
+
+# vim: syn=sh ft=sh

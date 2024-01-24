@@ -3,3 +3,5 @@
     email = GIT_USER_EMAIL
 [commit]
     gpgsign = GIT_GPGSIGN
+
+; vim: syn=gitconfig ft=gitconfig

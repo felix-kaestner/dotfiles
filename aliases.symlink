@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# ~/.aliases: for common commands
 
 # Easier navigation: .., ..., ...., .....
 alias ..="cd .."
@@ -32,3 +32,4 @@ alias mk="minikube"
 # Alias for invoking terraform
 alias tf="terraform"
 
+# vim: syn=sh ft=sh
