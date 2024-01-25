@@ -461,7 +461,7 @@ require("lazy").setup({
         },
         main = "nvim-treesitter.configs",
         opts = {
-            ensure_installed = { "go", "gomod", "gosum", "gowork", "lua", "rust", "dockerfile", "json", "tsx", "typescript", "vimdoc", "vim", "yaml" },
+            ensure_installed = { "go", "gomod", "gosum", "gowork", "lua", "rust", "dockerfile", "json", "markdown", "tsx", "typescript", "vimdoc", "vim", "yaml" },
             highlight = { enable = true },
             indent = { enable = true },
             textobjects = {
