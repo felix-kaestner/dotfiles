@@ -591,13 +591,13 @@ require("lazy").setup({
                 local action_state = require("telescope.actions.state")
                 local finders = require("telescope.finders")
                 local pickers = require("telescope.pickers")
-                local conf = require("telescope.config").values
+                local sorters = require("telescope.sorters")
                 local Job = require("plenary.job")
 
                 pickers.new({}, {
                     prompt_title = "Switch Theme",
                     finder = finders.new_table { results = { "latte", "frappe", "macchiato", "mocha" } },
-                    sorter = conf.generic_sorter({}),
+                    sorter = sorters.get_generic_fuzzy_sorter(),
                     attach_mappings = function(prompt_bufnr)
                         actions.select_default:replace(function()
                             actions.close(prompt_bufnr)
