@@ -151,7 +151,6 @@ local servers = {
             format = { enable = false },
             telemetry = { enable = false },
             workspace = { checkThirdParty = false },
-            diagnostics = { disable = { "missing-fields" } },
         },
     },
 
