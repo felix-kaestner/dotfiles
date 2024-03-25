@@ -19,6 +19,7 @@ dr() {
 pr() {
     case $(git config --get remote.origin.url) in
         git@github.com*) gh pr create $@ ;;
+        git@gitlab.com*) glab mr create $@ ;;
         *) ;;
     esac
 }
