@@ -174,7 +174,7 @@ local on_attach = function(client, bufnr)
     local builtin = require("telescope.builtin")
 
     -- Enable completion triggered by <c-x><c-o>
-    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
     local nmap = function(keys, func, desc)
         if desc then
@@ -461,7 +461,22 @@ require("lazy").setup({
         },
         main = "nvim-treesitter.configs",
         opts = {
-            ensure_installed = { "go", "gomod", "gosum", "gowork", "lua", "rust", "dockerfile", "json", "markdown", "tsx", "typescript", "vimdoc", "vim", "yaml" },
+            ensure_installed = {
+                "go",
+                "gomod",
+                "gosum",
+                "gowork",
+                "lua",
+                "rust",
+                "dockerfile",
+                "json",
+                "markdown",
+                "tsx",
+                "typescript",
+                "vimdoc",
+                "vim",
+                "yaml",
+            },
             highlight = { enable = true },
             indent = { enable = true },
             textobjects = {
@@ -685,9 +700,9 @@ require("lazy").setup({
         },
         opts = {
             window = {
-                width = .395,
-            }
-       },
+                width = 0.395,
+            },
+        },
     },
 
     -- Set lualine as statusline
