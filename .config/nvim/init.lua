@@ -99,7 +99,8 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 vim.keymap.set({ "c", "n", "v", "x" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
 -- Shorthand to launch Git pane
-vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane"} )
+vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
