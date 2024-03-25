@@ -17,7 +17,6 @@
 	editor = nvim
     autocrlf = input
 	excludesfile = ~/.gitignore
-    hooksPath = ~/.config/git/hooks
 [color]
 	ui = true
 [init]
