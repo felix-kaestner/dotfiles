@@ -36,7 +36,18 @@ if [ -x "$(command -v brew)" ]; then
    source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-# enable completions
+# Enable completions
 autoload -Uz compinit
 compinit
 
+# Enable vi mode
+bindkey -v
+
+# Command History Search
+bindkey "^r" history-incremental-search-backward
+
+# Enable Backspace after switching modes
+bindkey "^?" backward-delete-char
+
+# Tmux Session Helper
+bindkey -s "^f" "~/.local/bin/tmux-sessionizer\n"

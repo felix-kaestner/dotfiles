@@ -96,10 +96,4 @@ gpgconf --launch gpg-agent
 ## Node.js Settings
 export NODE_OPTIONS="--experimental-json-modules"
 
-## Tmux Session Helper
-bindkey -s ^f "~/.local/bin/tmux-sessionizer\n"
-
-## Command History Search
-bindkey ^r history-incremental-search-backward
-
 # vim: syn=sh ft=sh
