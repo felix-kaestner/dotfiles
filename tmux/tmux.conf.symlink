@@ -4,6 +4,9 @@ set-option -g prefix C-j
 # Enable mouse mode
 setw -g mouse on
 
+# Set default terminal
+set -g default-terminal "tmux-256color"
+
 # Set window title to application name
 set -g @catppuccin_window_default_text "#W"
 set -g @catppuccin_window_current_text "#W"
