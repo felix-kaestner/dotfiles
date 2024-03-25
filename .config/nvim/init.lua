@@ -793,6 +793,15 @@ require("lazy").setup({
         end,
     },
 
+    -- Git Diff View
+    {
+        "sindrets/diffview.nvim",
+        cmd = "DiffviewOpen",
+        keys = {
+            { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "[G]it [D]iff" },
+        },
+    },
+
     -- Git Decorations
     {
         "lewis6991/gitsigns.nvim",
