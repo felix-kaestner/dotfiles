@@ -695,6 +695,7 @@ require("lazy").setup({
                 ["<leader>h"] = { name = "[H]unk", _ = "which_key_ignore" },
                 ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
                 ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
+                ["<leader>t"] = { name = "[T]test", _ = "which_key_ignore" },
             })
         end,
     },
@@ -769,6 +770,121 @@ require("lazy").setup({
         end,
     },
 
+    -- Test Runner
+    {
+        "nvim-neotest/neotest",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-neotest/neotest-go",
+            "nvim-neotest/nvim-nio",
+        },
+        -- stylua: ignore
+        keys = {
+            { "<leader>tn", "<cmd>lua require('neotest').run.run()<cr>", desc = "[T]est [N]earest" },
+            { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>", desc = "[T]est [F]ile" },
+            { "<leader>tw", "<cmd>lua require('neotest').watch.toggle(vim.fn.expand('%'))<cr>", desc = "[T]est [W]atch" },
+            { "<leader>to", "<cmd>lua require('neotest').output.open({ enter = true, auto_close = true })<cr>", desc = "[T]est [O]utput" },
+            { "<leader>tO", "<cmd>lua require('neotest').output_panel.toggle()<cr>", desc = "Toggle [T]est [O]utput" },
+            { "<leader>ts", "<cmd>lua require('neotest').summary.toggle()<cr>", desc = "Toggle [T]est [S]ummary" },
+            { "<leader>tS", "<cmd>lua require('neotest').run.stop()<cr>", desc = "[S]top [T]est Run" },
+        },
+        opts = function()
+            return {
+                adapters = {
+                    require("neotest-go")({ args = { "-tags=test" } }),
+                },
+                status = { virtual_text = true },
+                quickfix = { enabled = false },
+            }
+        end,
+        config = function(_, opts)
+            local ns = vim.api.nvim_create_namespace("neotest")
+
+            vim.diagnostic.config({
+                virtual_text = {
+                    format = function(diagnostic)
+                        return diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+                    end,
+                },
+            }, ns)
+
+            require("neotest").setup(opts)
+        end,
+    },
+
+    -- Debug Adapter Protocol
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            {
+                "rcarriga/nvim-dap-ui",
+                keys = {
+                    { "<F7>", "<cmd>lua require('dapui').toggle()<cr>", desc = "Debug: Show Last Session Result" },
+                },
+                config = function(_, opts)
+                    require("dapui").setup(opts)
+
+                    local dap, dapui = require("dap"), require("dapui")
+                    dap.listeners.after.event_initialized["dapui_config"] = function()
+                        dapui.open()
+                    end
+                    dap.listeners.before.event_terminated["dapui_config"] = function()
+                        dapui.close()
+                    end
+                    dap.listeners.before.event_exited["dapui_config"] = function()
+                        dapui.close()
+                    end
+                end,
+            },
+
+            {
+                "jay-babu/mason-nvim-dap.nvim",
+                dependencies = { "williamboman/mason.nvim" },
+                opts = {
+                    ensure_installed = { "delve" },
+                    handlers = {},
+                },
+            },
+        },
+        keys = {
+            -- Launch & Terminate
+            { "<F5>", "<cmd>DapContinue<cr>", desc = "Debug: Start/Continue" },
+            { "<F10>", "<cmd>DapTerminate<cr>", desc = "Debug: Terminate" },
+            -- Step Through
+            { "<F1>", "<cmd>DapStepInto<cr>", desc = "Debug: Step Into" },
+            { "<F2>", "<cmd>DapStepOver<cr>", desc = "Debug: Step Over" },
+            { "<F3>", "<cmd>DapStepOut<cr>", desc = "Debug: Step Out" },
+            -- Breakpoints
+            { "<leader>b", "<cmd>DapToggleBreakpoint<cr>", desc = "Debug: Toggle Breakpoint" },
+            {
+                "<leader>B",
+                "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>",
+                desc = "Debug: Set Breakpoint",
+            },
+        },
+    },
+    {
+        "leoluz/nvim-dap-go",
+        dependencies = { "mfussenegger/nvim-dap" },
+        keys = {
+            { "<leader>tdn", "<cmd>lua require('dap-go').debug_test()<cr>", desc = "[D]ebug [N]earest Go [T]est" },
+            { "<leader>tdl", "<cmd>lua require('dap-go').debug_last()<cr>", desc = "[D]ebug [L]ast Go [T]est" },
+        },
+        opts = {
+            delve = {
+                build_flags = "-tags=test",
+            },
+            dap_configurations = {
+                {
+                    type = "go",
+                    name = "Attach Remote",
+                    mode = "remote",
+                    request = "attach",
+                },
+            },
+        },
+    },
 
     -- Kitty config file syntax highlighting
     { "fladson/vim-kitty", ft = "kitty" },
