@@ -303,7 +303,7 @@ require("lazy").setup({
                                 local module = table.concat(job:result()):gsub("'", "")
                                 servers[server_name].gopls["local"] = module
 
-                                if module == "tadarida.aboutyou.com" then
+                                if string.find(module, "aboutyou.com") then
                                     servers[server_name].gopls.analyses.deprecated = false
                                     servers[server_name].gopls.analyses.fieldalignment = false
                                     servers[server_name].gopls.analyses.unusedparams = false
