@@ -101,6 +101,8 @@ vim.keymap.set({ "c", "n", "v", "x" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
 
+-- Shorthand to launch Newtrw
+vim.keymap.set("n", "<leader>fn", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
