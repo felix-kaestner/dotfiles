@@ -193,7 +193,7 @@ local on_attach = function(client, bufnr)
     nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
     nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
     nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
-    nmap("gR", function() builtin.lsp_references({ file_ignore_patterns = { "%_test.go" } }) end, "[G]oto [R]eferences w/o Test Files") -- stylua: ignore
+    nmap("gR", function() builtin.lsp_references({ file_ignore_patterns = { "%_test.go", "%_gen.go", "%.pb.go" } }) end, "[G]oto [R]eferences w/o Test Files") -- stylua: ignore
     nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
