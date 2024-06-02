@@ -203,6 +203,10 @@ local on_attach = function(client, bufnr)
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
     nmap("<C-K>", vim.lsp.buf.signature_help, "Signature Documentation")
 
+    if client.server_capabilities.inlayHintProvider and vim.fn.has("nvim-0.10") then
+        vim.lsp.inlay_hint.enable(bufnr, true)
+    end
+
     -- Automatically format source code on save
     if client.supports_method("textDocument/formatting") and client.name ~= "tsserver" then
         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
