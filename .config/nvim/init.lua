@@ -193,6 +193,17 @@ local on_attach = function(client, bufnr)
         vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
     end
 
+    -- Fix for bug https://github.com/neovim/neovim/issues/12970
+    vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, offset_encoding)
+        local text_document = text_document_edit.textDocument
+        local buf = vim.uri_to_bufnr(text_document.uri)
+        if offset_encoding == nil then
+            vim.notify_once('apply_text_document_edit must be called with valid offset encoding', vim.log.levels.WARN)
+        end
+
+        vim.lsp.util.apply_text_edits(text_document_edit.edits, buf, offset_encoding)
+    end
+
     nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
     nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
