@@ -204,7 +204,7 @@ local on_attach = function(client, bufnr)
     nmap("<C-K>", vim.lsp.buf.signature_help, "Signature Documentation")
 
     if client.server_capabilities.inlayHintProvider and vim.fn.has("nvim-0.10") then
-        vim.lsp.inlay_hint.enable(bufnr, true)
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
     end
 
     -- Automatically format source code on save
