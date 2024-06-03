@@ -139,6 +139,13 @@ local servers = {
                 unusedvariable = true,
                 fieldalignment = true,
             },
+            codelenses = {
+                test = true,
+                gc_details = true,
+            },
+            hints = {
+                constantValues = true,
+            },
             buildFlags = { "-tags=test" }
         },
     },
