@@ -51,3 +51,5 @@ bindkey "^?" backward-delete-char
 
 # Tmux Session Helper
 bindkey -s "^f" "~/.local/bin/tmux-sessionizer\n"
+
+# vim: syn=sh ft=sh
