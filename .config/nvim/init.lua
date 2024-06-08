@@ -219,7 +219,7 @@ local on_attach = function(client, bufnr)
 
     -- See `:help K` for why this keymap
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-    nmap("<C-K>", vim.lsp.buf.signature_help, "Signature Documentation")
+    vim.keymap.set({"n", "i"}, "<C-K>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "LSP: Signature Documentation" })
 
     if client.server_capabilities.inlayHintProvider and vim.fn.has("nvim-0.10") then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
