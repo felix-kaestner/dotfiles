@@ -8,6 +8,18 @@ reloadgpg() {
     gpg-connect-agent updatestartuptty /bye >/dev/null
 }
 
+watch() {
+    local src=$1 cmd=${@:2} files=
+
+    if git -C "$src" rev-parse --git-dir > /dev/null 2>&1; then
+        files=$(git -C "$src" ls-files)
+    else
+        files=$(find "$src" -type f)
+    fi
+
+    echo "$files" | entr -r bash -c "clear; $cmd"
+}
+
 dind() {
     docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock:ro -v $(pwd):/workspace -w /workspace docker /bin/ash
 }
