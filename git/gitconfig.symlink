@@ -8,11 +8,12 @@
 	d = diff
     ca = commit --amend
     ce = commit --amend --no-edit
+    rs = reset --hard HEAD
+    rv = reset --soft HEAD~1
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	cd = !"branch=$(git branch --show-current); git checkout $1; git branch -D ${branch}; #"
 	pu = !"git push -u origin $(git branch --show-current)"
 	mu = !"git remote add upstream $1; git fetch origin -v; git fetch upstream -v; git merge upstream/main; #"
-    undo = reset --soft HEAD~1
 [core]
 	editor = nvim
     autocrlf = input
