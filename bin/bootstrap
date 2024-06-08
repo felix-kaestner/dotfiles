@@ -109,10 +109,18 @@ install_dotfiles() {
 
     for dir in $(find -H "$DIR" -maxdepth 1 -name '.*' -not -path '*.git*' -type d); do
         mkdir -p "$HOME/${dir##$DIR/}"
-        for dir in $(find -H "$dir" -maxdepth 1 -not -path "$dir" -type d); do
+        for dir in $(find -H "$dir" -maxdepth 1 -not -path "$dir" -not -path "$dir/bin" -type d); do
             dst="$HOME/${dir##$DIR/}"
             link_file "$dir" "$dst"
         done
+
+        if [ -d "$dir/bin" ]; then
+            mkdir -p "$HOME/${dir##$DIR/}/bin"
+            for src in $(find -H "$dir/bin" -maxdepth 1 -type f); do
+                dst="$HOME/${src##$DIR/}"
+                link_file "$src" "$dst"
+            done
+        fi
     done
 }
 
