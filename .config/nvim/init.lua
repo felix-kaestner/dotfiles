@@ -887,7 +887,7 @@ require("lazy").setup({
         dependencies = { "mfussenegger/nvim-dap" },
         keys = {
             { "<leader>tdn", "<cmd>lua require('dap-go').debug_test()<cr>", desc = "[D]ebug [N]earest Go [T]est" },
-            { "<leader>tdl", "<cmd>lua require('dap-go').debug_last()<cr>", desc = "[D]ebug [L]ast Go [T]est" },
+            { "<leader>tdl", "<cmd>lua require('dap-go').debug_last_test()<cr>", desc = "[D]ebug [L]ast Go [T]est" },
         },
         opts = {
             delve = {
