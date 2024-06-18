@@ -290,8 +290,8 @@ require("lazy").setup({
         },
         keys = {
             -- Diagnostic keymaps
-            { "[d", vim.diagnostic.goto_prev, desc = "Go to previous diagnostic message" },
-            { "]d", vim.diagnostic.goto_next, desc = "Go to next diagnostic message" },
+            { "[d", function() vim.diagnostic.jump({count = -1}) end, desc = "Go to previous diagnostic message" },
+            { "]d", function() vim.diagnostic.jump({count = 1}) end, desc = "Go to next diagnostic message" },
             { "<leader>e", vim.diagnostic.open_float, desc = "Open floating diagnostic message" },
             { "<leader>q", vim.diagnostic.setloclist, desc = "Open buffer diagnostics list" },
             { "<leader>Q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
