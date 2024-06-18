@@ -194,7 +194,8 @@ local on_attach = function(client, bufnr)
     end
 
     -- Fix for bug https://github.com/neovim/neovim/issues/12970
-    vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, offset_encoding)
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.lsp.util.apply_text_document_edit = function(text_document_edit, _, offset_encoding)
         local text_document = text_document_edit.textDocument
         local buf = vim.uri_to_bufnr(text_document.uri)
         if offset_encoding == nil then
