@@ -823,7 +823,8 @@ require("lazy").setup({
             vim.diagnostic.config({
                 virtual_text = {
                     format = function(diagnostic)
-                        return diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+                        local text = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+                        return text
                     end,
                 },
             }, ns)
