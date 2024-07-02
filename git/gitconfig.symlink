@@ -6,6 +6,7 @@
 	f = fetch
 	r = remote
 	d = diff
+    co = checkout
     ca = commit --amend
     ce = commit --amend --no-edit
     rs = reset --hard HEAD
