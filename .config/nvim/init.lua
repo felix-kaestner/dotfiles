@@ -216,7 +216,7 @@ local on_attach = function(client, bufnr)
     nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-    nmap("<leader>cl", vim.lsp.codelens.run)
+    nmap("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]enses")
 
     -- See `:help K` for why this keymap
     nmap("K", vim.lsp.buf.hover, "Hover Documentation")
@@ -339,6 +339,13 @@ require("lazy").setup({
                 end,
             })
 
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+                group = vim.api.nvim_create_augroup("lsp-codelens", {}),
+                pattern = { "*.go", "*.mod" },
+                callback = function()
+                    vim.lsp.codelens.refresh({ bufnr = 0 })
+                end
+            })
         end,
     },
 
