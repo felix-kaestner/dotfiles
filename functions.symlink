@@ -58,12 +58,6 @@ extract() {
     fi
 }
 
-adba() {
-    adb shell settings put global window_animation_scale $1
-    adb shell settings put global transition_animation_scale $1
-    adb shell settings put global animator_duration_scale $1
-}
-
 wo() {
 	[ -x "$(command -v timer)" ] || go install github.com/caarlos0/timer@latest
     timer 50m -n "Work"
