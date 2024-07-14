@@ -707,20 +707,21 @@ require("lazy").setup({
     -- Show pending keybindings
     {
         "folke/which-key.nvim",
-        config = function(_, opts)
-            require("which-key").setup(opts)
-            require("which-key").register({
-                ["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-                ["<leader>f"] = { name = "[F]ile", _ = "which_key_ignore" },
-                ["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-                ["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-                ["<leader>g"] = { name = "[G]it", _ = "which_key_ignore" },
-                ["<leader>h"] = { name = "[H]unk", _ = "which_key_ignore" },
-                ["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-                ["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-                ["<leader>t"] = { name = "[T]test", _ = "which_key_ignore" },
-            })
-        end,
+        event = "VeryLazy",
+        ---@type wk.Opts
+        opts = {
+            spec = {
+                { "<leader>c", group = "[C]ode" },
+                { "<leader>f", group = "[F]ile" },
+                { "<leader>d", group = "[D]ocument" },
+                { "<leader>w", group = "[W]orkspace" },
+                { "<leader>g", group = "[G]it" },
+                { "<leader>h", group = "[H]unk" },
+                { "<leader>r", group = "[R]ename" },
+                { "<leader>s", group = "[S]earch" },
+                { "<leader>t", group = "[T]test" },
+            },
+        },
     },
 
     -- Zen-Mode
