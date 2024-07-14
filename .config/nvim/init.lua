@@ -339,10 +339,6 @@ require("lazy").setup({
                 end,
             })
 
-            require("lspconfig").dartls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
-            })
         end,
     },
 
