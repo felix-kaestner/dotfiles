@@ -1013,11 +1013,6 @@ require("lazy").setup({
             end,
         },
     },
-}, {
-    defaults = {
-        -- Disable loading plugins inside VSCode by default
-        cond = not vim.g.vscode,
-    },
 })
 
 -- vim: ts=2 sts=4 sw=4 et
