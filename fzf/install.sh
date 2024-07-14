@@ -10,3 +10,6 @@ case $(uname -s) in
     ;;
 *) ;;
 esac
+
+mkdir -p $HOME/.fzf
+curl -fsSL -o $HOME/.fzf/fzf-git.sh https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh
