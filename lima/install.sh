@@ -8,6 +8,18 @@ case $(uname -s) in
     ;;
 'Darwin')
     brew install lima
+
+    mkdir -p "$HOME/Developer"
+
+    limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=default template://default
+    limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --network=vzNAT --name=docker template://docker-rootful
+    limactl create --vm-type=vz --rosetta --name=k8s template://k8s
+
+    # Use k8s context from lima-vm instance on host
+    if ! [ -f "$HOME/.kube/config" ]; then
+      mkdir -p "$HOME/.kube"
+      cp "$(limactl list "k8s" --format '{{.Dir}}/copied-from-guest/kubeconfig.yaml')" "$HOME/.kube/config"
+    fi
     ;;
 *) ;;
 esac
