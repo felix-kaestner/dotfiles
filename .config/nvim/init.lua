@@ -302,13 +302,21 @@ require("lazy").setup({
             capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
             -- Setup mason-lspconfig so it can manage external tooling
-            local mason_lspconfig = require("mason-lspconfig")
+            require("mason-lspconfig").setup({
+                ensure_installed = vim.tbl_keys(servers),
 
-            mason_lspconfig.setup({ ensure_installed = vim.tbl_keys(servers) })
+                handlers = {
+                    function(server_name)
+                        require("lspconfig")[server_name].setup({
+                            settings = servers[server_name],
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end,
 
-            mason_lspconfig.setup_handlers({
-                function(server_name)
-                    if server_name == "gopls" then
+                    ["gopls"] = function()
+                        local settings = servers.gopls
+
                         local Job = require("plenary.job")
 
                         Job:new({
@@ -319,24 +327,25 @@ require("lazy").setup({
                                     return
                                 end
 
+                                -- See: https://github.com/golang/tools/blob/master/gopls/doc/settings.md#local-string
                                 local module = table.concat(job:result()):gsub("'", "")
-                                servers[server_name].gopls["local"] = module
+                                settings.gopls["local"] = module
 
                                 if string.find(module, "aboutyou.com") then
-                                    servers[server_name].gopls.analyses.deprecated = false
-                                    servers[server_name].gopls.analyses.fieldalignment = false
-                                    servers[server_name].gopls.analyses.unusedparams = false
+                                    settings.gopls.analyses.deprecated = false
+                                    settings.gopls.analyses.fieldalignment = false
+                                    settings.gopls.analyses.unusedparams = false
                                 end
                             end,
                         }):sync()
-                    end
 
-                    require("lspconfig")[server_name].setup({
-                        settings = servers[server_name],
-                        capabilities = capabilities,
-                        on_attach = on_attach,
-                    })
-                end,
+                        require("lspconfig").gopls.setup({
+                            settings = settings,
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end
+                },
             })
 
             vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
