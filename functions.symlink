@@ -17,7 +17,7 @@ watch() {
         files=$(find "$src" -type f)
     fi
 
-    echo "$files" | entr -r -c "$cmd"
+    echo "$files" | entr -rsc "$cmd"
 }
 
 dind() {
