@@ -352,7 +352,9 @@ require("lazy").setup({
                 group = vim.api.nvim_create_augroup("lsp-codelens", {}),
                 pattern = { "*.go", "*.mod" },
                 callback = function()
-                    vim.lsp.codelens.refresh({ bufnr = 0 })
+                    if #vim.lsp.get_clients({ bufnr = 0, name = "gopls" }) > 0 then
+                        vim.lsp.codelens.refresh({ bufnr = 0 })
+                    end
                 end
             })
         end,
