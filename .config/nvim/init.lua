@@ -79,8 +79,13 @@ vim.keymap.set("n", "<C-P>", "<cmd>tabprevious<cr>")
 vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 
 -- Open/Close Quicklist
--- stylua: ignore
-vim.keymap.set("n", "<leader>co", "getqflist({'winid':0}).winid == 0 ? ':copen<cr>' : ':cclose<cr>'", { expr = true, silent = true })
+vim.keymap.set("n", "<leader>co", function()
+    if vim.fn.getqflist({ winid = 0 }).winid == 0 then
+        vim.cmd.copen()
+    else
+        vim.cmd.cclose()
+    end
+end)
 
 -- Paste over without replacing default register
 vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
