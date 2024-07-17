@@ -187,7 +187,7 @@ local on_attach = function(client, bufnr)
             desc = "LSP: " .. desc
         end
 
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc, noremap = true, nowait = true })
     end
 
     -- Fix for bug https://github.com/neovim/neovim/issues/12970
@@ -214,9 +214,6 @@ local on_attach = function(client, bufnr)
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
     nmap("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]enses")
-
-    -- See `:help K` for why this keymap
-    vim.keymap.set({"n", "i"}, "<C-K>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "LSP: Signature Documentation" })
 
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
