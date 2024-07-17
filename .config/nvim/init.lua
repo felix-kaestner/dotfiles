@@ -216,7 +216,6 @@ local on_attach = function(client, bufnr)
     nmap("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]enses")
 
     -- See `:help K` for why this keymap
-    nmap("K", vim.lsp.buf.hover, "Hover Documentation")
     vim.keymap.set({"n", "i"}, "<C-K>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "LSP: Signature Documentation" })
 
     if client.server_capabilities.inlayHintProvider then
