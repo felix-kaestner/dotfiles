@@ -288,8 +288,30 @@ require("lazy").setup({
         },
         keys = {
             -- Diagnostic keymaps
-            { "[q", vim.cmd.cprevious, desc = "Go to previous quickfix item" },
-            { "]q", vim.cmd.cnext, desc = "Go to next quickfix item" },
+            {
+                "[q",
+                function()
+                    local idx = vim.fn.getqflist({ idx = 0 }).idx
+                    if idx <= 1 then
+                        vim.cmd.clast()
+                    else
+                        vim.cmd.cprevious()
+                    end
+                end,
+                desc = "Go to previous quickfix item",
+            },
+            {
+                "]q",
+                function()
+                    local qflist, idx = vim.fn.getqflist(), vim.fn.getqflist({ idx = 0 }).idx
+                    if idx >= #qflist then
+                        vim.cmd.cfirst()
+                    else
+                        vim.cmd.cnext()
+                    end
+                end,
+                desc = "Go to next quickfix item",
+            },
             { "<leader>q", vim.diagnostic.setloclist, desc = "Open buffer diagnostics list" },
             { "<leader>Q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
         },
