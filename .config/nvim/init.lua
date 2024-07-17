@@ -286,6 +286,8 @@ require("lazy").setup({
         },
         keys = {
             -- Diagnostic keymaps
+            { "[q", vim.cmd.cprevious, desc = "Go to previous quickfix item" },
+            { "]q", vim.cmd.cnext, desc = "Go to next quickfix item" },
             { "<leader>q", vim.diagnostic.setloclist, desc = "Open buffer diagnostics list" },
             { "<leader>Q", vim.diagnostic.setqflist, desc = "Open diagnostics list" },
         },
