@@ -33,7 +33,6 @@ brew install --cask arc
 brew install --cask chatgpt
 brew install --cask enpass
 brew install --cask gpg-suite
-brew install --cask logi-options-plus
 brew install --cask monitorcontrol
 brew install --cask rectangle
 brew install --cask slack
