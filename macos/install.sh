@@ -39,3 +39,5 @@ brew install --cask rectangle
 brew install --cask slack
 brew install --cask tidal
 
+# Install Rosetta 2
+softwareupdate --install-rosetta --agree-to-license
