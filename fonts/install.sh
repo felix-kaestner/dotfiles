@@ -6,8 +6,7 @@ case $(uname -s) in
     ;;
 'Darwin')
     FONT_DIR="${HOME}/Library/Fonts"
-    brew tap homebrew/cask-fonts
-    brew install --cask font-cascadia-code
+    brew install font-jetbrains-mono
     ;;
 *) ;;
 esac
