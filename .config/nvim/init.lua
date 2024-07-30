@@ -970,6 +970,24 @@ require("lazy").setup({
         },
         config = function()
             require("telescope").load_extension("git_worktree")
+
+            local Worktree = require("git-worktree")
+
+            Worktree.on_tree_change(function(op, metadata)
+                if op == Worktree.Operations.Create then
+                    -- Copy required environment variables for project setup
+                    vim.fn.system("cp " .. Worktree.get_root() .. "/.env*" .. " " .. Worktree.get_worktree_path(metadata.path) .. "/") --stylua:ignore
+                end
+            end)
+
+            -- Update the working directory of the current tmux session when switching between worktrees
+            if os.getenv("TMUX") ~= nil then
+                Worktree.on_tree_change(function(op, metadata)
+                    if op == Worktree.Operations.Switch then
+                        vim.fn.system("tmux attach-session -t . -c " .. Worktree.get_worktree_path(metadata.path))
+                    end
+                end)
+            end
         end,
     },
 
