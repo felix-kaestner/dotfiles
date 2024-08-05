@@ -13,7 +13,6 @@ alias la="ls -A"
 alias l="ls -CF"
 
 # vim aliases
-alias vi="nvim"
 alias vim="nvim"
 alias view="nvim -R"
 
