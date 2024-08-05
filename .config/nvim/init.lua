@@ -948,6 +948,9 @@ require("lazy").setup({
     -- Kitty config file syntax highlighting
     { "fladson/vim-kitty", ft = "kitty" },
 
+    -- Line and column number support
+    "wsdjeg/vim-fetch",
+
     -- Source Code Comments
     "tpope/vim-commentary",
 
