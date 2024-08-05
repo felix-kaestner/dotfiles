@@ -38,7 +38,10 @@ fi
 
 # Enable completions
 autoload -Uz compinit
-compinit
+for dump in ${ZDOTDIR:-$HOME}/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 
 # Enable vi mode
 bindkey -v
