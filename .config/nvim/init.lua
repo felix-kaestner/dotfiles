@@ -109,6 +109,9 @@ vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
 -- Shorthand to launch Newtrw
 vim.keymap.set("n", "<leader>fn", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 
+-- Exit from insert mode by Esc in Terminal
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
