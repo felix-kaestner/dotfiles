@@ -6,7 +6,7 @@ case $(uname -s) in
     ;;
 'Darwin')
     FONT_DIR="${HOME}/Library/Fonts"
-    brew install font-jetbrains-mono
+    brew install font-jetbrains-mono font-jetbrains-mono-nerd-font
     ;;
 *) ;;
 esac
