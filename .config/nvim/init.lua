@@ -341,25 +341,27 @@ require("lazy").setup({
 
                         local Job = require("plenary.job")
 
-                        Job:new({
-                            command = "go",
-                            args = { "list", "-m", "-f", "'{{.Path}}'" },
-                            on_exit = function(job, code)
-                                if code ~= 0 then
-                                    return
-                                end
+                        if vim.fn.executable('go') == 1 then
+                            Job:new({
+                                command = "go",
+                                args = { "list", "-m", "-f", "'{{.Path}}'" },
+                                on_exit = function(job, code)
+                                    if code ~= 0 then
+                                        return
+                                    end
 
-                                -- See: https://github.com/golang/tools/blob/master/gopls/doc/settings.md#local-string
-                                local module = table.concat(job:result()):gsub("'", "")
-                                settings.gopls["local"] = module
+                                    -- See: https://github.com/golang/tools/blob/master/gopls/doc/settings.md#local-string
+                                    local module = table.concat(job:result()):gsub("'", "")
+                                    settings.gopls["local"] = module
 
-                                if string.find(module, "aboutyou.com") then
-                                    settings.gopls.analyses.deprecated = false
-                                    settings.gopls.analyses.fieldalignment = false
-                                    settings.gopls.analyses.unusedparams = false
-                                end
-                            end,
-                        }):sync()
+                                    if string.find(module, "aboutyou.com") then
+                                        settings.gopls.analyses.deprecated = false
+                                        settings.gopls.analyses.fieldalignment = false
+                                        settings.gopls.analyses.unusedparams = false
+                                    end
+                                end,
+                            }):sync()
+                        end
 
                         require("lspconfig").gopls.setup({
                             settings = settings,
