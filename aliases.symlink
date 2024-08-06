@@ -31,4 +31,8 @@ alias mk="minikube"
 # Alias for invoking terraform
 alias tf="terraform"
 
+# Alias for hyperlinked ripgrep
+# See https://sw.kovidgoyal.net/kitty/kittens/hyperlinked_grep/#hyperlinked-grep
+alias rg="rg --hyperlink-format=kitty"
+
 # vim: syn=sh ft=sh
