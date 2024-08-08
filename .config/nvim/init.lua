@@ -225,6 +225,8 @@ local on_attach = function(client, bufnr)
 
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
+        nmap('<leader>th', function () vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }) end, "T]oggle Inlay [H]ints")
     end
 
     -- Automatically format source code on save
