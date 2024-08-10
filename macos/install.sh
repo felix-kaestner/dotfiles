@@ -39,4 +39,6 @@ brew install --cask slack
 brew install --cask tidal
 
 # Install Rosetta 2
-softwareupdate --install-rosetta --agree-to-license
+if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto > /dev/null 2>&1; then
+    softwareupdate --install-rosetta --agree-to-license
+fi
