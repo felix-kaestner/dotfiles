@@ -38,6 +38,15 @@ brew install --cask rectangle
 brew install --cask slack
 brew install --cask tidal
 
+brew install pam-reattach
+
+path=$(brew --prefix)
+sudo tee /etc/pam.d/sudo_local > /dev/null <<EOF
+# sudo_local: local config file which survives system update and is included for sudo
+auth       optional       $path/lib/pam/pam_reattach.so ignore_ssh
+auth       sufficient     pam_tid.so
+EOF
+
 # Install Rosetta 2
 if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto > /dev/null 2>&1; then
     softwareupdate --install-rosetta --agree-to-license
