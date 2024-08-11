@@ -11,7 +11,9 @@ case $(uname -s) in
 *) ;;
 esac
 
-curl -fsSLO --output-dir ~/.config/alacritty https://github.com/catppuccin/alacritty/raw/main/catppuccin-latte.toml
-curl -fsSLO --output-dir ~/.config/alacritty https://github.com/catppuccin/alacritty/raw/main/catppuccin-frappe.toml
-curl -fsSLO --output-dir ~/.config/alacritty https://github.com/catppuccin/alacritty/raw/main/catppuccin-macchiato.toml
-curl -fsSLO --output-dir ~/.config/alacritty https://github.com/catppuccin/alacritty/raw/main/catppuccin-mocha.toml
+mkdir -p ~/.config/alacritty/themes
+for palette in latte frappe macchiato mocha; do
+    curl -fsSLO --output-dir ~/.config/alacritty/themes https://github.com/catppuccin/alacritty/raw/main/catppuccin-$palette.toml
+done
+
+ln -sf ~/.config/alacritty/themes/catppuccin-mocha.toml ~/.config/alacritty/theme.toml
