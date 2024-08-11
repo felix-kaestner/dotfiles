@@ -10,14 +10,17 @@ if [[ -z $selected ]]; then
     exit 0
 fi
 
-tmux_running=$(pgrep tmux)
+if [[ -x "$(command -v alacritty)" ]]; then
+    ln -sf ~/.config/alacritty/themes/catppuccin-$selected.toml ~/.config/alacritty/theme.toml
+    touch ~/.config/alacritty/alacritty.toml
+fi
 
-if [ -x "$(command -v kitty)" ]; then
+if [[ -x "$(command -v kitty)" ]]; then
     kitty +kitten themes --reload-in=all --config-file-name kitty.local.conf Catppuccin-$(echo "$selected" | awk '{ print toupper(substr($0, 1, 1)) substr($0, 2); }')
     rm -rf ~/.config/kitty/kitty.local.conf.bak
 fi
 
-if [[ ! -z $TMUX ]] && [[ ! -z $tmux_running ]]; then
+if [[ ! -z $TMUX ]] && [[ ! -z $(pgrep tmux) ]]; then
     tmux set -g @catppuccin_flavour $selected
     tmux source-file ~/.tmux.conf
 fi
