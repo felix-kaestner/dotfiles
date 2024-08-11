@@ -12,6 +12,7 @@ family = "JetBrainsMono Nerd Font"
 decorations = "None"
 startup_mode = "Maximized"
 option_as_alt = "OnlyLeft"
+dynamic_padding = true
 
 [selection]
 save_to_clipboard = true
