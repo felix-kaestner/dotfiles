@@ -58,4 +58,6 @@ bindkey -s "^f" "~/.local/bin/tmux-sessionizer\n"
 # Fzf shell integration
 source <(fzf --zsh)
 
+export FZF_ALT_C_COMMAND="find ~/Developer -mindepth 1 -maxdepth 1 -type d"
+
 # vim: syn=sh ft=sh
