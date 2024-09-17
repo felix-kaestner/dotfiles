@@ -11,7 +11,7 @@ family = "JetBrainsMono Nerd Font"
 [window]
 decorations = "None"
 startup_mode = "Maximized"
-option_as_alt = "OnlyLeft"
+option_as_alt = "OnlyRight"
 dynamic_padding = true
 
 [selection]
