@@ -833,50 +833,6 @@ require("lazy").setup({
         end,
     },
 
-    -- Test Runner
-    {
-        "nvim-neotest/neotest",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-neotest/neotest-go",
-            "nvim-neotest/nvim-nio",
-        },
-        -- stylua: ignore
-        keys = {
-            { "<leader>tn", "<cmd>lua require('neotest').run.run()<cr>", desc = "[T]est [N]earest" },
-            { "<leader>tf", "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>", desc = "[T]est [F]ile" },
-            { "<leader>tw", "<cmd>lua require('neotest').watch.toggle(vim.fn.expand('%'))<cr>", desc = "[T]est [W]atch" },
-            { "<leader>to", "<cmd>lua require('neotest').output.open({ enter = true, auto_close = true })<cr>", desc = "[T]est [O]utput" },
-            { "<leader>tO", "<cmd>lua require('neotest').output_panel.toggle()<cr>", desc = "Toggle [T]est [O]utput" },
-            { "<leader>ts", "<cmd>lua require('neotest').summary.toggle()<cr>", desc = "Toggle [T]est [S]ummary" },
-            { "<leader>tS", "<cmd>lua require('neotest').run.stop()<cr>", desc = "[S]top [T]est Run" },
-        },
-        opts = function()
-            return {
-                adapters = {
-                    require("neotest-go")({ args = { "-tags=test" } }),
-                },
-                status = { virtual_text = true },
-                quickfix = { enabled = false },
-            }
-        end,
-        config = function(_, opts)
-            local ns = vim.api.nvim_create_namespace("neotest")
-
-            vim.diagnostic.config({
-                virtual_text = {
-                    format = function(diagnostic)
-                        local text = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-                        return text
-                    end,
-                },
-            }, ns)
-
-            require("neotest").setup(opts)
-        end,
-    },
-
     -- Debug Adapter Protocol
     {
         "mfussenegger/nvim-dap",
