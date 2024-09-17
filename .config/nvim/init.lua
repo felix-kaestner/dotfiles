@@ -112,6 +112,27 @@ vim.keymap.set("n", "<leader>fn", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 -- Exit from insert mode by Esc in Terminal
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
+-- [[ Netrw ]]
+vim.g.netrw_banner = 0
+vim.g.netrw_altv = 1
+
+-- Based on "tpope/vim-vinegar"
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "netrw",
+    callback = function()
+        vim.keymap.set("n", ".", function()
+            local path = vim.b.netrw_curdir .. "/" .. vim.fn.expand("<cfile>")
+            local cmd = ":<C-U> " .. vim.fn.fnameescape(path) .. "<Home>"
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(cmd, true, true, true), "n", true)
+        end, { buffer = true })
+
+        vim.keymap.set("n", "y.", function()
+            local path = vim.b.netrw_curdir .. "/" .. vim.fn.expand("<cfile>")
+            vim.fn.setreg(vim.v.register, path)
+        end, { buffer = true, silent = true })
+    end,
+})
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup("YankHighlight", { clear = true })
