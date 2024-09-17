@@ -14,9 +14,16 @@ defaults write com.apple.dock "expose-group-apps" -bool "true"
 
 killall Dock
 
-# Finder
+# System
+defaults write NSGlobalDomain "KeyRepeat" -int "2"
+defaults write NSGlobalDomain "InitialKeyRepeat" -int "15"
 defaults write NSGlobalDomain "NSDocumentSaveNewDocumentsToCloud" -bool "false"
 
+defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots"
+
+killall SystemUIServer
+
+# Finder
 defaults write com.apple.finder "FXEnableExtensionChangeWarning" -bool "false"
 defaults write com.apple.finder "FXPreferredViewStyle" -string "Nlsv"
 defaults write com.apple.finder "FXDefaultSearchScope" -string "SCcf"
