@@ -110,7 +110,7 @@ vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
 vim.keymap.set("n", "<leader>fn", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 
 -- Exit from insert mode by Esc in Terminal
-vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]])
 
 -- [[ Netrw ]]
 vim.g.netrw_banner = 0
@@ -175,7 +175,7 @@ local servers = {
             hints = {
                 constantValues = true,
             },
-            buildFlags = { "-tags=test" }
+            buildFlags = { "-tags=test" },
         },
     },
 
@@ -225,7 +225,7 @@ local on_attach = function(client, bufnr)
         local text_document = text_document_edit.textDocument
         local buf = vim.uri_to_bufnr(text_document.uri)
         if offset_encoding == nil then
-            vim.notify_once('apply_text_document_edit must be called with valid offset encoding', vim.log.levels.WARN)
+            vim.notify_once("apply_text_document_edit must be called with valid offset encoding", vim.log.levels.WARN)
         end
 
         vim.lsp.util.apply_text_edits(text_document_edit.edits, buf, offset_encoding)
@@ -238,7 +238,8 @@ local on_attach = function(client, bufnr)
     nmap("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
     nmap("gr", builtin.lsp_references, "[G]oto [R]eferences")
     nmap("gI", builtin.lsp_implementations, "[G]oto [I]mplementation")
-    nmap("gR", function() builtin.lsp_references({ file_ignore_patterns = { "%_test.go", "%_gen.go", "%.pb.go" } }) end, "[G]oto [R]eferences w/o Test & Generated Files") -- stylua: ignore
+    -- stylua: ignore
+    nmap("gR", function() builtin.lsp_references({ file_ignore_patterns = { "%_test.go", "%_gen.go", "%.pb.go" } }) end, "[G]oto [R]eferences w/o Test & Generated Files")
     nmap("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
     nmap("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
     nmap("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
@@ -247,7 +248,9 @@ local on_attach = function(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
         vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
 
-        nmap('<leader>th', function () vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }) end, "T]oggle Inlay [H]ints")
+        nmap("<leader>th", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }))
+        end, "T]oggle Inlay [H]ints")
     end
 
     -- Automatically format source code on save
@@ -364,7 +367,7 @@ require("lazy").setup({
 
                         local Job = require("plenary.job")
 
-                        if vim.fn.executable('go') == 1 then
+                        if vim.fn.executable("go") == 1 then
                             Job:new({
                                 command = "go",
                                 args = { "list", "-m", "-f", "'{{.Path}}'" },
@@ -391,7 +394,7 @@ require("lazy").setup({
                             capabilities = capabilities,
                             on_attach = on_attach,
                         })
-                    end
+                    end,
                 },
             })
 
@@ -402,7 +405,7 @@ require("lazy").setup({
                     if #vim.lsp.get_clients({ bufnr = 0, name = "gopls" }) > 0 then
                         vim.lsp.codelens.refresh({ bufnr = 0 })
                     end
-                end
+                end,
             })
         end,
     },
@@ -430,7 +433,8 @@ require("lazy").setup({
                 "rafamadriz/friendly-snippets",
                 config = function()
                     require("luasnip.loaders.from_vscode").lazy_load({ exclude = { "go" } })
-                    require("luasnip.loaders.from_vscode").lazy_load({ paths = vim.fn.stdpath "config" .. "/snippets/" })
+                    -- stylua: ignore
+                    require("luasnip.loaders.from_vscode").lazy_load({ paths = vim.fn.stdpath("config") .. "/snippets/" })
                 end,
             },
         },
@@ -964,7 +968,8 @@ require("lazy").setup({
             Worktree.on_tree_change(function(op, metadata)
                 if op == Worktree.Operations.Create then
                     -- Copy required environment variables for project setup
-                    vim.fn.system("cp " .. Worktree.get_root() .. "/.env*" .. " " .. Worktree.get_worktree_path(metadata.path) .. "/") --stylua:ignore
+                    -- stylua: ignore
+                    vim.fn.system("cp " .. Worktree.get_root() .. "/.env*" .. " " .. Worktree.get_worktree_path(metadata.path) .. "/")
                 end
             end)
 
