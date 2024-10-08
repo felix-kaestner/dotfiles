@@ -200,7 +200,7 @@ local servers = {
         },
     },
 
-    tsserver = {},
+    ts_ls = {},
 
     yamlls = {},
 }
