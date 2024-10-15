@@ -644,7 +644,7 @@ require("lazy").setup({
             "nvim-treesitter/nvim-treesitter",
         },
         keys = {
-            { "<leader>rr", "<cmd>lua require('refactoring').select_refactor()<cr>", desc = "[R]efactor" },
+            { "<leader>re", "<cmd>lua require('refactoring').select_refactor()<cr>", desc = "[R]efactor" },
         },
     },
 
