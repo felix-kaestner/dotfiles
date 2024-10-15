@@ -311,9 +311,6 @@ require("lazy").setup({
 
             -- Useful status updates for LSP
             { "j-hui/fidget.nvim", event = "LspAttach", opts = { notification = { window = { winblend = 0 } } } },
-
-            -- Additional lua configuration for Neovim setup and plugin development
-            { "folke/neodev.nvim", opts = {} },
         },
         keys = {
             -- Diagnostic keymaps
@@ -413,6 +410,20 @@ require("lazy").setup({
     -- Automatically install LSPs to stdpath
     { "williamboman/mason.nvim", cmd = "Mason", build = ":MasonUpdate", opts = {} },
 
+    -- Additional LuaLS configuration for Neovim config and plugin development
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        dependencies = {
+            { "Bilal2453/luvit-meta", lazy = true }, -- `vim.uv` typings
+        },
+        opts = {
+            library = {
+                { path = "luvit-meta/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+
     -- Autocompletion
     {
         "hrsh7th/nvim-cmp",
@@ -510,6 +521,10 @@ require("lazy").setup({
                     end, { "i", "s" }),
                 }),
                 sources = {
+                    {
+                        name = "lazydev",
+                        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+                    },
                     { name = "nvim_lsp" },
                     { name = "nvim_lua" },
                     { name = "luasnip" },
@@ -757,7 +772,6 @@ require("lazy").setup({
     {
         "folke/which-key.nvim",
         event = "VeryLazy",
-        ---@type wk.Opts
         opts = {
             spec = {
                 { "<leader>c", group = "[C]ode" },
