@@ -107,7 +107,7 @@ vim.keymap.set({ "c", "n", "v", "x" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/
 vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
 
 -- Shorthand to launch Netrw
-vim.keymap.set("n", "<leader>fn", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
+vim.keymap.set("n", "<leader>fe", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 
 -- Exit from insert mode by Esc in Terminal
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]])
@@ -737,21 +737,6 @@ require("lazy").setup({
         config = function()
             require("telescope").load_extension("gh")
         end,
-    },
-
-    -- File Explorer
-    {
-        "nvim-tree/nvim-tree.lua",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        keys = {
-            { "<leader>fe", "<cmd>NvimTreeFindFileToggle<cr>", desc = "[F]ile [E]xplorer" },
-        },
-        opts = {
-            view = { width = "30%" },
-            filters = { custom = { "^\\.git" } },
-            update_focused_file = { enable = true },
-            diagnostics = { enable = true },
-        },
     },
 
     -- Quick Navigation
