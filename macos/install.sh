@@ -40,6 +40,7 @@ killall Finder
 brew install --cask arc
 brew install --cask chatgpt
 brew install --cask enpass
+brew install --cask eqmac
 brew install --cask gpg-suite
 brew install --cask notion
 brew install --cask monitorcontrol
@@ -47,7 +48,6 @@ brew install --cask rectangle
 brew install --cask slack
 brew install --cask tidal
 brew install --cask todoist
-brew install --cask via
 
 brew install pam-reattach
 
