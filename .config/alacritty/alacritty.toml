@@ -51,3 +51,8 @@ regex = "[^ ]+\\.[^ ]+:\\d+(:\\d+)?"
 action = "Copy"
 binding = { key = "L", mods = "Control|Shift" }
 
+[[hints.enabled]]
+regex = "\\w+([\\.\\+\\-\\w]+)*@\\w+([\\.\\-]\\w+)*\\.\\w{2,}"
+action = "Copy"
+binding = { key = "E", mods = "Control|Shift" }
+
