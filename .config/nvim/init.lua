@@ -283,19 +283,15 @@ local on_attach = function(client, bufnr)
     end
 end
 
--- Install package manager
--- https://github.com/folke/lazy.nvim
--- See `:help lazy.nvim.txt`
+-- Install plugin manager
+-- See `:help lazy.nvim` or https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    })
+if not vim.uv.fs_stat(lazypath) then
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    local stdout = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    if vim.v.shell_error ~= 0 then
+        error("Failed to clone lazy.nvim:\n" .. stdout)
+    end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -729,7 +725,7 @@ require("lazy").setup({
                             local selection = action_state.get_selected_entry()
                             vim.cmd("colorscheme catppuccin-" .. selection.value)
                             Job:new({
-                                command = vim.loop.os_homedir() .. "/.local/bin/theme-switcher",
+                                command = vim.uv.os_homedir() .. "/.local/bin/theme-switcher",
                                 args = { selection.value },
                             }):sync()
                         end)
