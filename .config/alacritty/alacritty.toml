@@ -37,7 +37,7 @@ binding = { key = "G", mods = "Control|Shift" }
 mouse = { enabled = true }
 
 [[hints.enabled]]
-regex = "[a-f0-9]{40}|[a-f0-9]{7,8}"
+regex = "[a-f0-9]{40}|[a-f0-9]{12}|[a-f0-9]{7,8}"
 action = "Copy"
 binding = { key = "H", mods = "Control|Shift" }
 
