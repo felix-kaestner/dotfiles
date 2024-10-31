@@ -113,8 +113,9 @@ vim.keymap.set("n", "<leader>fe", vim.cmd.Ex, { desc = "[F]ile [E]xplorer" })
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]])
 
 -- [[ Netrw ]]
-vim.g.netrw_banner = 0
-vim.g.netrw_altv = 1
+vim.g.netrw_altv = 1 -- Split right
+vim.g.netrw_banner = 0 -- Hide banner
+vim.g.netrw_localcopydircmd = "cp -r" -- Enable recursive copy of directories.
 
 -- Based on "tpope/vim-vinegar"
 vim.api.nvim_create_autocmd("FileType", {
