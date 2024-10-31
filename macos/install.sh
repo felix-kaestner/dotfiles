@@ -36,6 +36,22 @@ defaults write com.apple.finder "ShowRemovableMediaOnDesktop" -bool "false"
 
 killall Finder
 
+# Keyboard Shortcuts for macOS 15.X window tiling
+# $ = Shift (⇧)
+# ^ = Control (⌃)
+# ~ = Option (⌥)
+# @ = Command (⌘)
+# Up Arrow = \UF700
+# Down Arrow = \UF701
+# Left Arrow: = \UF702
+# Right Arrow = \UF703
+defaults write -g NSUserKeyEquivalents -dict-add 'Fill' '^~@f'
+defaults write -g NSUserKeyEquivalents -dict-add 'Centre' '^~@c'
+defaults write -g NSUserKeyEquivalents -dict-add 'Top' '^~@\UF700'
+defaults write -g NSUserKeyEquivalents -dict-add 'Bottom' '^~@\UF701'
+defaults write -g NSUserKeyEquivalents -dict-add 'Left' '^~@\UF702'
+defaults write -g NSUserKeyEquivalents -dict-add 'Right' '^~@\UF703'
+
 # MacOS-only Software
 brew install --cask arc
 brew install --cask chatgpt
@@ -44,7 +60,6 @@ brew install --cask eqmac
 brew install --cask gpg-suite
 brew install --cask notion
 brew install --cask monitorcontrol
-brew install --cask rectangle
 brew install --cask slack
 brew install --cask tidal
 brew install --cask todoist
