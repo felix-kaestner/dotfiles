@@ -55,6 +55,7 @@ defaults write -g NSUserKeyEquivalents -dict-add 'Right' '^~@\UF703'
 # MacOS-only Software
 brew install --cask arc
 brew install --cask chatgpt
+brew install --cask claude
 brew install --cask enpass
 brew install --cask eqmac
 brew install --cask gpg-suite
