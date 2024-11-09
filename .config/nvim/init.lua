@@ -194,6 +194,8 @@ local servers = {
         },
     },
 
+    pyright = {},
+
     terraformls = {
         experimentalFeatures = {
             validateOnSave = true,
@@ -568,6 +570,7 @@ require("lazy").setup({
                 "tsx",
                 "javascript",
                 "typescript",
+                "python",
                 "vimdoc",
                 "vim",
                 "yaml",
