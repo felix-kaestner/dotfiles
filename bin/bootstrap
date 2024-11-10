@@ -141,11 +141,11 @@ function generate_keys() {
     read -e MAIL
 
     info ' - Generate a Master GPG key..'
-    gpg --quick-generate-key "${NAME} <${MAIL}>" rsa4096
+    gpg --quick-gen-key "${NAME} <${MAIL}>" ed25519 cert
     success 'GPG key generated.'
 
     info 'Retrieve Fingerprint..'
-    FPR=$(gpg --with-colons --fingerprint "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "fpr" {print $10;}')
+    FPR=$(gpg --with-colons --fingerprint "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "fpr" {print $10; exit}')
     success 'Fingerprint retrieved.'
 
     # Generate subkeys
@@ -153,27 +153,27 @@ function generate_keys() {
     read -e REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Signing Subkey..'
-        gpg --quick-add-key $FPR rsa4096 sign
+        gpg --quick-add-key $FPR ed25519 sign 1y
         success 'Signing Subkey generated.'
 
-        SIGN_KEY=$(gpg --list-secret-keys --keyid-format LONG $MAIL | sed -n '/\[S\]/{s/.*\/\([A-Z0-9]*\).*/\1/;p}')
+        SIGN_KEY=$(gpg --list-secret-keys --with-colons "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "ssb" && $12 == "s" {print $5; exit}')
     fi
 
     ask ' - Do you want to create a subkey for authentication? (Y/n)'
     read -e REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Authentication Subkey..'
-        gpg --quick-add-key $FPR rsa4096 auth
+        gpg --quick-add-key $FPR ed25519 auth 1y
         success 'Authentication Subkey generated.'
 
-        SSH_KEYGRIP=$(gpg --list-secret-keys --with-keygrip $MAIL | sed -n '/\[A\]/{n;s/^.*Keygrip\s=\s//;p}')
+        SSH_KEYGRIP=$(gpg --list-secret-keys --with-colons "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "ssb" && $12 == "a" {capture = 3} capture && capture-- == 1 {print $10; exit}')
     fi
 
     ask ' - Do you want to create a subkey for encryption? (Y/n)'
     read -e REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Encryption Subkey.'
-        gpg --quick-add-key $FPR rsa4096 encr
+        gpg --quick-add-key $FPR cv25519 encr 1y
         success 'Encryption Subkey generated.'
     fi
 
