@@ -103,6 +103,9 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 -- stylua: ignore
 vim.keymap.set({ "c", "n", "v", "x" }, "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gcI<Left><Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
+-- Shorthand to convert all camelCase words in a selection to snake_case
+vim.keymap.set("v", "<leader>sc", [[:s/[a-z]\@<=[A-Z]/_\l\0/g]], { desc = "[S]nake [C]ase" })
+
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", vim.cmd.Git, { desc = "[G]it [P]ane" })
 
