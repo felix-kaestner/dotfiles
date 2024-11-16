@@ -187,7 +187,13 @@ local servers = {
 
     rust_analyzer = {},
 
-    jsonls = {},
+    jsonls = {
+        json = {
+            ---@type SchemaOpts?
+            schemas = nil,
+            validate = { enable = true },
+        },
+    },
 
     lua_ls = {
         Lua = {
@@ -208,7 +214,15 @@ local servers = {
 
     ts_ls = {},
 
-    yamlls = {},
+    yamlls = {
+        redhat = { telemetry = { enabled = false } },
+        yaml = {
+            ---@type SchemaOpts?
+            schemas = nil,
+            -- disable built-in schema store support to use SchemaStore.nvim
+            schemaStore = { enable = false, url = "" },
+        },
+    },
 }
 
 local augroup = vim.api.nvim_create_augroup("lsp-format", {})
@@ -301,6 +315,9 @@ require("lazy").setup({
 
             -- Useful status updates for LSP
             { "j-hui/fidget.nvim", event = "LspAttach", opts = { notification = { window = { winblend = 0 } } } },
+
+            -- SchemaStore catalog for jsonls and yamlls
+            "b0o/schemastore.nvim",
         },
         keys = {
             -- Diagnostic keymaps
@@ -382,6 +399,32 @@ require("lazy").setup({
                             on_attach = on_attach,
                         })
                     end,
+
+                    ["jsonls"] = function()
+                        local settings = servers.jsonls
+
+                        settings.json.schemas = require("schemastore").json.schemas(settings.json.schemas)
+
+                        require("lspconfig").jsonls.setup({
+                            settings = settings,
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end,
+
+                    ["yamlls"] = function()
+                        local settings = servers.yamlls
+
+                        settings.yaml.schemas = require("schemastore").yaml.schemas(settings.yaml.schemas)
+
+                        require("lspconfig").yamlls.setup({
+                            settings = settings,
+                            capabilities = capabilities,
+                            on_attach = on_attach,
+                        })
+                    end,
+                },
+            })
                 },
             })
 
