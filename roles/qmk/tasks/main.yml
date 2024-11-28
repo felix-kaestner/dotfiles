@@ -1,0 +1,32 @@
+---
+- name: Install QMK on macOS using Homebrew
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: qmk/qmk/qmk
+    state: present
+
+- name: Install QMK on Linux using pip
+  when: ansible_system == "Linux"
+  ansible.builtin.pip:
+    name: qmk
+    state: present
+    virtualenv: "{{ ansible_env.HOME }}/.venvs/qmk"
+    virtualenv_command: "{{ ansible_python_interpreter }} -m venv"
+
+- name: Set QMK executable path
+  ansible.builtin.set_fact:
+    qmk: "{{ 'qmk' if ansible_system == 'Darwin' else ansible_env.HOME + '/.venvs/qmk/bin/qmk' }}"
+
+- name: Detect QMK home directory
+  ansible.builtin.command: "{{ qmk }} config user.qmk_home"
+  register: qmk_home
+  changed_when: false
+
+- name: Configure QMK home directory
+  when: "qmk_home.stdout != 'user.qmk_home=' + ansible_env.HOME + '/.qmk'"
+  ansible.builtin.command: "{{ qmk }} config user.qmk_home='{{ ansible_env.HOME }}/.qmk'"
+
+- name: Run QMK setup
+  ansible.builtin.command: "{{ qmk }} setup -y"
+  args:
+    creates: "{{ ansible_env.HOME }}/.qmk/keyboards"

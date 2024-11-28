@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# tmux-sessionizer: launch or attach to a tmux session in a working directory
+# usage: tmux-sessionizer [DIRECTORY]
+
+help() {
+    echo >&2 "Usage: $(basename "$0") [DIRECTORY]
+
+Launches or attaches to a tmux session in the specified directory.
+If no directory is specified, it will use fzf to select one.
+The tmux session name will be based on the directory name.
+
+Options:
+  -h, --help    Show this help message and exit
+
+Arguments:
+  DIRECTORY     Working directory for tmux session (optional)
+
+Example:
+  $(basename "$0")                  # Uses fzf to select a directory under ~/Developer
+  $(basename "$0") ~/projects/app"
+}
+
+if [[ $# -gt 1 || "$1" =~ ^(-h|--help)$ ]]; then
+    help
+    exit 0
+fi
+
+if [[ $# -eq 1 ]]; then
+    if [[ ! -d "$1" ]]; then
+        echo >&2 "'$1' is not a directory" ""
+        help
+        exit 2
+    fi
+    dir=$1
+else
+    dir=$(find ~/Developer -mindepth 1 -maxdepth 1 -type d | fzf --tmux) || exit 0
+fi
+
+name=$(basename "$dir" | tr . _)
+
+if [[ -z $TMUX ]] && [[ -z $(pgrep tmux) ]]; then
+    tmux new-session -s $name -c $dir
+    exit 0
+fi
+
+if ! tmux has-session -t=$name 2>/dev/null; then
+    tmux new-session -ds $name -c $dir
+fi
+
+if [[ -z $TMUX ]]; then
+    tmux attach -t $name
+else
+    tmux switch-client -t $name
+fi

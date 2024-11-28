@@ -1,0 +1,8 @@
+# Search hidden files and directories.
+--hidden
+
+# Follow symbolic links.
+--follow
+
+# Searches case insensitively.
+--smart-case

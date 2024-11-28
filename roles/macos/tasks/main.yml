@@ -1,0 +1,15 @@
+---
+- name: Install pam-reattach
+  community.general.homebrew:
+    name: "pam-reattach"
+    state: present
+
+- name: Ensure /etc/pam.d/sudo_local exists
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/sudo_local"
+    dest: "/etc/pam.d/sudo_local"
+    remote_src: true
+    owner: root
+    group: wheel
+    mode: "0644"
+  become: true

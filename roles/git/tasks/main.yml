@@ -1,0 +1,19 @@
+---
+- name: Include vars from local.yml
+  when: "(role_path + '/vars/local.yml') is file"
+  ansible.builtin.include_vars:
+    file: "{{ role_path }}/vars/local.yml"
+
+- name: Create symbolic links for git config
+  ansible.builtin.file:
+    src: "{{ item }}"
+    dest: "{{ ansible_env.HOME }}/{{ item | basename }}"
+    state: link
+  with_fileglob:
+    - "{{ role_path }}/files/.*"
+
+- name: Create ~/.gitconfig.local
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/.gitconfig.local.j2"
+    dest: "{{ ansible_env.HOME }}/.gitconfig.local"
+    force: false

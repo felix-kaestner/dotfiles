@@ -1,0 +1,11 @@
+---
+- name: Install ripgrep
+  ansible.builtin.package:
+    name: "ripgrep"
+    state: present
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/ripgrep"
+    state: link

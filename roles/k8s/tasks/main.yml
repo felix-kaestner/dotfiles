@@ -1,0 +1,8 @@
+---
+- name: Include macOS tasks
+  when: ansible_system == "Darwin"
+  ansible.builtin.include_tasks: macos.yml
+
+- name: Include Linux tasks
+  when: ansible_system == "Linux"
+  ansible.builtin.include_tasks: linux.yml
