@@ -1,0 +1,115 @@
+# ~/.profile: executed by the command interpreter for login shells.
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+# exists.
+
+# set locale
+export LANG=en_US.UTF-8
+
+# set user id environment variable
+if [ -z "$UID" ]; then
+    UID="$(id -u)"
+fi
+export UID
+
+# set group id environment variable
+if [ -z "$GID" ]; then
+    GID=$(id -g)
+fi
+export GID
+
+# include brew shellenv
+if [ -x "/opt/homebrew/bin/brew" ]; then
+    eval $(/opt/homebrew/bin/brew shellenv)
+fi
+
+# helper function to add a directory to the PATH
+add_to_path() {
+    if [[ -d "$1" && "$PATH" != *"$1"* ]]; then
+        export PATH="$PATH:$1"
+    fi
+}
+
+# set PATH so it includes user's private bin if it exists
+add_to_path "$HOME/.local/bin"
+
+# set PATH so it includes pnpm home if it exists
+export PNPM_HOME="$HOME/.local/share/pnpm"
+add_to_path "$HOME/.local/share/pnpm"
+
+# set PATH so it includes golang's user bin if it exists
+export GOPATH="$HOME/.go"
+add_to_path "$GOPATH/bin"
+
+# set PATH so it includes user's ruby bin directory if it exists
+export GEM_HOME="$HOME/.gem"
+add_to_path "$GEM_HOME/bin"
+
+# set PATH so it includes user's cargo bin if it exists
+add_to_path "$HOME/.cargo/bin"
+
+# set PATH so it includes user's symfony bin directory if it exists
+add_to_path "$HOME/.symfony/bin"
+
+# set PATH so it includes user's flutter bin directory if it exists
+add_to_path "$HOME/.flutter/bin"
+
+unset -f add_to_path
+
+# set aliases
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
+fi
+
+# set functions
+if [ -f ~/.functions ]; then
+    . ~/.functions
+fi
+
+# include local profile
+if [ -f ~/.profile.local ]; then
+    . ~/.profile.local
+fi
+
+# include fzf key bindings for git objects
+if [ -f ~/.fzf/fzf-git.sh ]; then
+    . ~/.fzf/fzf-git.sh
+fi
+
+# set editor to nvim
+if [[ -n $SSH_CONNECTION ]]; then
+    export EDITOR='vi'
+else
+    export EDITOR='nvim'
+fi
+
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
+
+## Docker Settings
+
+# enable buildkit
+export DOCKER_BUILDKIT=1
+
+# use docker cli command to build with docker-compose -> buildkit
+export COMPOSE_DOCKER_CLI_BUILD=1
+
+# automatically expose docker host through in lima-vm
+if [ "$(limactl ls -f '{{ .Status }}' docker 2>/dev/null)" = "Running" ]; then
+    export DOCKER_HOST=$(limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
+    export TESTCONTAINERS_HOST_OVERRIDE=$(limactl shell docker ip a show lima0 | awk '/inet / {sub("/.*",""); print $2}')
+    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+fi
+
+## GPG Settings
+unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+    export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+fi
+export GPG_TTY=$(tty)
+gpgconf --launch gpg-agent
+
+## Node.js Settings
+export NODE_OPTIONS="--experimental-json-modules"
+
+# vim: syn=sh ft=sh

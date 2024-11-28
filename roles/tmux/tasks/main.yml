@@ -1,0 +1,25 @@
+---
+- name: Install tmux
+  ansible.builtin.package:
+    name: "tmux"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/tmux"
+    state: link
+
+- name: Ensure ~/.config/tmux/plugins exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/tmux/plugins"
+    state: directory
+    mode: "0755"
+
+- name: Ensure tpm is installed
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm.git
+    dest: "{{ xdg_config_home }}/tmux/plugins/tpm"
+    force: true
+    depth: 1

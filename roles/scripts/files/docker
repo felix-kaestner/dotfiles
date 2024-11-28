@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# docker: command line interface for invoking nerdctl or docker through lima
+# usage: docker [OPTIONS] COMMAND
+
+if ! [ -x "$(command -v limactl)" ]; then
+    echo >&2 "$(basename "$0"): 'limactl' executable not found"
+    exit 127
+fi
+
+if [ "$(limactl ls -f '{{ .Status }}' default 2>/dev/null)" = "Running" ]; then
+    exec lima nerdctl "$@"
+elif [ "$(limactl ls -f '{{ .Status }}' docker 2>/dev/null)" = "Running" ]; then
+    export LIMA_INSTANCE=docker
+    exec lima docker "$@"
+else
+    echo >&2 "no lima-vm instance running, execute 'limactl start [default|docker]' to start the desired instance."
+    exit 1
+fi

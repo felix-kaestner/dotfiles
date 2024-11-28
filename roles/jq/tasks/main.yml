@@ -1,0 +1,6 @@
+---
+- name: Install jq
+  ansible.builtin.package:
+    name: "jq"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"

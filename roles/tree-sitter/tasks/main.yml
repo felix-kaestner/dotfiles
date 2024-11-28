@@ -1,0 +1,6 @@
+---
+- name: Install tree-sitter
+  ansible.builtin.package:
+    name: "{{ 'tree-sitter' if ansible_system == 'Darwin' else 'tree-sitter-cli' }}"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"

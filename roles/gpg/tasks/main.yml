@@ -1,0 +1,29 @@
+---
+- name: Include vars from local.yml
+  when: "(role_path + '/vars/local.yml') is file"
+  ansible.builtin.include_vars:
+    file: "{{ role_path }}/vars/local.yml"
+
+- name: Install GPG-Suite
+  when: ansible_system == "Darwin"
+  community.general.homebrew_cask:
+    name: "gpg-suite"
+    state: present
+
+- name: Ensure ~/.gnupg exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.gnupg"
+    state: directory
+    mode: "0755"
+
+- name: Create ~/.gnupg/gpg-agent.conf
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/gpg-agent.conf.j2"
+    dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
+
+- name: Create ~/.gnupg/sshcontrol
+  when: ssh_keygrip | length > 0
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/sshcontrol.j2"
+    dest: "{{ ansible_env.HOME }}/.gnupg/sshcontrol"
+    force: false

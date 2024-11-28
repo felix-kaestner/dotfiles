@@ -51,30 +51,3 @@ defaults write -g NSUserKeyEquivalents -dict-add 'Top' '^~@\UF700'
 defaults write -g NSUserKeyEquivalents -dict-add 'Bottom' '^~@\UF701'
 defaults write -g NSUserKeyEquivalents -dict-add 'Left' '^~@\UF702'
 defaults write -g NSUserKeyEquivalents -dict-add 'Right' '^~@\UF703'
-
-# MacOS-only Software
-brew install --cask arc
-brew install --cask chatgpt
-brew install --cask claude
-brew install --cask enpass
-brew install --cask eqmac
-brew install --cask gpg-suite
-brew install --cask notion
-brew install --cask monitorcontrol
-brew install --cask slack
-brew install --cask tidal
-brew install --cask todoist
-
-brew install pam-reattach
-
-path=$(brew --prefix)
-sudo tee /etc/pam.d/sudo_local > /dev/null <<EOF
-# sudo_local: local config file which survives system update and is included for sudo
-auth       optional       $path/lib/pam/pam_reattach.so ignore_ssh
-auth       sufficient     pam_tid.so
-EOF
-
-# Install Rosetta 2
-if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto > /dev/null 2>&1; then
-    softwareupdate --install-rosetta --agree-to-license
-fi

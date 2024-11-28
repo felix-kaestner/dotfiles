@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# watch: run arbitrary command when files change
+# usage: watch <directory> <command> <args...>
+# based on: https://github.com/eradman/entr
+
+if [[ ! -x "$(command -v entr)" ]]; then
+  >&2 echo "entr executable not found"
+  exit 127
+fi
+
+help() {
+  >&2 echo "Usage: $(basename "$0") <directory> <command> <args...>
+
+Watches for changes in the specified directory and re-executes the given command whenever a file is modified.
+
+Options:
+  -h, --help    Show this help message and exit
+
+Arguments:
+  <directory>   Working directory to monitor for file changes
+  <command>     Command to execute when change is detected
+  <args...>     Additional arguments for the command.
+
+Example:
+  $(basename "$0") . make"
+}
+
+if [[ $# -lt 2 || "$@" =~ (-h|--help) ]]; then
+    help
+    exit 0
+fi
+
+if [[ ! -d "$1" ]]; then
+    >&2 echo "$(basename "$0"): '$1' is not a directory"
+    help
+    exit 2
+fi
+
+src=$1
+cmd=${@:2}
+files=
+
+if git -C "$src" rev-parse --git-dir &>/dev/null; then
+    files=$(git -C "$src" ls-files --cached --others --exclude-standard)
+else
+    files=$(find "$src" -type f)
+fi
+
+echo "$files" | entr -rsc "$cmd"
+
