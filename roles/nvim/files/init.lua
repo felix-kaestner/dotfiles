@@ -161,6 +161,7 @@ vim.g.netrw_localcopydircmd = "cp -r" -- Enable recursive copy of directories.
 -- Based on "tpope/vim-vinegar"
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "netrw",
+    group = vim.api.nvim_create_augroup("netrw-enhanced", { clear = true }),
     callback = function()
         vim.keymap.set("n", ".", function()
             local path = vim.b.netrw_curdir .. "/" .. vim.fn.expand("<cfile>")
