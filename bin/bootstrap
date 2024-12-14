@@ -1,136 +1,28 @@
 #!/usr/bin/env bash
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
+DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 
 set -eu
-cd "$DIR" || exit 1
-
-info() {
-    printf "\r  [ \033[00;34m..\033[0m ] $1\n"
-}
 
 ask() {
     printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+}
+
+info() {
+    printf "\r  [ \033[00;34m..\033[0m ] $1\n"
 }
 
 success() {
     printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
 }
 
-fail() {
-    printf "\r\033[2K  [\033[0;31mFAIL\033[0m] $1\n"
-    echo ''
-    exit 1
-}
-
-# Based on https://github.com/holman/dotfiles/blob/master/script/bootstrap#L53
-link_file() {
-    local src=$1 dst=$2
-
-    local overwrite= backup= skip=
-    local action=
-
-    if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]; then
-
-        if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
-
-            local currentSrc="$(readlink $dst)"
-
-            if [ "$currentSrc" == "$src" ]; then
-
-                skip=true
-
-            else
-
-                ask "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
-        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-                read -n 1 action
-
-                case "$action" in
-                o)
-                    overwrite=true
-                    ;;
-                O)
-                    overwrite_all=true
-                    ;;
-                b)
-                    backup=true
-                    ;;
-                B)
-                    backup_all=true
-                    ;;
-                s)
-                    skip=true
-                    ;;
-                S)
-                    skip_all=true
-                    ;;
-                *) ;;
-                esac
-
-            fi
-
-        fi
-
-        overwrite=${overwrite:-$overwrite_all}
-        backup=${backup:-$backup_all}
-        skip=${skip:-$skip_all}
-
-        if [ "$overwrite" == "true" ]; then
-            rm -rf "$dst"
-            success "Removed $dst"
-        fi
-
-        if [ "$backup" == "true" ]; then
-            mv "$dst" "${dst}.backup"
-            success "Moved $dst -> ${dst}.backup"
-        fi
-
-        if [ "$skip" == "true" ]; then
-            success "Skipped $src -> $dst"
-        fi
-    fi
-
-    if [ "$skip" != "true" ]; then # "false" or empty
-        ln -s "$1" "$2"
-        success "Successfully linked $1 -> $2"
-    fi
-}
-
-install_dotfiles() {
-    info 'Installing dotfiles'
-
-    local overwrite_all=false backup_all=false skip_all=false
-
-    for src in $(find -H "$DIR" -maxdepth 2 -name '*.symlink' -not -path '*.git*' -type f); do
-        dst="$HOME/.$(basename "${src%.*}")"
-        link_file "$src" "$dst"
-    done
-
-    for dir in $(find -H "$DIR" -maxdepth 1 -name '.*' -not -path '*.git*' -type d); do
-        mkdir -p "$HOME/${dir##$DIR/}"
-        for dir in $(find -H "$dir" -maxdepth 1 -not -path "$dir" -not -path "$dir/bin" -type d); do
-            dst="$HOME/${dir##$DIR/}"
-            link_file "$dir" "$dst"
-        done
-
-        if [ -d "$dir/bin" ]; then
-            mkdir -p "$HOME/${dir##$DIR/}/bin"
-            for src in $(find -H "$dir/bin" -maxdepth 1 -type f); do
-                dst="$HOME/${src##$DIR/}"
-                link_file "$src" "$dst"
-            done
-        fi
-    done
-}
-
 NAME=
 MAIL=
 SIGN_KEY=
+SSH_KEYGRIP=
 
 function generate_keys() {
     export GPG_TTY=$(tty)
-    local SSH_KEYGRIP=
 
     info 'Generating GPG keys..'
 
@@ -167,6 +59,15 @@ function generate_keys() {
         success 'Authentication Subkey generated.'
 
         SSH_KEYGRIP=$(gpg --list-secret-keys --with-colons "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "ssb" && $12 == "a" {capture = 3} capture && capture-- == 1 {print $10; exit}')
+
+        if [ ! -f "$DIR/roles/gpg/vars/local.yml" ]; then
+            info "Create $DIR/roles/gpg/vars/local.yml.."
+
+            cat <<EOF >$DIR/roles/gpg/vars/local.yml
+---
+ssh_keygrip: "$SSH_KEYGRIP"
+EOF
+        fi
     fi
 
     ask ' - Do you want to create a subkey for encryption? (Y/n)'
@@ -177,60 +78,21 @@ function generate_keys() {
         success 'Encryption Subkey generated.'
     fi
 
+    if [ ! -f "$DIR/roles/git/vars/local.yml" ]; then
+        info "Create $DIR/roles/git/vars/local.yml.."
+
+        cat <<EOF >$DIR/roles/git/vars/local.yml
+---
+git_name: "$NAME"
+git_email: "$MAIL"
+git_signingkey: "$SIGN_KEY"
+EOF
+    fi
+
     info 'Print Keys..'
     gpg --list-secret-keys --keyid-format LONG
 
     success 'Key(s) generated.'
-
-    info 'Updating ~/.gnupg/gpg-agent.conf..'
-    cat <<EOT >~/.gnupg/gpg-agent.conf
-default-cache-ttl 86400
-max-cache-ttl 86400
-EOT
-    success 'Updated ~/.gnupg/gpg-agent.conf.'
-
-    if ! [ -z "$SSH_KEYGRIP" ]; then
-        echo 'enable-ssh-support' >>~/.gnupg/gpg-agent.conf
-
-        info 'Updating ~/.gnupg/sshcontrol..'
-        ssh-add -L &>/dev/null || true
-        echo $SSH_KEYGRIP >>~/.gnupg/sshcontrol
-        success 'Updated ~/.gnupg/sshcontrol.'
-    fi
-}
-
-setup_gitconfig() {
-    if ! [ -f git/gitconfig.local.symlink ]; then
-        info 'Setup git/gitconfig.local.symlink'
-
-        if [ -z "$NAME" ]; then
-            ask ' - What is your name?'
-            read -e NAME
-        fi
-
-        if [ -z "$MAIL" ]; then
-            ask ' - What is your email?'
-            read -e MAIL
-        fi
-
-        sed -e "s/GIT_USER_NAME/$NAME/g" -e "s/GIT_USER_EMAIL/$MAIL/g" git/gitconfig.local.template >git/gitconfig.local.symlink
-
-        ask ' - Do you want to sign commits using gpg? (Y/n)'
-        read -e GIT_GPGSIGN
-        case $GIT_GPGSIGN in
-        [Yy]*)
-            sed -i "s/GIT_GPGSIGN/true/g" git/gitconfig.local.symlink
-            if [ -z "$SIGN_KEY" ]; then
-                ask ' - What is your GPG signing key?'
-                read -e SIGN_KEY
-            fi
-            sed -i "/\[user\]/c\\[user\]\n    signingkey = $SIGN_KEY" git/gitconfig.local.symlink
-            ;;
-        *) sed -i "s/GIT_GPGSIGN/false/g" git/gitconfig.local.symlink ;;
-        esac
-
-        success 'Created git/gitconfig.local.symlink'
-    fi
 }
 
 ask ' - Do you want to create GPG key(s)? (Y/n)'
@@ -238,5 +100,48 @@ read -e KEY_GEN
 if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
     generate_keys
 fi
-setup_gitconfig
-install_dotfiles
+
+if [ "$(uname -s)" == 'Darwin' ]; then
+    # Install Xcode Command Line Tools
+    if ! xcode-select -p &>/dev/null; then
+        xcode-select --install
+    fi
+
+    # Install Rosetta 2
+    if ! pkgutil --pkg-info=com.apple.pkg.RosettaUpdateAuto &>/dev/null; then
+        softwareupdate --install-rosetta --agree-to-license
+    fi
+
+    if ! [ -x "$(command -v brew)" ] && ! [ -x "/opt/homebrew/bin/brew" ]; then
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    if [ -x "/opt/homebrew/bin/brew" ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+fi
+
+if [ -x "$(command -v python3)" ]; then
+    PYTHON="python3"
+elif [ -x "$(command -v python)" ] && echo "$(python --version 2>&1)" | grep -q "^Python 3"; then
+    PYTHON="python"
+else
+    >&2 echo "No suitable Python 3.x interpreter found."
+    exit 1
+fi
+
+if ! [ -x "$(command -v ansible)" ]; then
+    VENV_PATH="$HOME/.venvs/ansible"
+
+    mkdir -p "$(dirname "$VENV_PATH")"
+
+    if [ ! -d "$VENV_PATH" ]; then
+        $PYTHON -m venv "$VENV_PATH"
+    fi
+
+    . "$VENV_PATH/bin/activate"
+
+    pip install -q -U pip ansible
+fi
+
+ansible-playbook --ask-become-pass -i "$DIR/hosts" --extra-vars "ansible_python_interpreter=$PYTHON" "$DIR/playbook.yml"

@@ -1,0 +1,41 @@
+---
+- name: Install fish
+  ansible.builtin.package:
+    name: "fish"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/fish"
+    state: link
+
+- name: Ensure that ~/.config/fish/local.fish exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/fish/local.fish"
+    state: touch
+
+- name: Detect fish shell path
+  ansible.builtin.shell: command -v fish
+  register: fish_path
+  changed_when: false
+
+- name: Check if /etc/shells exists
+  ansible.builtin.stat:
+    path: /etc/shells
+  register: shells_stat
+
+- name: Ensure fish shell in /etc/shells
+  when: shells_stat.stat.exists
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    line: "{{ fish_path.stdout }}"
+    state: present
+  become: true
+
+- name: Set default shell to fish
+  ansible.builtin.user:
+    name: "{{ user }}"
+    shell: "{{ fish_path.stdout }}"
+  become: true

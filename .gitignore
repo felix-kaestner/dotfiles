@@ -1,1 +1,2 @@
-*.local.symlink
+.pnpm-store
+roles/*/vars/local.yml

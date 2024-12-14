@@ -1,0 +1,78 @@
+---
+- name: ~/.dotfiles
+  hosts: localhost
+
+  vars:
+    user: "{{ lookup('env', 'USER') | default(ansible_user_id, true) }}"
+    xdg_config_home: "{{ lookup('env', 'XDG_CONFIG_HOME') | default(ansible_env.HOME + '/.config', true) }}"
+
+  pre_tasks:
+    - name: Ensure XDG_CONFIG_HOME exists
+      ansible.builtin.file:
+        path: "{{ xdg_config_home }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure ~/Developer exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/Developer"
+        state: directory
+        mode: "0755"
+
+  roles:
+    - alacritty
+    - entr
+    - fd
+    - fish
+    - fonts
+    - fzf
+    - git
+    - go
+    - gpg
+    - jq
+    - k8s
+    - lima
+    - role: macos
+      tags: macos
+      when: ansible_system == "Darwin"
+    - minikube
+    - node
+    - nvim
+    - qmk
+    - ripgrep
+    - rust
+    - scripts
+    - tmux
+    - tree-sitter
+    - uv
+
+  tasks:
+    - name: Install Homebrew casks
+      when: ansible_system == "Darwin"
+      community.general.homebrew_cask:
+        name:
+          - arc
+          - chatgpt
+          - claude
+          - enpass
+          - notion
+          - monitorcontrol
+          - rectangle
+          - slack
+          - tidal
+          - todoist
+        state: present
+
+    - name: Create symbolic links for ~/.* files
+      ansible.builtin.file:
+        src: "{{ playbook_dir }}/{{ item }}"
+        dest: "{{ ansible_env.HOME }}/{{ item }}"
+        state: link
+        force: true
+      loop:
+        - ".aliases"
+        - ".editorconfig"
+        - ".functions"
+        - ".ignore"
+        - ".profile"
+        - ".zshrc"

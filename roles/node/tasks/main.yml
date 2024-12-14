@@ -1,0 +1,16 @@
+---
+- name: Install pnpm
+  ansible.builtin.shell: curl -fsSL https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(command -v sh)" sh -
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/share/pnpm"
+
+- name: Delete $HOME/.shrc
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.shrc"
+    state: absent
+
+- name: Install Node.js
+  ansible.builtin.shell: pnpm env use --global lts
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"

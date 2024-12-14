@@ -1,0 +1,6 @@
+---
+- name: Install fd
+  ansible.builtin.package:
+    name: "{{ 'fd' if ansible_system == 'Darwin' else 'fd-find' }}"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"

@@ -1,0 +1,5 @@
+---
+- name: Install uv
+  ansible.builtin.shell: curl -fsSL https://astral.sh/uv/install.sh | UV_NO_MODIFY_PATH=1 sh
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/uv"

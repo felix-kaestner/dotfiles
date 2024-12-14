@@ -1,0 +1,11 @@
+[user]
+    name = "{{ git_name }}"
+    email = "{{ git_email }}"
+[commit]
+{% if git_signingkey %}
+    gpgsign = true
+    signingkey = {{ git_signingkey }}
+{% else %}
+    gpgsign = false
+{% endif %}
+; vim: syn=gitconfig ft=gitconfig

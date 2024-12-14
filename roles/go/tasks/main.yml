@@ -1,0 +1,6 @@
+---
+- name: Install go
+  ansible.builtin.package:
+    name: "{{ 'go' if ansible_system == 'Darwin' else 'golang' }}"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
