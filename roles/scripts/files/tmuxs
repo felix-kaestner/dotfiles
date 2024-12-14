@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# tmux-sessionizer: launch or attach to a tmux session in a working directory
-# usage: tmux-sessionizer [DIRECTORY]
+# tmuxs: launch or attach to a tmux session in a working directory
+# usage: tmuxs [DIRECTORY]
 
 help() {
     echo >&2 "Usage: $(basename "$0") [DIRECTORY]

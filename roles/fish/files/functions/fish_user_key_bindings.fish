@@ -8,8 +8,8 @@ function fish_user_key_bindings
     bind -M insert \ck accept-autosuggestion
 
     # TMUX session utility
-    bind -M default \cf '~/.local/bin/tmux-sessionizer'
-    bind -M insert \cf '~/.local/bin/tmux-sessionizer'
+    bind -M default \cf '~/.local/bin/tmuxs'
+    bind -M insert \cf '~/.local/bin/tmuxs'
 
     # https://github.com/junegunn/fzf#setting-up-shell-integration
     fzf --fish | source
