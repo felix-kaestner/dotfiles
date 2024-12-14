@@ -145,9 +145,6 @@ vim.keymap.set("v", "<leader>crs", [[:s/\%V[a-z]\@<=[A-Z]/_\l\0/g]], { desc = "[
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
 
--- Shorthand to launch Netrw
-vim.keymap.set("n", "-", vim.cmd.Ex, { desc = "File Explorer" })
-
 -- [[ Folds ]]
 vim.opt.foldlevel = 16
 vim.opt.foldmethod = "expr"
@@ -155,26 +152,7 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 -- [[ Netrw ]]
 vim.g.netrw_altv = 1 -- Split right
-vim.g.netrw_banner = 0 -- Hide banner
 vim.g.netrw_localcopydircmd = "cp -r" -- Enable recursive copy of directories.
-
--- Based on "tpope/vim-vinegar"
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "netrw",
-    group = vim.api.nvim_create_augroup("netrw-enhanced", { clear = true }),
-    callback = function()
-        vim.keymap.set("n", ".", function()
-            local path = vim.b.netrw_curdir .. "/" .. vim.fn.expand("<cfile>")
-            local cmd = ":<C-U> " .. vim.fn.fnameescape(path) .. "<Home>"
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(cmd, true, true, true), "n", true)
-        end, { buffer = true })
-
-        vim.keymap.set("n", "y.", function()
-            local path = vim.b.netrw_curdir .. "/" .. vim.fn.expand("<cfile>")
-            vim.fn.setreg(vim.v.register, path)
-        end, { buffer = true, silent = true })
-    end,
-})
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -1022,6 +1000,9 @@ require("lazy").setup({
 
     -- Line and column number support
     "wsdjeg/vim-fetch",
+
+    -- Netrw enhancements
+    "tpope/vim-vinegar",
 
     -- Git Integration
     "tpope/vim-fugitive",
