@@ -11,25 +11,8 @@
     dest: "{{ xdg_config_home }}/alacritty"
     state: link
 
-- name: Ensure Alacritty themes directory exists
-  ansible.builtin.file:
-    path: "{{ xdg_config_home }}/alacritty/themes"
-    state: directory
-    mode: "0755"
-
 - name: Download Catppuccin themes for Alacritty
   ansible.builtin.get_url:
-    url: "https://github.com/catppuccin/alacritty/raw/main/catppuccin-{{ item }}.toml"
-    dest: "{{ xdg_config_home }}/alacritty/themes/catppuccin-{{ item }}.toml"
-    mode: "0644"
-  loop:
-    - latte
-    - frappe
-    - macchiato
-    - mocha
-
-- name: Create symbolic link for default theme
-  ansible.builtin.file:
-    src: "{{ xdg_config_home }}/alacritty/themes/catppuccin-mocha.toml"
+    url: "https://github.com/catppuccin/alacritty/raw/main/catppuccin-mocha.toml"
     dest: "{{ xdg_config_home }}/alacritty/theme.toml"
-    state: link
+    mode: "0644"
