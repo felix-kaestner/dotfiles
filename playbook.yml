@@ -70,9 +70,5 @@
         state: link
         force: true
       loop:
-        - ".aliases"
         - ".editorconfig"
-        - ".functions"
         - ".ignore"
-        - ".profile"
-        - ".zshrc"
