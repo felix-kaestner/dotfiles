@@ -52,7 +52,7 @@ return {
             { "<leader>sd", "<cmd>Telescope diagnostics<cr>", desc = "[S]earch [D]iagnostics" },
             { "<leader>sr", "<cmd>Telescope resume<cr>", desc = "[S]earch [R]esume" },
             { "<leader>ss", "<cmd>Telescope builtin<cr>", desc = "[S]earch [S]elect" },
-            { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "[/] Fuzzily search in current buffer" },
+            { "<leader>/", "<cmd>Telescope current_buffer_fuzzy_find previewer=false<cr>", desc = "[/] Fuzzily search in current buffer" },
             -- Git
             { "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Search [G]it [F]iles" },
             { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "[G]it [C]ommits" },
