@@ -1,16 +1,16 @@
 -- [[ Highlight on yank ]]
 -- See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-    pattern = "*",
     group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+    pattern = "*",
     callback = function()
         vim.hl.on_yank()
     end,
 })
 
 vim.api.nvim_create_autocmd("TermOpen", {
-    pattern = "*",
     group = vim.api.nvim_create_augroup("term-open", { clear = true }),
+    pattern = "*",
     callback = function()
         vim.opt_local.number = false
         vim.opt_local.relativenumber = false
