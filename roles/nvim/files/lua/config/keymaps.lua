@@ -51,8 +51,8 @@ vim.keymap.set("v", "<leader>crc", [[:s/\%V_\([a-zA-Z]\)/\u\1/g]], { desc = "[C]
 vim.keymap.set("v", "<leader>crs", [[:s/\%V[a-z]\@<=[A-Z]/_\l\0/g]], { desc = "[C]onvert to [S]nake Case" })
 
 -- Diagnostic mappings
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open buffer diagnostics list" })
-vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Open workspace diagnostics list" })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open buffer diagnostic list' })
+vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Open diagnostics list" })
 
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
