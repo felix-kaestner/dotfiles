@@ -20,9 +20,6 @@ return {
         },
         opts = function()
             return {
-                defaults = require("telescope.themes").get_ivy({
-                    layout_config = { height = 0.5 },
-                }),
                 extensions = {
                     ["fzf"] = {},
                     ["ui-select"] = {
