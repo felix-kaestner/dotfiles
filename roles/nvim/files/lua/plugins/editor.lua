@@ -34,6 +34,9 @@ return {
         ---@module 'zen-mode'
         ---@type ZenOptions
         opts = {
+            window = {
+                options = { number = false },
+            },
             plugins = {
                 gitsigns = { enabled = true }, -- disables git signs
             },
