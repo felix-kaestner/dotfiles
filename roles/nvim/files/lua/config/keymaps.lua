@@ -28,6 +28,9 @@ vim.keymap.set("n", "<C-N>", "<cmd>tabnext<cr>")
 vim.keymap.set("n", "<C-P>", "<cmd>tabprevious<cr>")
 vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 
+-- Buffers
+vim.keymap.set("n", "<leader>bd", "<cmd>bd!<cr>", { desc = "[B]uffer [D]elete" })
+
 -- Paste over without replacing default register
 vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
 
