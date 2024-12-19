@@ -9,7 +9,6 @@ return {
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lua",
-            "hrsh7th/cmp-cmdline",
 
             -- Icons
             "onsails/lspkind-nvim",
@@ -98,22 +97,6 @@ return {
                 experimental = {
                     ghost_text = false,
                 },
-            })
-
-            cmp.setup.cmdline({ "/", "?" }, {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = {
-                    { name = "buffer" }
-                }
-            })
-
-            cmp.setup.cmdline(":", {
-                mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = "path" },
-                }, {
-                    { name = "cmdline" }
-                }),
             })
         end,
     },
