@@ -43,8 +43,6 @@ return {
             { "<leader>.", "<cmd>Telescope oldfiles<cr>", desc = "[?] Find recently opened files" },
             { "<leader><leader>", "<cmd>Telescope buffers show_all_buffers=true<cr>", desc = "[ ] Find existing buffers" },
             { "<leader>sf", "<cmd>Telescope find_files<cr>", desc = "[S]earch [F]iles" },
-            { "<leader>sn", "<cmd>Telescope find_files cwd=~/.config/nvim<cr>", desc = "[S]earch [N]eovim Config Files" },
-            { "<leader>sp", "<cmd>Telescope find_files cwd=~/.local/share/nvim/lazy<cr>", desc = "[S]earch Neovim [P]lugin Files" },
             -- Search
             { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "[S]earch [H]elp" },
             { "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "[S]earch [W]ord" },
