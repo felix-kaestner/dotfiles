@@ -64,7 +64,7 @@ vim.keymap.set("c", "<F1>", [[\(.*\)]], { noremap = true, silent = true })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 -- Open/Close Terminal
-vim.keymap.set("n", "<leader>t", function()
+vim.keymap.set("n", "<leader>tt", function()
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
         if vim.bo[buf].buftype == "terminal" then
