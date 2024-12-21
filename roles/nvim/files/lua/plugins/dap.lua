@@ -24,7 +24,7 @@ return {
                 ---@type MasonNvimDapSettings
                 opts = {
                     handlers = {},
-                    ensure_installed = { "delve" },
+                    ensure_installed = { "debugpy", "delve" },
                     automatic_installation = false,
                 },
             },
