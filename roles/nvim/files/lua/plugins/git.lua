@@ -61,47 +61,47 @@ return {
                 topdelete = { text = "‾" },
                 changedelete = { text = "~" },
             },
+            -- stylua: ignore
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
 
-                local map = function(keys, func, desc, expr)
-                    vim.keymap.set({ "n", "v" }, keys, func, { buffer = bufnr, desc = desc, expr = expr })
+                local map = function(mode, keys, func, desc)
+                    vim.keymap.set(mode, keys, func, { buffer = bufnr, desc = desc })
                 end
 
                 -- Navigation
-                map("]c", function()
+                map("n", "]c", function()
                     if vim.wo.diff then
-                        return "]c"
-                    end
-                    vim.schedule(function()
+                        vim.cmd.normal({ "]c", bang = true })
+                    else
                         gitsigns.nav_hunk("next")
-                    end)
-                    return "<Ignore>"
-                end, "Next Hunk", true)
-
-                map("[c", function()
-                    if vim.wo.diff then
-                        return "[c"
                     end
-                    vim.schedule(function()
+                end)
+
+                map("n", "[c", function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "[c", bang = true })
+                    else
                         gitsigns.nav_hunk("prev")
-                    end)
-                    return "<Ignore>"
-                end, "Previous Hunk", true)
+                    end
+                end)
 
                 -- Actions
-                map("<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
-                map("<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
-                map("<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
-                map("<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
-                map("<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
-                map("<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
-                map("<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
-                map("<leader>hd", gitsigns.diffthis, "Diff Buffer")
-                map("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
-                map("<leader>hb", function()
-                    gitsigns.blame_line({ full = true })
-                end, "Blame Line")
+                map("n", "<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
+                map("n", "<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
+                map("v", "<leader>hs", function() gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
+                map("v", "<leader>hr", function() gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") }) end)
+                map("n", "<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
+                map("n", "<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
+                map("n", "<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
+                map("n", "<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
+                map("n", "<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
+                map("n", "<leader>hd", gitsigns.diffthis, "Diff Buffer")
+                map("n", "<leader>hb", gitsigns.blame_line, "Blame Line")
+                map("n", "<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
+
+                -- Text object
+                map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
             end,
         },
     },
