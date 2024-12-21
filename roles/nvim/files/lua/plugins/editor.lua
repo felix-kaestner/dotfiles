@@ -1,6 +1,6 @@
 return {
     -- Line and column number support
-    "wsdjeg/vim-fetch",
+    "lewis6991/fileline.nvim",
 
     -- Netrw enhancements
     "tpope/vim-vinegar",
