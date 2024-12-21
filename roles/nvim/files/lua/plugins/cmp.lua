@@ -118,7 +118,6 @@ return {
         init = function()
             vim.g.copilot_no_tab_map = true
         end,
-        enabled = false,
         keys = {
             { "<C-K>", 'copilot#Accept("")', mode = "i", expr = true, replace_keycodes = false },
             { "<C-[>", "copilot#Previous()", mode = "i", expr = true },
