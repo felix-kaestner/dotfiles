@@ -153,8 +153,6 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
-            -- Automatically install LSPs to stdpath
-            { "williamboman/mason.nvim", cmd = { "Mason", "MasonUpdate" }, build = ":MasonUpdate", opts = {} },
             "williamboman/mason-lspconfig.nvim",
 
             -- SchemaStore catalog for jsonls and yamlls
@@ -163,7 +161,7 @@ return {
         config = function()
             -- nvim-cmp supports additional completion capabilities
             local capabilities = vim.lsp.protocol.make_client_capabilities()
-            capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+            capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
             -- Setup mason-lspconfig so it can manage external tooling
             require("mason-lspconfig").setup({
@@ -180,7 +178,6 @@ return {
 
                     ["gopls"] = function()
                         local settings = servers.gopls
-
 
                         if vim.fn.executable("go") == 1 then
                             local Job = require("plenary.job")
@@ -237,6 +234,38 @@ return {
                     end,
                 },
             })
+        end,
+    },
+
+    -- Automatically install LSPs, Debugger, Linter & Formatter to stdpath
+    {
+        "williamboman/mason.nvim",
+        cmd = { "Mason", "MasonUpdate" },
+        build = ":MasonUpdate",
+        opts = {
+            ensure_installed = { "debugpy", "delve" },
+        },
+        config = function(_, opts)
+            require("mason").setup()
+
+            local registry, Package = require("mason-registry"), require("mason-core.package")
+            registry.refresh(vim.schedule_wrap(function()
+                for _, identifier in ipairs(opts.ensure_installed) do
+                    local name, version = Package.Parse(identifier)
+                    local pkg = registry.get_package(name)
+                    if not pkg:is_installed() then
+                        vim.notify(("[mason.nvim] installing %s"):format(pkg.name))
+                        pkg:install({ version = version }):once(
+                            "closed",
+                            vim.schedule_wrap(function()
+                                if pkg:is_installed() then
+                                    vim.notify(("[mason.nvim] %s was successfully installed"):format(pkg.name))
+                                end
+                            end)
+                        )
+                    end
+                end
+            end))
         end,
     },
 
