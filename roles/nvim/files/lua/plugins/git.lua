@@ -17,6 +17,7 @@ return {
             if os.getenv("TMUX") ~= nil then
                 wt.on_tree_change(function(op, metadata)
                     if op == wt.Operations.Switch then
+                        -- stylua: ignore
                         vim.fn.system("tmux attach-session -t . -c " .. require("git-worktree").get_worktree_path(metadata.path))
                     end
                 end)
@@ -45,7 +46,7 @@ return {
         keys = {
             { "<leader>gd", "<cmd>lua require('diffview').open()<cr>", desc = "[G]it [D]iff" },
             { "<leader>gl", "<cmd>lua require('diffview').file_history()<cr>", desc = "[G]it [L]og" },
-        }
+        },
     },
 
     -- Git Decorations
@@ -97,8 +98,10 @@ return {
                 map("<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
                 map("<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
                 map("<leader>hd", gitsigns.diffthis, "Diff Buffer")
-                map("<leader>hb", function() gitsigns.blame_line({full = true}) end, "Blame Line")
                 map("<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
+                map("<leader>hb", function()
+                    gitsigns.blame_line({ full = true })
+                end, "Blame Line")
             end,
         },
     },

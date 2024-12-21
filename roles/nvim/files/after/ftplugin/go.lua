@@ -17,4 +17,3 @@ vim.keymap.set("n", "<leader>tc", function()
         args = { "tool", "cover", "-html=c.out" },
     }):sync()
 end, { desc = "[G]o [C]overage" })
-
