@@ -43,6 +43,9 @@ vim.keymap.set("v", ">", ">gv")
 vim.keymap.set("v", "J", ":m '>+1<cr>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 
+-- Edit file under cursor
+vim.keymap.set("n", "<leader>e", "gF", { desc = "[E]dit file under cursor" })
+
 -- Search & Replace
 vim.keymap.set("n", "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
