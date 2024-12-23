@@ -9,13 +9,10 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 [*.md]
-insert_final_newline = false
+trim_trailing_whitespace = false
 
-[*.{yml,yaml}]
+[*.{js,jsx,ts,tsx,yml,yaml}]
 indent_size = 2
 
-[*.{js,jsx,ts,tsx}]
-indent_size = 2
-
-[{Makefile, *.mk}]
+[{*.go,Makefile,*.mk}]
 indent_style = tab
