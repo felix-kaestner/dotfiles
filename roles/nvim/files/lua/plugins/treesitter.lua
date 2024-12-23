@@ -110,7 +110,6 @@ return {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
         },
-        -- stylua: ignore
         keys = {
             { "<leader>re", "<cmd>lua require('telescope').extensions.refactoring.refactors()<cr>", desc = "[R]efactor" },
             { "<leader>ri", "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", desc = "[R]efactor [I]nline Variable" },

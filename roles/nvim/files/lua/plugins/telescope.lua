@@ -34,7 +34,6 @@ return {
             telescope.load_extension("fzf")
             telescope.load_extension("ui-select")
         end,
-        -- stylua: ignore
         keys = {
             -- Buffers & Files
             { "<leader>.", "<cmd>Telescope oldfiles<cr>", desc = "[?] Find recently opened files" },

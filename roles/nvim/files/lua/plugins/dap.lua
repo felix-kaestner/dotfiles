@@ -59,7 +59,6 @@ return {
             -- Adapter
             "williamboman/mason.nvim",
         },
-        -- stylua: ignore
         keys = {
             -- Step Through
             { "<F1>", "<cmd>lua require('dap').step_into()<cr>", desc = "Debug: Step Into" },

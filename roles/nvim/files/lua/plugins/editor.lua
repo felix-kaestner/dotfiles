@@ -58,7 +58,6 @@ return {
             require("harpoon"):setup(opts)
             require("telescope").load_extension("harpoon")
         end,
-        -- stylua: ignore
         keys = {
             { "<C-m>", "<cmd>lua require('harpoon'):list():add()<cr>", desc = "[Harpoon] [M]ark File" },
             { "<C-h>", "<cmd>lua require('harpoon').ui:toggle_quick_menu(require('harpoon'):list())<cr>", desc = "[Harpoon] Open Menu" },
