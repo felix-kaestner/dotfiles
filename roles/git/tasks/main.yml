@@ -17,3 +17,8 @@
     src: "{{ role_path }}/templates/.gitconfig.local.j2"
     dest: "{{ ansible_env.HOME }}/.gitconfig.local"
     force: false
+
+- name: Install Git LFS
+  ansible.builtin.package:
+    name: git-lfs
+    state: present
