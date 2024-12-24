@@ -1,4 +1,4 @@
-# vim: syn=sh ft=sh
+# vim: ft=sh
 ---
 - name: Install minikube
   when: ansible_system == "Linux"
