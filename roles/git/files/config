@@ -1,0 +1,42 @@
+[alias]
+	a = add -A
+	b = branch
+	c = commit
+	d = diff
+	f = fetch
+	r = rebase
+	s = status
+	w = worktree
+	co = checkout
+	ca = commit --amend
+	ce = commit --amend --no-edit
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+[core]
+	editor = nvim
+	autocrlf = input
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+[pull]
+	rebase = true
+[rebase]
+	autoStash = true
+	autoSquash = true
+	updateRefs = true
+[merge]
+	conflictStyle = zdiff3
+[help]
+	autoCorrect = prompt
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[include]
+	path = ./config.local
+# vim: noet ts=4 sw=4 sts=0 ft=gitconfig

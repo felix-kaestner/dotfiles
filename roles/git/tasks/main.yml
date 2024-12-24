@@ -4,18 +4,16 @@
   ansible.builtin.include_vars:
     file: "{{ role_path }}/vars/local.yml"
 
-- name: Create symbolic links for git config
+- name: Create symbolic link for config
   ansible.builtin.file:
-    src: "{{ item }}"
-    dest: "{{ ansible_env.HOME }}/{{ item | basename }}"
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/git"
     state: link
-  with_fileglob:
-    - "{{ role_path }}/files/.*"
 
-- name: Create ~/.gitconfig.local
+- name: Create ~/.config/git/config.local
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/.gitconfig.local.j2"
-    dest: "{{ ansible_env.HOME }}/.gitconfig.local"
+    src: "{{ role_path }}/templates/config.local.j2"
+    dest: "{{ xdg_config_home }}/git/config.local"
     force: false
 
 - name: Install Git LFS
