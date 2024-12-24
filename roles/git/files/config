@@ -14,6 +14,8 @@
 [core]
 	editor = nvim
 	autocrlf = input
+[help]
+	autoCorrect = prompt
 [init]
 	defaultBranch = main
 [push]
@@ -30,8 +32,6 @@
 	updateRefs = true
 [merge]
 	conflictStyle = zdiff3
-[help]
-	autoCorrect = prompt
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
