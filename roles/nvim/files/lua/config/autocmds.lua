@@ -27,3 +27,12 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
         end
     end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("tab-indent", { clear = true }),
+    pattern = { "go", "make" },
+    callback = function ()
+        -- Disable listchars for files with tabs
+        vim.opt_local.list = false
+    end,
+})

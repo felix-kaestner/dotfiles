@@ -59,6 +59,11 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- Configure how certain whitespace characters are displayed
+--  See `:help 'list'` and `:help 'listchars'`
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
 -- Show which line your cursor is on
 vim.opt.cursorline = true
 
