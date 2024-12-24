@@ -13,7 +13,6 @@ local servers = {
                 unusedwrite = true,
                 unusedparams = true,
                 unusedvariable = true,
-                fieldalignment = true,
             },
             codelenses = {
                 test = true,
