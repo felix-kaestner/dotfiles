@@ -4,15 +4,3 @@
     name: "fzf"
     state: present
   become: "{{ ansible_system == 'Linux' }}"
-
-- name: Ensure ~/.fzf directory exists
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.fzf"
-    state: directory
-    mode: "0755"
-
-- name: Download fzf-git.sh
-  ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh"
-    dest: "{{ ansible_env.HOME }}/.fzf/fzf-git.sh"
-    mode: "0644"
