@@ -115,7 +115,7 @@ local on_attach = function(client, bufnr)
     end
 
     -- Automatically format source code on save
-    if client:supports_method("textDocument/formatting", bufnr) and client.name ~= "tsserver" then
+    if client:supports_method("textDocument/formatting", bufnr) and client.name ~= "ts_ls" then
         local augroup = vim.api.nvim_create_augroup("lsp-format", { clear = true })
         vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
         vim.api.nvim_create_autocmd("BufWritePre", {
