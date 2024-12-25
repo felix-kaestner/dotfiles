@@ -30,6 +30,10 @@
 	autoStash = true
 	autoSquash = true
 	updateRefs = true
+[diff]
+	algorithm = histogram
+	colorMoved = default
+	colorMovedWS = allow-indentation-change
 [merge]
 	conflictStyle = zdiff3
 [filter "lfs"]
