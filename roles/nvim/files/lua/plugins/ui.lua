@@ -5,7 +5,7 @@ return {
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
             options = {
-                theme = "catppuccin",
+                theme = "catppuccin-mocha",
                 globalstatus = true,
                 icons_enabled = true,
                 section_separators = "",
@@ -48,7 +48,7 @@ return {
         },
         config = function(_, opts)
             require("catppuccin").setup(opts)
-            vim.cmd.colorscheme("catppuccin")
+            vim.cmd.colorscheme("catppuccin-mocha")
         end,
     },
 
