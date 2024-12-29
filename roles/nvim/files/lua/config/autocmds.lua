@@ -18,6 +18,71 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end,
 })
 
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
+    callback = function(args)
+        local map = function(keys, func, desc, mode)
+            mode = mode or "n"
+            vim.keymap.set(mode, keys, func, { buffer = args.buf, desc = "LSP: " .. desc })
+        end
+
+        local builtin = require("telescope.builtin")
+        map("gd", builtin.lsp_definitions, "[G]oto [D]efinition")
+        map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
+        map("<leader>gr", builtin.lsp_references, "[G]oto [R]eferences")
+        map("<leader>gi", builtin.lsp_implementations, "[G]oto [I]mplementation")
+        map("<leader>D", builtin.lsp_type_definitions, "Type [D]efinition")
+        map("<leader>ds", builtin.lsp_document_symbols, "[D]ocument [S]ymbols")
+        map("<leader>ws", builtin.lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+        map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+        map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
+        map("<leader>cl", vim.lsp.codelens.run, "[C]ode [L]enses")
+
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then
+            return
+        end
+
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
+            vim.api.nvim_create_autocmd("LspDetach", {
+                group = vim.api.nvim_create_augroup("lsp-format", { clear = true }),
+                callback = function()
+                    vim.lsp.buf.format({ async = false, bufnr = args.buf })
+                end,
+            })
+        end
+
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+            vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+
+            map("<leader>th", function()
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }))
+            end, "[T]oggle Inlay [H]ints")
+        end
+
+        if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+            local augroup = vim.api.nvim_create_augroup("lsp-highlight", { clear = false })
+            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                group = augroup,
+                buffer = args.buf,
+                callback = vim.lsp.buf.document_highlight,
+            })
+            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                group = augroup,
+                buffer = args.buf,
+                callback = vim.lsp.buf.clear_references,
+            })
+            vim.api.nvim_create_autocmd("LspDetach", {
+                group = vim.api.nvim_create_augroup("lsp-detach", { clear = true }),
+                callback = function(event)
+                    vim.lsp.buf.clear_references()
+                    vim.api.nvim_clear_autocmds({ group = augroup, buffer = event.buf })
+                end,
+            })
+        end
+    end,
+})
+
 -- Organize imports on save
 -- See: https://github.com/golang/tools/blob/master/gopls/doc/vim.md#neovim-imports
 vim.api.nvim_create_autocmd("BufWritePre", {
