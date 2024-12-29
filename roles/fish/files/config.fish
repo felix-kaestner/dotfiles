@@ -41,6 +41,41 @@ fish_add_path "$HOME/.flutter/bin"
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
 if status is-interactive
+    # https://fishshell.com/docs/current/interactive.html#configurable-greeting
+    set -g fish_greeting
+
+    # https://fishshell.com/docs/current/interactive.html#vi-mode-commands
+    fish_default_key_bindings -M insert
+    fish_vi_key_bindings --no-erase insert
+
+    # vi cursor behavior
+    set -g fish_cursor_insert line
+    set -g fish_cursor_visual block
+    set -g fish_cursor_default block
+    set -g fish_cursor_replace underscore
+    set -g fish_cursor_replace_one underscore
+    set -g fish_cursor_external line
+    set -g fish_vi_force_cursor 1
+
+    # https://fishshell.com/docs/current/interactive.html#autosuggestions
+    bind -M default \ck accept-autosuggestion
+    bind -M insert \ck accept-autosuggestion
+
+    # TMUX session utility
+    bind -M default \cf '~/.local/bin/tmuxs'
+    bind -M insert \cf '~/.local/bin/tmuxs'
+
+    # https://github.com/junegunn/fzf#setting-up-shell-integration
+    fzf --fish | source
+    set -gx FZF_ALT_C_OPTS "
+        --preview 'tree -C {}'"
+    set -gx FZF_CTRL_R_OPTS "
+        --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+        --header 'Press CTRL-Y to copy command into clipboard'
+        --color header:italic"
+
+    abbr --add dotdot --regex '^\.\.+$' --function _dotdot
+
     # GPG Settings - based on: https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/gpg-agent/gpg-agent.plugin.zsh#L12
     if test (gpgconf --list-options gpg-agent 2>/dev/null | awk -F: '$1=="enable-ssh-support" {print $10}') = 1
         set -e SSH_AGENT_PID
@@ -58,11 +93,4 @@ if status is-interactive
         set -gx TESTCONTAINERS_HOST_OVERRIDE (limactl shell docker ip a show lima0 | awk '/inet / {sub("/.*",""); print $2}')
         set -gx TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE /var/run/docker.sock
     end
-
-    set -gx FZF_ALT_C_COMMAND "find ~/Developer -mindepth 1 -maxdepth 1 -type d"
-
-    abbr --add dotdot --regex '^\.\.+$' --function _dotdot
-
-    set -gx fish_greeting
 end
-
