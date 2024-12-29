@@ -113,12 +113,6 @@ return {
                                     -- See: https://github.com/golang/tools/blob/master/gopls/doc/settings.md#local-string
                                     local module = table.concat(job:result()):gsub("'", "")
                                     settings.gopls["local"] = module
-
-                                    if string.find(module, "aboutyou.com") then
-                                        settings.gopls.analyses.deprecated = false
-                                        settings.gopls.analyses.fieldalignment = false
-                                        settings.gopls.analyses.unusedparams = false
-                                    end
                                 end,
                             }):sync()
                         end
@@ -161,7 +155,15 @@ return {
         cmd = { "Mason", "MasonUpdate" },
         build = ":MasonUpdate",
         opts = {
-            ensure_installed = { "debugpy", "delve" },
+            ensure_installed = {
+                -- DAP
+                "debugpy",
+                "delve",
+                -- Linter
+                "ruff",
+                -- Formatter
+                "stylua",
+            },
         },
         config = function(_, opts)
             require("mason").setup()
@@ -173,18 +175,39 @@ return {
                     local pkg = registry.get_package(name)
                     if not pkg:is_installed() then
                         vim.notify(("[mason.nvim] installing %s"):format(pkg.name))
-                        pkg:install({ version = version }):once(
-                            "closed",
-                            vim.schedule_wrap(function()
-                                if pkg:is_installed() then
-                                    vim.notify(("[mason.nvim] %s was successfully installed"):format(pkg.name))
-                                end
-                            end)
-                        )
+                        -- stylua: ignore
+                        pkg:install({ version = version }):once("closed", vim.schedule_wrap(function()
+                            if pkg:is_installed() then
+                                vim.notify(("[mason.nvim] %s was successfully installed"):format(pkg.name))
+                            end
+                        end))
                     end
                 end
             end))
         end,
+    },
+
+    -- Automatically format code on save
+    {
+        "stevearc/conform.nvim",
+        event = "BufWritePre",
+        cmd = "ConformInfo",
+        ---@module "conform"
+        ---@type conform.setupOpts
+        opts = {
+            formatters_by_ft = {
+                lua = { "stylua" },
+                python = { "ruff_fix", "ruff_format" },
+            },
+            format_on_save = { timeout_ms = 500 },
+            default_format_opts = { lsp_format = "fallback" },
+        },
+        init = function()
+            vim.opt.formatexpr = "v:lua.require('conform').formatexpr()"
+        end,
+        keys = {
+            { "<leader>f", "<cmd>lua require('conform').format({async=true})<cr>", desc = "[F]ormat" },
+        },
     },
 
     -- Useful status updates for LSP
