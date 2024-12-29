@@ -106,10 +106,6 @@ return {
     {
         "ThePrimeagen/refactoring.nvim",
         cmd = "Refactor",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-treesitter/nvim-treesitter",
-        },
         keys = {
             { "<leader>re", "<cmd>lua require('telescope').extensions.refactoring.refactors()<cr>", desc = "[R]efactor" },
             { "<leader>ri", "<cmd>lua require('refactoring').refactor('Inline Variable')<cr>", desc = "[R]efactor [I]nline Variable" },

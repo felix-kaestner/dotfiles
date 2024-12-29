@@ -8,6 +8,9 @@ return {
     -- Add/change/delete surrounding characters
     "tpope/vim-surround",
 
+    -- Neovim lua library
+    { "nvim-lua/plenary.nvim", lazy = true },
+
     -- Show pending keybindings
     {
         "folke/which-key.nvim",
@@ -50,7 +53,6 @@ return {
     {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
-        dependencies = { "nvim-lua/plenary.nvim" },
         ---@module 'harpoon'
         ---@type HarpoonPartialConfig
         opts = {},
