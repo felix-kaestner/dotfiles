@@ -11,8 +11,8 @@
     dest: "{{ xdg_config_home }}/alacritty"
     state: link
 
-- name: Download Catppuccin themes for Alacritty
+- name: Download Catppuccin theme for Alacritty
   ansible.builtin.get_url:
-    url: "https://github.com/catppuccin/alacritty/raw/main/catppuccin-mocha.toml"
+    url: "https://raw.githubusercontent.com/catppuccin/alacritty/refs/heads/main/catppuccin-mocha.toml"
     dest: "{{ xdg_config_home }}/alacritty/theme.toml"
     mode: "0644"
