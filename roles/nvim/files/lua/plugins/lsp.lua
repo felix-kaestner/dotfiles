@@ -4,6 +4,7 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPost", "BufNewFile" },
         dependencies = {
+            "saghen/blink.cmp",
             "williamboman/mason-lspconfig.nvim",
 
             -- SchemaStore catalog for jsonls and yamlls
@@ -81,9 +82,7 @@ return {
         },
         ---@param opts Opts
         config = function(_, opts)
-            -- nvim-cmp supports additional completion capabilities
-            local capabilities = vim.lsp.protocol.make_client_capabilities()
-            capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+            local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
 
             -- Setup mason-lspconfig so it can manage external tooling
             require("mason-lspconfig").setup({
