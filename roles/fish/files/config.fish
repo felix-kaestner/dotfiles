@@ -73,6 +73,14 @@ if status is-interactive
         --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
         --header 'Press CTRL-Y to copy command into clipboard'
         --color header:italic"
+    set -gx FZF_DEFAULT_OPTS "
+        --color=bg:#1e1e2e,bg+:#313244
+        --color=fg:#cdd6f4,fg+:#cdd6f4
+        --color=hl:#f38ba8,hl+:#eba0ac
+        --color=info:#89b4fa,prompt:#89b4fa
+        --color=marker:#f2cdcd,header:#a6adc8
+        --color=pointer:#f5e0dc,spinner:#f5e0dc
+        --color=selected-bg:#45475a"
 
     abbr --add dotdot --regex '^\.\.+$' --function _dotdot
 
