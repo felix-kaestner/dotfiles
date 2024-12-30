@@ -1,3 +1,5 @@
+---@module 'lazy'
+---@type LazySpec[]
 return {
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     {

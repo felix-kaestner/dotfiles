@@ -1,3 +1,5 @@
+---@module 'lazy'
+---@type LazySpec[]
 return {
     -- Git Integration
     "tpope/vim-fugitive",

@@ -1,3 +1,5 @@
+---@module 'lazy'
+---@type LazySpec[]
 return {
     -- Line and column number support
     "wsdjeg/vim-fetch",

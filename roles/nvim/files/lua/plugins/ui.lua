@@ -1,3 +1,5 @@
+---@module 'lazy'
+---@type LazySpec[]
 return {
     -- Nerd Font Icons
     "nvim-tree/nvim-web-devicons",
