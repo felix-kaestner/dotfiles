@@ -60,6 +60,9 @@ vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Open diagno
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
 
+-- Quickly open the news file
+vim.keymap.set("n", "<leader>N", "<cmd>edit $VIMRUNTIME/doc/news.txt<cr>", { desc = "[N]ews" })
+
 -- Shorthand to insert \(.*\) in command mode
 vim.keymap.set("c", "<F1>", [[\(.*\)]], { noremap = true, silent = true })
 
