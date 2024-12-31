@@ -4,50 +4,6 @@ return {
     -- Git Integration
     "tpope/vim-fugitive",
     "tpope/vim-rhubarb",
-    "shumphrey/fugitive-gitlab.vim",
-
-    -- Git Worktree Operations
-    {
-        "ThePrimeagen/git-worktree.nvim",
-        config = function()
-            local wt = require("git-worktree")
-
-            wt.setup()
-            require("telescope").load_extension("git_worktree")
-
-            -- Update the working directory of the current tmux session when switching between worktrees
-            if os.getenv("TMUX") ~= nil then
-                wt.on_tree_change(function(op, metadata)
-                    if op == wt.Operations.Switch then
-                        vim.fn.system("tmux attach-session -t . -c " .. require("git-worktree").get_worktree_path(metadata.path))
-                    end
-                end)
-            end
-        end,
-        keys = {
-            { "<leader>gwl", "<cmd>lua require('telescope').extensions.git_worktree.git_worktrees()<cr>", desc = "Switch [G]it [W]orktree" },
-            { "<leader>gwc", "<cmd>lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>", desc = "Create [G]it [W]orktree" },
-        },
-    },
-
-    -- Git Diff View
-    {
-        "sindrets/diffview.nvim",
-        cmd = { "DiffviewOpen", "DiffviewFileHistory" },
-        ---@module 'diffview'
-        ---@type DiffviewConfig
-        opts = {
-            view = {
-                merge_tool = {
-                    layout = "diff4_mixed",
-                },
-            },
-        },
-        keys = {
-            { "<leader>gd", "<cmd>lua require('diffview').open()<cr>", desc = "[G]it [D]iff" },
-            { "<leader>gl", "<cmd>lua require('diffview').file_history()<cr>", desc = "[G]it [L]og" },
-        },
-    },
 
     -- Git Decorations
     {
@@ -108,6 +64,49 @@ return {
                 -- Text object
                 map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>")
             end,
+        },
+    },
+
+    -- Git Diff View
+    {
+        "sindrets/diffview.nvim",
+        cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+        ---@module 'diffview'
+        ---@type DiffviewConfig
+        opts = {
+            view = {
+                merge_tool = {
+                    layout = "diff4_mixed",
+                },
+            },
+        },
+        keys = {
+            { "<leader>gd", "<cmd>lua require('diffview').open()<cr>", desc = "[G]it [D]iff" },
+            { "<leader>gl", "<cmd>lua require('diffview').file_history()<cr>", desc = "[G]it [L]og" },
+        },
+    },
+
+    -- Git Worktree Operations
+    {
+        "ThePrimeagen/git-worktree.nvim",
+        config = function()
+            local wt = require("git-worktree")
+
+            wt.setup()
+            require("telescope").load_extension("git_worktree")
+
+            -- Update the working directory of the current tmux session when switching between worktrees
+            if os.getenv("TMUX") ~= nil then
+                wt.on_tree_change(function(op, metadata)
+                    if op == wt.Operations.Switch then
+                        vim.fn.system("tmux attach-session -t . -c " .. require("git-worktree").get_worktree_path(metadata.path))
+                    end
+                end)
+            end
+        end,
+        keys = {
+            { "<leader>gwl", "<cmd>lua require('telescope').extensions.git_worktree.git_worktrees()<cr>", desc = "Switch [G]it [W]orktree" },
+            { "<leader>gwc", "<cmd>lua require('telescope').extensions.git_worktree.create_git_worktree()<cr>", desc = "Create [G]it [W]orktree" },
         },
     },
 }
