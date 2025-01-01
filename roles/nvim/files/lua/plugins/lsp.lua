@@ -176,12 +176,14 @@ return {
                     local pkg = registry.get_package(name)
                     if not pkg:is_installed() then
                         vim.notify(("[mason.nvim] installing %s"):format(pkg.name))
-                        -- stylua: ignore
-                        pkg:install({ version = version }):once("closed", vim.schedule_wrap(function()
-                            if pkg:is_installed() then
-                                vim.notify(("[mason.nvim] %s was successfully installed"):format(pkg.name))
-                            end
-                        end))
+                        pkg:install({ version = version }):once(
+                            "closed",
+                            vim.schedule_wrap(function()
+                                if pkg:is_installed() then
+                                    vim.notify(("[mason.nvim] %s was successfully installed"):format(pkg.name))
+                                end
+                            end)
+                        )
                     end
                 end
             end))
