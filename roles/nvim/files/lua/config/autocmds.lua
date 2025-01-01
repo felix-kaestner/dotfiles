@@ -41,15 +41,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
             return
         end
 
-        if client:supports_method(vim.lsp.protocol.Methods.textDocument_formatting) then
-            vim.api.nvim_create_autocmd("LspDetach", {
-                group = vim.api.nvim_create_augroup("lsp-format", { clear = true }),
-                callback = function()
-                    vim.lsp.buf.format({ async = false, bufnr = args.buf })
-                end,
-            })
-        end
-
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
 
