@@ -20,3 +20,4 @@
   ansible.builtin.package:
     name: git-lfs
     state: present
+  become: "{{ ansible_system == 'Linux' }}"
