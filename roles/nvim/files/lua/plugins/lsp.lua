@@ -161,6 +161,7 @@ return {
                 "debugpy",
                 "delve",
                 -- Linter
+                "golangci-lint",
                 "ruff",
                 -- Formatter
                 "stylua",
