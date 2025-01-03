@@ -43,4 +43,6 @@
 	required = true
 [include]
 	path = ./config.local
+[url "git@github.com:"]
+	insteadOf = https://github.com/
 # vim: noet ts=4 sw=4 sts=0 ft=gitconfig
