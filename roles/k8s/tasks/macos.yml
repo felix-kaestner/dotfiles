@@ -1,7 +1,8 @@
 ---
-- name: Install kubectl & k9s
+- name: Install kubectl, krew & k9s
   community.general.homebrew:
     name:
       - "kubernetes-cli"
+      - "krew"
       - "k9s"
     state: present

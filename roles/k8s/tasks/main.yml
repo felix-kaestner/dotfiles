@@ -6,3 +6,8 @@
 - name: Include Linux tasks
   when: ansible_system == "Linux"
   ansible.builtin.include_tasks: linux.yml
+
+- name: Install kubectx & kubens through krew
+  ansible.builtin.command: "kubectl krew install ctx ns"
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"

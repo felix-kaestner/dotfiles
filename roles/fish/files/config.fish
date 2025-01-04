@@ -29,6 +29,9 @@ fish_add_path "$GOPATH/bin"
 set -gx GEM_HOME "$HOME/.gem"
 fish_add_path "$GEM_HOME/bin"
 
+# set PATH so it includes user's krew bin directory if it exists
+fish_add_path "$HOME/.krew/bin"
+
 # set PATH so it includes user's cargo bin if it exists
 fish_add_path "$HOME/.cargo/bin"
 
