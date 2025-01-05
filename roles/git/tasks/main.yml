@@ -21,3 +21,9 @@
     name: git-lfs
     state: present
   become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install Github CLI
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: gh
+    state: present
