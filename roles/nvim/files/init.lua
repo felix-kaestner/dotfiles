@@ -3,6 +3,12 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 
+-- Source existing ~/.vimrc file
+local vimrc = vim.fn.expand("~/.vimrc")
+if vim.fn.filereadable(vimrc) == 1 then
+    vim.cmd("source " .. vimrc)
+end
+
 -- Install plugin manager
 -- See `:help lazy.nvim` or https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
