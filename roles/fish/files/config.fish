@@ -104,4 +104,9 @@ if status is-interactive
         set -gx TESTCONTAINERS_HOST_OVERRIDE (limactl shell docker ip a show lima0 | awk '/inet / {sub("/.*",""); print $2}')
         set -gx TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE /var/run/docker.sock
     end
+
+    set -gx --path KUBECONFIG "$HOME/.kube/config"
+    if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' k8s 2>/dev/null)
+        set -p KUBECONFIG (limactl list "k8s" --format "{{.Dir}}/copied-from-guest/kubeconfig.yaml")
+    end
 end

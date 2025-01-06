@@ -30,26 +30,3 @@
 - name: Create "k8s" lima-vm instance
   when: lima_k8s.rc != 0
   ansible.builtin.command: limactl create --vm-type=vz --rosetta --name=k8s template://k8s
-
-- name: Ensure ~/.kube exists
-  ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/.kube"
-    state: directory
-    mode: "0755"
-
-- name: Check if ~/.kube/config exists
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.kube/config"
-  register: kubeconfig
-
-- name: Get kubeconfig from "k8s" lima-vm instance
-  when: not kubeconfig.stat.exists
-  ansible.builtin.command: limactl list "k8s" --format "{{.Dir}}/copied-from-guest/kubeconfig.yaml"
-  register: kubeconfig_path
-
-- name: Copy kubeconfig from "k8s" lima-vm instance
-  when: not kubeconfig.stat.exists
-  ansible.builtin.copy:
-    src: "{{ kubeconfig_path.stdout }}"
-    dest: "{{ ansible_env.HOME }}/.kube/config"
-    mode: "0600"
