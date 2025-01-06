@@ -25,4 +25,9 @@ function up --description 'Update all system packages'
         kubectl krew update
         kubectl krew upgrade
     end
+
+    if type -q u8s
+        u8s sync
+        u8s update
+    end
 end

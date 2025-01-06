@@ -109,4 +109,7 @@ if status is-interactive
     if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' k8s 2>/dev/null)
         set -p KUBECONFIG (limactl list "k8s" --format "{{.Dir}}/copied-from-guest/kubeconfig.yaml")
     end
+    if type -q u8s; and test -f "$HOME/.config/SAPCC/u8s/.kube/config"
+        set -p KUBECONFIG "$HOME/.config/SAPCC/u8s/.kube/config"
+    end
 end
