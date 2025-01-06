@@ -1,0 +1,4 @@
+aliases:
+  dp: deployments
+  np: networkpolicies
+  sec: v1/secrets

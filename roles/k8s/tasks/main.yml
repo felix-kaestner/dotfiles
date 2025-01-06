@@ -11,3 +11,22 @@
   ansible.builtin.command: "kubectl krew install ctx ns"
   environment:
     PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/k9s"
+    dest: "{{ xdg_config_home }}/k9s"
+    state: link
+
+- name: Ensure ~/.config/k9s/skins exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/k9s/skins"
+    state: directory
+    mode: "0755"
+
+- name: Download Catppuccin theme for k9s
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/catppuccin/k9s/refs/heads/main/dist/catppuccin-mocha.yaml"
+    dest: "{{ xdg_config_home }}/k9s/skins/catppuccin-mocha.yaml"
+    mode: "0644"
+
