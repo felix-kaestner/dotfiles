@@ -19,6 +19,7 @@ function up --description 'Update all system packages'
 
     if type -q uv
         uv self update
+        uv tool upgrade --all
     end
 
     if type -q kubectl; and kubectl krew &>/dev/null
