@@ -29,6 +29,7 @@
     - git
     - go
     - gpg
+    - helm
     - jq
     - k8s
     - lima

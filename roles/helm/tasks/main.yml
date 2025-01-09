@@ -1,0 +1,6 @@
+---
+- name: Install Helm
+  ansible.builtin.package:
+    name: "helm"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
