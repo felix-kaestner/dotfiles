@@ -42,6 +42,7 @@
     - ripgrep
     - rust
     - scripts
+    - terraform
     - tmux
     - tree-sitter
     - uv

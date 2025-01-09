@@ -1,0 +1,6 @@
+---
+- name: Install Terraform
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: "hashicorp/tap/terraform"
+    state: present
