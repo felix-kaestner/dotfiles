@@ -38,6 +38,7 @@
     - minikube
     - node
     - nvim
+    - pass
     - qmk
     - ripgrep
     - rust

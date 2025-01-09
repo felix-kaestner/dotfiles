@@ -1,0 +1,6 @@
+---
+- name: Install pass
+  ansible.builtin.package:
+    name: "pass"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
