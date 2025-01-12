@@ -48,10 +48,7 @@ if status is-interactive
     set -g fish_greeting
 
     # https://fishshell.com/docs/current/interactive.html#vi-mode-commands
-    function fish_user_key_bindings
-        fish_default_key_bindings -M insert
-        fish_vi_key_bindings --no-erase insert
-    end
+    set -g fish_key_bindings fish_hybrid_key_bindings
 
     # vi cursor behavior
     set -g fish_cursor_insert line
