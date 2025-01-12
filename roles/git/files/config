@@ -41,8 +41,8 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[url "ssh://git@github.com/"]
+	pushInsteadOf = https://github.com/
 [include]
 	path = ./config.local
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 # vim: noet ts=4 sw=4 sts=0 ft=gitconfig
