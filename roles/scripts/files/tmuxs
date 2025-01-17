@@ -33,7 +33,7 @@ if [[ $# -eq 1 ]]; then
     fi
     dir=$1
 else
-    dir=$(find "${DIR:-~/Developer}" -mindepth 1 -maxdepth 1 -type d | fzf --tmux) || exit 0
+    dir=$(find "${DIR:-$HOME/Developer}" -mindepth 1 -maxdepth 1 -type d | fzf --tmux) || exit 0
 fi
 
 name=$(basename "$dir" | tr . _)
