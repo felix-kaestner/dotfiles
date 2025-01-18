@@ -1,0 +1,6 @@
+---
+- name: Install MicroK8s
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: "ubuntu/microk8s/microk8s"
+    state: present
