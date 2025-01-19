@@ -36,6 +36,7 @@
     - role: macos
       tags: macos
       when: ansible_system == "Darwin"
+    - microk8s
     - minikube
     - node
     - nvim
