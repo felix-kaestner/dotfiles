@@ -9,6 +9,10 @@ set -q XDG_BIN_HOME; or set -gx XDG_BIN_HOME "$HOME/.local/bin"
 
 set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
+if type -q nerdctl
+    set -gx KIND_EXPERIMENTAL_PROVIDER nerdctl
+end
+
 # include brew shellenv
 if test -x "/opt/homebrew/bin/brew"
     /opt/homebrew/bin/brew shellenv | source
