@@ -3,3 +3,17 @@
   ansible.builtin.shell: curl -fsSL https://astral.sh/uv/install.sh | UV_NO_MODIFY_PATH=1 sh
   args:
     creates: "{{ ansible_env.HOME }}/.local/bin/uv"
+
+- name: Install ruff using uv
+  ansible.builtin.command: uv tool install ruff
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/ruff"
+
+- name: Install tox using uv
+  ansible.builtin.command: uv tool install tox --with tox-uv
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/tox"
