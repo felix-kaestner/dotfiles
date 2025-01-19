@@ -1,0 +1,5 @@
+---
+- name: Install Vault
+  community.general.homebrew:
+    name: "hashicorp/tap/vault"
+    state: present

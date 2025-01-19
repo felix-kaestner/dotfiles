@@ -1,0 +1,23 @@
+---
+- name: Set system architecture
+  ansible.builtin.set_fact:
+    vault_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+
+- name: Remove existing vault installation
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/bin/vault"
+    state: absent
+
+- name: Get latest vault version
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/hashicorp/vault/releases/latest"
+  register: vault_release
+
+- name: Install Vault
+  when: ansible_system == "Linux"
+  ansible.builtin.unarchive:
+    src: "https://releases.hashicorp.com/vault/{{ vault_release.json.tag_name[1:] }}/vault_{{ vault_release.json.tag_name[1:] }}_linux_{{ vault_arch }}.zip"
+    dest: "{{ ansible_env.HOME }}/.local/bin"
+    remote_src: yes
+    exclude:
+      - "LICENSE.txt"

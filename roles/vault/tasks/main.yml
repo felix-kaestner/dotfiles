@@ -1,6 +1,8 @@
 ---
-- name: Install Vault
+- name: Include macOS tasks
   when: ansible_system == "Darwin"
-  community.general.homebrew:
-    name: "hashicorp/tap/vault"
-    state: present
+  ansible.builtin.include_tasks: macos.yml
+
+- name: Include Linux tasks
+  when: ansible_system == "Linux"
+  ansible.builtin.include_tasks: linux.yml
