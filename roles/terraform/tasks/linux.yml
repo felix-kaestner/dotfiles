@@ -1,0 +1,23 @@
+---
+- name: Set system architecture
+  ansible.builtin.set_fact:
+    tf_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+
+- name: Remove existing terraform installation
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.local/bin/terraform"
+    state: absent
+
+- name: Get latest terraform version
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/hashicorp/terraform/releases/latest"
+  register: tf_release
+
+- name: Install terraform
+  when: ansible_system == "Linux"
+  ansible.builtin.unarchive:
+    src: "https://releases.hashicorp.com/terraform/{{ tf_release.json.tag_name[1:] }}/terraform_{{ tf_release.json.tag_name[1:] }}_linux_{{ tf_arch }}.zip"
+    dest: "{{ ansible_env.HOME }}/.local/bin"
+    remote_src: yes
+    exclude:
+      - "LICENSE.txt"
