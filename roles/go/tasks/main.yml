@@ -4,3 +4,11 @@
     name: "{{ 'go' if ansible_system == 'Darwin' else 'golang' }}"
     state: present
   become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install kind
+  ansible.builtin.command: go install sigs.k8s.io/kind@v0.26.0
+  environment:
+    GOPATH: "{{ ansible_env.HOME }}/.go"
+    PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ ansible_env.HOME }}/.go/bin/kind"
