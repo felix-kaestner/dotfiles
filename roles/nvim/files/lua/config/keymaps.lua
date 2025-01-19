@@ -46,6 +46,9 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv")
 -- Edit file under cursor
 vim.keymap.set("n", "<leader>e", "gF", { desc = "[E]dit file under cursor" })
 
+-- Execute command in new split
+vim.keymap.set("n", "<leader>x", ":new | %! <C-r>=getline('.')<CR><CR>", { desc = "E[x]ecute Command" })
+
 -- Search & Replace
 vim.keymap.set("n", "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
