@@ -41,6 +41,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
             return
         end
 
+        if client.name == "ruff" then
+            -- Disable hover in favor of pyright
+            client.server_capabilities.hoverProvider = false
+        end
+
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
 
