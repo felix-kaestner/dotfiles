@@ -3,3 +3,4 @@ k9s:
     skin: catppuccin-mocha
     enableMouse: true
     logoless: true
+  noExitOnCtrlC: true
