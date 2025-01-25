@@ -49,6 +49,10 @@ vim.keymap.set("n", "<leader>e", "gF", { desc = "[E]dit file under cursor" })
 -- Execute command in new split
 vim.keymap.set("n", "<leader>x", ":new | %! <C-r>=getline('.')<CR><CR>", { desc = "E[x]ecute Command" })
 
+-- Convert word under cursor between base64 and plain text
+vim.keymap.set("n", "<leader>atob", ':normal! ciW<C-r>=system("echo -n " . expand("<cWORD>") . " | base64 -d")<CR><CR>')
+vim.keymap.set("n", "<leader>btoa", ':normal! ciW<C-r>=system("echo -n " . expand("<cWORD>") . " | base64 -w 0")<CR><CR>')
+
 -- Search & Replace
 vim.keymap.set("n", "<C-S>", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "[S]earch & [R]eplace" })
 
