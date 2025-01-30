@@ -5,7 +5,7 @@ return {
     {
         "saghen/blink.cmp",
         dependencies = { "rafamadriz/friendly-snippets" },
-        tag = "v0.10.0",
+        tag = "v0.11.0",
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
         opts = {
