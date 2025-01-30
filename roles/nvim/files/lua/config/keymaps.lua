@@ -64,6 +64,10 @@ vim.keymap.set("v", "<leader>crs", [[:s/\%V[a-z]\@<=[A-Z]/_\l\0/g]], { desc = "[
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open buffer diagnostic list" })
 vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Open diagnostics list" })
 
+vim.keymap.set("n", "<leader>vl", function()
+    vim.diagnostic.config({ virtual_lines = not vim.diagnostic.config().virtual_lines })
+end, { desc = "Toggle diagnostic virtual lines" })
+
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
 
