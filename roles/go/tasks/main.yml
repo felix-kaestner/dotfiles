@@ -1,9 +1,18 @@
 ---
 - name: Install go
+  when: ansible_distribution != "Ubuntu"
   ansible.builtin.package:
     name: "{{ 'go' if ansible_system == 'Darwin' else 'golang' }}"
     state: present
   become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install go
+  when: ansible_distribution == "Ubuntu"
+  community.general.snap:
+    name: "go"
+    state: present
+    classic: true
+  become: true
 
 - name: Install kind
   ansible.builtin.command: go install sigs.k8s.io/kind@v0.26.0
