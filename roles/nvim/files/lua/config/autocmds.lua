@@ -113,3 +113,19 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.list = false
     end,
 })
+
+vim.api.nvim_create_autocmd("BufRead", {
+    callback = function(opts)
+        vim.api.nvim_create_autocmd("BufWinEnter", {
+            once = true,
+            buffer = opts.buf,
+            callback = function()
+                local ft = vim.bo[opts.buf].filetype
+                local last = vim.api.nvim_buf_get_mark(opts.buf, '"')[1]
+                if not ft:match("commit") and not ft:match("rebase") and last > 1 and last <= vim.api.nvim_buf_line_count(opts.buf) then
+                    vim.api.nvim_feedkeys([[g`"zz]], "nx", false)
+                end
+            end,
+        })
+    end,
+})
