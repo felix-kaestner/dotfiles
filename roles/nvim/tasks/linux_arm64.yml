@@ -1,6 +1,0 @@
----
-- name: Install neovim
-  when: ansible_system == "Linux"
-  ansible.builtin.package:
-    name: "neovim"
-    state: present
