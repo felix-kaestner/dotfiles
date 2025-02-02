@@ -13,6 +13,12 @@ return {
                 nerd_font_variant = "normal",
                 use_nvim_cmp_as_default = true,
             },
+            keymap = {
+                preset = "default",
+
+                ["<C-k>"] = {},
+                ["<C-l>"] = { "show_signature", "hide_signature", "fallback" },
+            },
             completion = {
                 menu = {
                     auto_show = function(ctx)
