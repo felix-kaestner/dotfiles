@@ -3,8 +3,8 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 
--- Source existing ~/.vimrc file
-local vimrc = vim.fn.expand("~/.vimrc")
+-- Source existing ~/.vim/vimrc.local file if present
+local vimrc = vim.fn.expand("~/.vim/vimrc.local")
 if vim.fn.filereadable(vimrc) == 1 then
     vim.cmd("source " .. vimrc)
 end
