@@ -20,6 +20,7 @@
   ansible.builtin.template:
     src: "{{ role_path }}/templates/gpg-agent.conf.j2"
     dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
+    force: false
 
 - name: Create ~/.gnupg/sshcontrol
   when: ssh_keygrip | length > 0
