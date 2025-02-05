@@ -29,3 +29,9 @@
     PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
   args:
     creates: "{{ ansible_env.HOME }}/.go/bin/kind"
+
+- name: Install kind fish completion
+  ansible.builtin.command: "kind completion fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/kind.fish"
+  environment:
+    GOPATH: "{{ ansible_env.HOME }}/.go"
+    PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
