@@ -14,6 +14,14 @@
     classic: true
   become: true
 
+- name: Install goimports
+  ansible.builtin.command: go install golang.org/x/tools/cmd/goimports@latest
+  environment:
+    GOPATH: "{{ ansible_env.HOME }}/.go"
+    PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
+  args:
+    creates: "{{ ansible_env.HOME }}/.go/bin/goimports"
+
 - name: Install kind
   ansible.builtin.command: go install sigs.k8s.io/kind@v0.26.0
   environment:
