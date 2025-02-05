@@ -64,8 +64,6 @@
           - enpass
           - notion
           - monitorcontrol
-          - rectangle
-          - slack
           - tidal
           - todoist
         state: present
