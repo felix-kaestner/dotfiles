@@ -1,6 +1,6 @@
 ---
 - name: Install JetBrains Mono Nerd Font
   when: ansible_system == "Darwin"
-  community.general.homebrew:
+  community.general.homebrew_cask:
     name: "font-jetbrains-mono-nerd-font"
     state: present
