@@ -1,9 +1,8 @@
 ---
 - name: Install alacritty
-  ansible.builtin.package:
+  community.general.homebrew_cask:
     name: "alacritty"
     state: present
-  become: "{{ ansible_system == 'Linux' }}"
 
 - name: Create symbolic link for config
   ansible.builtin.file:

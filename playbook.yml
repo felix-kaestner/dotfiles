@@ -21,7 +21,8 @@
         mode: "0755"
 
   roles:
-    - alacritty
+    - role: alacritty
+      when: ansible_system == "Darwin"
     - entr
     - fd
     - fish
