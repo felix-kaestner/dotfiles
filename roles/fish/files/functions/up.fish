@@ -4,11 +4,6 @@ function up --description 'Update all system packages'
         brew upgrade
     end
 
-    if type -q nvim
-        nvim --headless "+Lazy! sync" +qa
-        nvim --headless "+MasonUpdate" +qa
-    end
-
     if type -q pnpm
         pnpm self-update
     end
