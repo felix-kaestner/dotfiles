@@ -151,6 +151,16 @@ return {
                     end,
                 },
             })
+
+            -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#sourcekit
+            if vim.fn.executable("sourcekit-lsp") == 1 then
+                require("lspconfig").sourcekit.setup({})
+            end
+
+            -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#dartls
+            if vim.fn.executable("dart") == 1 then
+                require("lspconfig").dartls.setup({})
+            end
         end,
     },
 
