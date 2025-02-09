@@ -81,6 +81,11 @@ if status is-interactive
         --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
         --header 'Press CTRL-Y to copy command into clipboard'
         --color header:italic"
+    set -gx FZF_CTRL_T_OPTS "
+        --preview 'cat -n -t {}'
+        --bind 'ctrl-e:become($EDITOR {} < /dev/tty > /dev/tty)+abort'
+        --header 'Press CTRL-E to open file in $EDITOR'
+        --color header:italic"
     set -gx FZF_DEFAULT_OPTS "
         --color=bg:#1e1e2e,bg+:#313244
         --color=fg:#cdd6f4,fg+:#cdd6f4
