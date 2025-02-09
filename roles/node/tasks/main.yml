@@ -14,3 +14,9 @@
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Install pnpm fish completion
+  ansible.builtin.shell: "pnpm completion fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/pnpm.fish"
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"

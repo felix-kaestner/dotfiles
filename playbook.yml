@@ -20,6 +20,13 @@
         state: directory
         mode: "0755"
 
+    - name: Ensure ~/.local/share/fish/vendor_completions.d exists
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d"
+        state: directory
+        recurse: true
+        mode: "0755"
+
   roles:
     - role: alacritty
       when: ansible_system == "Darwin"

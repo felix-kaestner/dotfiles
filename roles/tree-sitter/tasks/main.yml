@@ -4,3 +4,6 @@
     name: "{{ 'tree-sitter' if ansible_system == 'Darwin' else 'tree-sitter-cli' }}"
     state: present
   become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install tree-sitter fish completion
+  ansible.builtin.shell: "tree-sitter complete --shell fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/tree-sitter.fish"

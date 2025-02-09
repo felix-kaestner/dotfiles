@@ -17,3 +17,6 @@
     PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
   args:
     creates: "{{ ansible_env.HOME }}/.local/bin/tox"
+
+- name: Install uv fish completion
+  ansible.builtin.shell: "uv generate-shell-completion fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/uv.fish"
