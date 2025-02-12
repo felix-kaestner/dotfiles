@@ -5,7 +5,10 @@ return {
     {
         "saghen/blink.cmp",
         dependencies = { "rafamadriz/friendly-snippets" },
-        tag = "v0.11.0",
+        build = "cargo build --release",
+        cond = function()
+            return vim.fn.executable("cargo") == 1
+        end,
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
         opts = {
