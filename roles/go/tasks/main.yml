@@ -43,3 +43,9 @@
   environment:
     GOPATH: "{{ ansible_env.HOME }}/.go"
     PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
+
+- name: Set go toolchain to local
+  ansible.builtin.command: go env -w GOTOOLCHAIN=local
+  environment:
+    GOPATH: "{{ ansible_env.HOME }}/.go"
+    PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
