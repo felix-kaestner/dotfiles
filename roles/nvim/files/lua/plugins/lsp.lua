@@ -44,9 +44,6 @@ return {
 
                 jsonls = {
                     json = {
-                        ---@module 'schemastore'
-                        ---@type SchemaOpts?
-                        schemas = nil,
                         validate = { enable = true },
                     },
                 },
@@ -77,9 +74,7 @@ return {
                 yamlls = {
                     redhat = { telemetry = { enabled = false } },
                     yaml = {
-                        ---@module 'schemastore'
-                        ---@type SchemaOpts?
-                        schemas = nil,
+                        schemas = { kubernetes = "config/**/*.yaml" },
                         -- disable built-in schema store support to use SchemaStore.nvim
                         schemaStore = { enable = false, url = "" },
                     },
@@ -131,7 +126,7 @@ return {
                     ["jsonls"] = function()
                         local settings = opts.servers.jsonls
 
-                        settings.json.schemas = require("schemastore").json.schemas(settings.json.schemas)
+                        settings.json.schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), settings.json.schemas or {})
 
                         require("lspconfig").jsonls.setup({
                             settings = settings,
@@ -142,7 +137,7 @@ return {
                     ["yamlls"] = function()
                         local settings = opts.servers.yamlls
 
-                        settings.yaml.schemas = require("schemastore").yaml.schemas(settings.yaml.schemas)
+                        settings.yaml.schemas = vim.tbl_deep_extend("force", require("schemastore").yaml.schemas(), settings.yaml.schemas or {})
 
                         require("lspconfig").yamlls.setup({
                             settings = settings,
