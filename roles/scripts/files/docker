@@ -15,7 +15,7 @@ elif [ "$(limactl ls -f '{{ .Status }}' docker 2>/dev/null)" = "Running" ]; then
     exec lima docker "$@"
 else
     for docker in $(type -a -p docker); do
-        if [ $docker != "$HOME/.local/bin/docker" ]; then
+        if [ "$docker" != "$HOME/.local/bin/docker" ]; then
             exec $docker "$@"
             exit
         fi

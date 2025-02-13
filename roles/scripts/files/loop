@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# loop: continously re-execute an arbitrary command
+# loop: continuously re-execute an arbitrary command
 # usage: loop <command> <args...>
 
 help() {
-  >&2 echo "Usage: $(basename "$0") <command> <args...>
+    >&2 echo "Usage: $(basename "$0") <command> <args...>
 
 Continuously re-execute an arbitrary command. Use Ctrl+C to exit.
 
@@ -18,15 +18,14 @@ Example:
   $(basename "$0") kubectl get pods -A"
 }
 
-if [[ $# -lt 1 || "$@" =~ (-h|--help) ]]; then
+if [[ $# -lt 1 || "$*" =~ (-h|--help) ]]; then
     help
     exit 0
 fi
 
-
 if fish -c "functions -q $1" &>/dev/null; then
     set -- fish -c "$*"
-elif [[ ! -x "$(command -v $1)" ]]; then
+elif [[ ! -x "$(command -v "$1")" ]]; then
     >&2 echo "$(basename "$0"): '$1' command not found"
     help
     exit 2
@@ -42,7 +41,7 @@ cleanup() {
 trap cleanup SIGINT
 
 while true; do
-    "$@" > "$tmpfile" 2>&1
+    "$@" >"$tmpfile" 2>&1
     clear
     cat "$tmpfile"
     sleep 1

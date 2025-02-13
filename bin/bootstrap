@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
+# bootstrap: setup development environment using Ansible
+# usage: bootstrap
 
 DIR="$(dirname "$(dirname "$(realpath "$0")")")"
 
 set -eu
 
 ask() {
-    printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+    printf "\r  [ \033[0;33m??\033[0m ] %s\n" "$1"
 }
 
 info() {
-    printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+    printf "\r  [ \033[00;34m..\033[0m ] %s\n" "$1"
 }
 
 success() {
-    printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+    printf "\r\033[2K  [ \033[00;32mOK\033[0m ] %s\n" "$1"
 }
 
 NAME=
@@ -22,15 +24,16 @@ SIGN_KEY=
 SSH_KEYGRIP=
 
 function generate_keys() {
+    # shellcheck disable=SC2155
     export GPG_TTY=$(tty)
 
     info 'Generating GPG keys..'
 
     ask ' - Please provide your name.'
-    read -e NAME
+    read -re NAME
 
     ask ' - Please provide your email.'
-    read -e MAIL
+    read -re MAIL
 
     info ' - Generate a Master GPG key..'
     gpg --quick-gen-key "${NAME} <${MAIL}>" ed25519 cert
@@ -42,20 +45,20 @@ function generate_keys() {
 
     # Generate subkeys
     ask ' - Do you want to create a subkey for signing? (Y/n)'
-    read -e REPLY
+    read -re REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Signing Subkey..'
-        gpg --quick-add-key $FPR ed25519 sign 1y
+        gpg --quick-add-key "$FPR" ed25519 sign 1y
         success 'Signing Subkey generated.'
 
         SIGN_KEY=$(gpg --list-secret-keys --with-colons "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "ssb" && $12 == "s" {print $5; exit}')
     fi
 
     ask ' - Do you want to create a subkey for authentication? (Y/n)'
-    read -e REPLY
+    read -re REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Authentication Subkey..'
-        gpg --quick-add-key $FPR ed25519 auth 1y
+        gpg --quick-add-key "$FPR" ed25519 auth 1y
         success 'Authentication Subkey generated.'
 
         SSH_KEYGRIP=$(gpg --list-secret-keys --with-colons "$NAME <$MAIL>" 2>/dev/null | awk -F: '$1 == "ssb" && $12 == "a" {capture = 3} capture && capture-- == 1 {print $10; exit}')
@@ -63,7 +66,7 @@ function generate_keys() {
         if [ ! -f "$DIR/roles/gpg/vars/local.yml" ]; then
             info "Create $DIR/roles/gpg/vars/local.yml.."
 
-            cat <<EOF >$DIR/roles/gpg/vars/local.yml
+            cat <<EOF >"$DIR/roles/gpg/vars/local.yml"
 ---
 ssh_keygrip: "$SSH_KEYGRIP"
 EOF
@@ -71,17 +74,17 @@ EOF
     fi
 
     ask ' - Do you want to create a subkey for encryption? (Y/n)'
-    read -e REPLY
+    read -re REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         info 'Generate Encryption Subkey.'
-        gpg --quick-add-key $FPR cv25519 encr 1y
+        gpg --quick-add-key "$FPR" cv25519 encr 1y
         success 'Encryption Subkey generated.'
     fi
 
     if [ ! -f "$DIR/roles/git/vars/local.yml" ]; then
         info "Create $DIR/roles/git/vars/local.yml.."
 
-        cat <<EOF >$DIR/roles/git/vars/local.yml
+        cat <<EOF >"$DIR/roles/git/vars/local.yml"
 ---
 git_name: "$NAME"
 git_email: "$MAIL"
@@ -96,7 +99,7 @@ EOF
 }
 
 ask ' - Do you want to create GPG key(s)? (Y/n)'
-read -e KEY_GEN
+read -re KEY_GEN
 if [[ $KEY_GEN =~ ^[Yy]$ ]]; then
     generate_keys
 fi
@@ -123,7 +126,7 @@ fi
 
 if [ -x "$(command -v python3)" ]; then
     PYTHON="python3"
-elif [ -x "$(command -v python)" ] && echo "$(python --version 2>&1)" | grep -q "^Python 3"; then
+elif [ -x "$(command -v python)" ] && "$(python --version 2>&1)" | grep -q "^Python 3"; then
     PYTHON="python"
 else
     >&2 echo "No suitable Python 3.x interpreter found."
@@ -133,12 +136,11 @@ fi
 if ! [ -x "$(command -v ansible)" ]; then
     VENV_PATH="$HOME/.venvs/ansible"
 
-    mkdir -p "$(dirname "$VENV_PATH")"
-
     if [ ! -d "$VENV_PATH" ]; then
         $PYTHON -m venv "$VENV_PATH"
     fi
 
+    # shellcheck disable=SC1091
     . "$VENV_PATH/bin/activate"
 
     pip install -q -U pip ansible

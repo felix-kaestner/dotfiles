@@ -4,12 +4,12 @@
 # based on: https://github.com/eradman/entr
 
 if [[ ! -x "$(command -v entr)" ]]; then
-  >&2 echo "entr executable not found"
-  exit 127
+    >&2 echo "entr executable not found"
+    exit 127
 fi
 
 help() {
-  >&2 echo "Usage: $(basename "$0") <directory> <command> <args...>
+    >&2 echo "Usage: $(basename "$0") <directory> <command> <args...>
 
 Watches for changes in the specified directory and re-executes the given command whenever a file is modified.
 
@@ -25,7 +25,7 @@ Example:
   $(basename "$0") . make"
 }
 
-if [[ $# -lt 2 || "$@" =~ (-h|--help) ]]; then
+if [[ $# -lt 2 || "$*" =~ (-h|--help) ]]; then
     help
     exit 0
 fi
@@ -37,7 +37,7 @@ if [[ ! -d "$1" ]]; then
 fi
 
 src=$1
-cmd=${@:2}
+cmd=("${@:2}")
 files=
 
 if git -C "$src" rev-parse --git-dir &>/dev/null; then
@@ -46,5 +46,4 @@ else
     files=$(find "$src" -type f)
 fi
 
-echo "$files" | entr -rsc "$cmd"
-
+echo "$files" | entr -rsc "${cmd[*]}"
