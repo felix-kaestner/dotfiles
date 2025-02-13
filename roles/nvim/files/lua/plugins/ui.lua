@@ -41,6 +41,7 @@ return {
         ---@type CatppuccinOptions
         opts = {
             integrations = {
+                blink_cmp = true,
                 copilot_vim = true,
                 diffview = true,
                 fidget = true,

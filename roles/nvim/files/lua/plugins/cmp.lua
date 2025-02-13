@@ -14,7 +14,6 @@ return {
         opts = {
             appearance = {
                 nerd_font_variant = "normal",
-                use_nvim_cmp_as_default = true,
             },
             keymap = {
                 preset = "default",
