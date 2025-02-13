@@ -36,9 +36,19 @@ action = "Copy"
 binding = { key = "U", mods = "Control|Shift" }
 
 [[hints.enabled]]
+regex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+action = "Paste"
+mouse = { enabled = true }
+
+[[hints.enabled]]
 regex = "[0-9a-f]{40}|[0-9a-f]{12}|[0-9a-f]{7,8}"
 action = "Copy"
 binding = { key = "H", mods = "Control|Shift" }
+
+[[hints.enabled]]
+regex = "[0-9a-f]{40}|[0-9a-f]{12}|[0-9a-f]{7,8}"
+action = "Paste"
+mouse = { enabled = true }
 
 [[hints.enabled]]
 regex = "(\\d{1,3}\\.){3}\\d{1,3}(:\\d{1,5})?"
@@ -46,11 +56,26 @@ action = "Copy"
 binding = { key = "I", mods = "Control|Shift" }
 
 [[hints.enabled]]
+regex = "(\\d{1,3}\\.){3}\\d{1,3}(:\\d{1,5})?"
+action = "Paste"
+mouse = { enabled = true }
+
+[[hints.enabled]]
 regex = "[^ ]+\\.[^ ]+:\\d+(:\\d+)?"
 action = "Copy"
 binding = { key = "L", mods = "Control|Shift" }
 
 [[hints.enabled]]
+regex = "[^ ]+\\.[^ ]+:\\d+(:\\d+)?"
+action = "Paste"
+mouse = { enabled = true }
+
+[[hints.enabled]]
 regex = "(/[\\w.-]+)+"
 action = "Copy"
 binding = { key = "F", mods = "Control|Shift" }
+
+[[hints.enabled]]
+regex = "(/[\\w.-]+)+"
+action = "Paste"
+mouse = { enabled = true }
