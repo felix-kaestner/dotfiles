@@ -74,7 +74,8 @@ return {
                 yamlls = {
                     redhat = { telemetry = { enabled = false } },
                     yaml = {
-                        schemas = { kubernetes = "config/**/*.yaml" },
+                        -- https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.32.1-standalone-strict/all.json
+                        schemas = { kubernetes = { "k8s**.yaml", "kube*/*.yaml" } },
                         -- disable built-in schema store support to use SchemaStore.nvim
                         schemaStore = { enable = false, url = "" },
                     },

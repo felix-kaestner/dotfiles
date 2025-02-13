@@ -46,6 +46,26 @@ vim.api.nvim_create_autocmd("LspAttach", {
             client.server_capabilities.hoverProvider = false
         end
 
+        -- Automatically discover kubernetes schema inside yaml files
+        if client.name == "yamlls" then
+            local uri = nil
+            local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+            for _, line in ipairs(lines) do
+                if line:match("^# yaml-language-server: $schema=") then
+                    uri = nil
+                    break
+                end
+                if uri == nil and line:match("^kind: ") then
+                    uri = vim.uri_from_bufnr(args.buf)
+                end
+            end
+
+            if uri ~= nil then
+                table.insert(client.settings.yaml.schemas.kubernetes, uri)
+                client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.settings })
+            end
+        end
+
         if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
             vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
 
