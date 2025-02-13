@@ -25,19 +25,18 @@ binding = { key = "O", mods = "Control|Shift" }
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
 
 [[hints.enabled]]
-regex = "[A-Z]+-\\d+"
-command = { program = "bash", args = [ "-c", "open https://aboutyou.atlassian.net/browse/${1}", "--" ] }
-binding = { key = "T", mods = "Control|Shift" }
-mouse = { enabled = true }
-
-[[hints.enabled]]
 regex = '"\w[\w-]+\/[\w.-]+"'
 command = { program = "bash", args = [ "-c", 'open https://github.com/${1//\"/}', "--" ] }
 binding = { key = "G", mods = "Control|Shift" }
 mouse = { enabled = true }
 
 [[hints.enabled]]
-regex = "[a-f0-9]{40}|[a-f0-9]{16}|[a-f0-9]{12}|[a-f0-9]{7,8}"
+regex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+action = "Copy"
+binding = { key = "U", mods = "Control|Shift" }
+
+[[hints.enabled]]
+regex = "[0-9a-f]{40}|[0-9a-f]{12}|[0-9a-f]{7,8}"
 action = "Copy"
 binding = { key = "H", mods = "Control|Shift" }
 
@@ -52,7 +51,6 @@ action = "Copy"
 binding = { key = "L", mods = "Control|Shift" }
 
 [[hints.enabled]]
-regex = "\\w+([\\.\\+\\-\\w]+)*@\\w+([\\.\\-]\\w+)*\\.\\w{2,}"
+regex = "(/[\\w.-]+)+"
 action = "Copy"
-binding = { key = "E", mods = "Control|Shift" }
-
+binding = { key = "F", mods = "Control|Shift" }
