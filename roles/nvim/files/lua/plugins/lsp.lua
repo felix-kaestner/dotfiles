@@ -171,7 +171,6 @@ return {
                 "debugpy",
                 "delve",
                 -- Linter
-                "codespell",
                 "ruff",
                 -- Formatter
                 "shfmt",
@@ -220,7 +219,6 @@ return {
                     end
                 end,
                 sh = { "shfmt" },
-                ["*"] = { "codespell" },
             },
             format_on_save = {
                 timeout_ms = 500,
