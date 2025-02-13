@@ -91,3 +91,10 @@ vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
     opts.border = opts.border or { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
     return fn(contents, syntax, opts, ...)
 end
+
+vim.api.nvim_create_user_command("Script", function(opts)
+    local path = vim.fn.expand("~/.local/bin/" .. opts.args)
+    vim.fn.writefile({ "#!/usr/bin/env bash" }, path)
+    vim.fn.setfperm(path, "rwxr-xr-x")
+    vim.cmd("edit " .. path)
+end, { nargs = 1 })
