@@ -171,9 +171,10 @@ return {
                 "debugpy",
                 "delve",
                 -- Linter
-                "golangci-lint",
+                "codespell",
                 "ruff",
                 -- Formatter
+                "shfmt",
                 "stylua",
             },
         },
@@ -211,10 +212,22 @@ return {
         opts = {
             formatters_by_ft = {
                 lua = { "stylua" },
-                python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
+                python = function(bufnr)
+                    if vim.fs.root(bufnr, { "pyproject.toml", "ruff.toml", ".ruff.toml" }) ~= nil then
+                        return { "ruff_fix", "ruff_format", "ruff_organize_imports" }
+                    else
+                        return { lsp_format = "never" }
+                    end
+                end,
+                sh = { "shfmt" },
+                ["*"] = { "codespell" },
             },
-            format_on_save = { timeout_ms = 500 },
-            default_format_opts = { lsp_format = "fallback" },
+            format_on_save = {
+                timeout_ms = 500,
+            },
+            default_format_opts = {
+                lsp_format = "fallback",
+            },
         },
         init = function()
             vim.opt.formatexpr = "v:lua.require('conform').formatexpr()"
