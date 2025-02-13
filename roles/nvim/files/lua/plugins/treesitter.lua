@@ -36,7 +36,6 @@ return {
                 "rust",
                 "json5",
                 "markdown",
-                "dockerfile",
                 "fish",
                 "tsx",
                 "javascript",
@@ -50,6 +49,7 @@ return {
             },
             highlight = {
                 enable = true,
+                disable = { "dockerfile" },
             },
             indent = {
                 enable = true,
