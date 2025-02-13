@@ -13,6 +13,9 @@ if [ "$(limactl ls -f '{{ .Status }}' default 2>/dev/null)" = "Running" ]; then
 elif [ "$(limactl ls -f '{{ .Status }}' docker 2>/dev/null)" = "Running" ]; then
     export LIMA_INSTANCE=docker
     exec lima docker "$@"
+elif [ "$(limactl ls -f '{{ .Status }}' k8s 2>/dev/null)" = "Running" ]; then
+    export LIMA_INSTANCE=k8s
+    exec lima sudo CONTAINERD_NAMESPACE=k8s.io --preserve-env=SSH_AUTH_SOCK nerdctl "$@"
 else
     for docker in $(type -a -p docker); do
         if [ "$docker" != "$HOME/.local/bin/docker" ]; then
