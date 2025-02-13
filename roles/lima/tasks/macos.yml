@@ -4,29 +4,11 @@
     name: "lima"
     state: present
 
-- name: Check if "default" lima-vm instance exists
-  ansible.builtin.command: limactl list --quiet default
-  register: lima_default
-  changed_when: false
-
 - name: Create "default" lima-vm instance
-  when: lima_default.rc != 0
-  ansible.builtin.command: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=default template://default
-
-- name: Check if "docker" lima-vm instance exists
-  ansible.builtin.command: limactl list --quiet docker
-  register: lima_docker
-  changed_when: false
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=default template://default 2>/dev/null || true
 
 - name: Create "docker" lima-vm instance
-  when: lima_docker.rc != 0
-  ansible.builtin.command: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --network=vzNAT --name=docker template://docker-rootful
-
-- name: Check if "k8s" lima-vm instance exists
-  ansible.builtin.command: limactl list --quiet k8s
-  register: lima_k8s
-  changed_when: false
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --network=vzNAT --name=docker template://docker-rootful 2>/dev/null || true
 
 - name: Create "k8s" lima-vm instance
-  when: lima_k8s.rc != 0
-  ansible.builtin.command: limactl create --vm-type=vz --rosetta --name=k8s template://k8s
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=k8s template://k8s 2>/dev/null || true
