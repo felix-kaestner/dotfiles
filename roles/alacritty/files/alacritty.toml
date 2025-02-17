@@ -71,11 +71,11 @@ action = "Paste"
 mouse = { enabled = true }
 
 [[hints.enabled]]
-regex = "(/[\\w.-]+)+"
+regex = "/?([\\w.-]+/)+[\\w.-]+"
 action = "Copy"
 binding = { key = "F", mods = "Control|Shift" }
 
 [[hints.enabled]]
-regex = "(/[\\w.-]+)+"
+regex = "/?([\\w.-]+/)+[\\w.-]+"
 action = "Paste"
 mouse = { enabled = true }
