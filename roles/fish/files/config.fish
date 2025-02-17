@@ -82,7 +82,7 @@ if status is-interactive
         --header 'Press CTRL-Y to copy command into clipboard'
         --color header:italic"
     set -gx FZF_CTRL_T_OPTS "
-        --preview 'cat -n -t {}'
+        --preview 'fzf-preview.sh {}'
         --bind 'ctrl-e:become($EDITOR {} < /dev/tty > /dev/tty)+abort'
         --header 'Press CTRL-E to open file in $EDITOR'
         --color header:italic"
