@@ -31,7 +31,7 @@
     creates: "{{ ansible_env.HOME }}/.go/bin/govulncheck"
 
 - name: Install kind
-  ansible.builtin.command: go install sigs.k8s.io/kind@v0.26.0
+  ansible.builtin.command: go install sigs.k8s.io/kind@latest
   environment:
     GOPATH: "{{ ansible_env.HOME }}/.go"
     PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
