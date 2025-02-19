@@ -5,10 +5,10 @@
     state: present
 
 - name: Create "default" lima-vm instance
-  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=default template://default 2>/dev/null || true
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --memory=8 --name=default template://default 2>/dev/null || true
 
 - name: Create "docker" lima-vm instance
-  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --network=vzNAT --name=docker template://docker-rootful 2>/dev/null || true
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --memory=8 --network=vzNAT --name=docker template://docker-rootful 2>/dev/null || true
 
 - name: Create "k8s" lima-vm instance
-  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --name=k8s template://k8s 2>/dev/null || true
+  ansible.builtin.shell: limactl create --vm-type=vz --rosetta --mount="~/Developer:w" --mount-type=virtiofs --mount-inotify --memory=8 --name=k8s template://k8s 2>/dev/null || true
