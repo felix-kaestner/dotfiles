@@ -211,6 +211,7 @@ return {
         ---@type conform.setupOpts
         opts = {
             formatters_by_ft = {
+                sh = { "shfmt" },
                 lua = { "stylua" },
                 python = function(bufnr)
                     if vim.fs.root(bufnr, { "pyproject.toml", "ruff.toml", ".ruff.toml" }) ~= nil then
@@ -219,8 +220,14 @@ return {
                         return { lsp_format = "never" }
                     end
                 end,
-                sh = { "shfmt" },
-                ["*"] = { "codespell" },
+                ["*"] = function(bufnr)
+                    if vim.fs.root(bufnr, ".codespellrc") ~= nil then
+                        return { "codespell" }
+                    else
+                        return {}
+                    end
+                end,
+                ["_"] = { "trim_whitespace" },
             },
             format_on_save = {
                 timeout_ms = 500,
