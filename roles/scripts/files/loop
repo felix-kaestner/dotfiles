@@ -41,8 +41,6 @@ cleanup() {
 trap cleanup SIGINT
 
 while true; do
-    "$@" >"$tmpfile" 2>&1
-    clear
-    cat "$tmpfile"
+    printf "\033[2J\033[H%s\n" "$("$@" 2>&1)"
     sleep 1
 done
