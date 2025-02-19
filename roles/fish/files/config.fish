@@ -47,6 +47,11 @@ fish_add_path "$HOME/.symfony/bin"
 # set PATH so it includes user's flutter bin directory if it exists
 fish_add_path "$HOME/.flutter/bin"
 
+# set PATH so it includes the bin directory of gnu-sed if it exists
+if test -x "/opt/homebrew/opt/gnu-sed/libexec/gnubin/sed"
+    fish_add_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+end
+
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
 if status is-interactive
