@@ -22,6 +22,9 @@ return {
                 ["<C-l>"] = { "show_signature", "hide_signature", "fallback" },
             },
             completion = {
+                accept = {
+                    auto_brackets = { enabled = false },
+                },
                 menu = {
                     auto_show = function(ctx)
                         return ctx.mode ~= "cmdline"
