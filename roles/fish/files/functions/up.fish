@@ -26,4 +26,10 @@ function up --description 'Update all system packages'
         u8s sync
         u8s update
     end
+
+    for bin in ~/.go/bin/*
+        set -l mod (go version -m "$bin" | awk '/path/ {print $2;exit}')
+        printf "\e[1;36m=> go install %s@latest\e[0m\n" "$mod"
+        go install "$mod@latest"
+    end
 end
