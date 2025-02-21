@@ -14,6 +14,15 @@
     classic: true
   become: true
 
+- name: Install go tools
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name:
+      - "caarlos0/tap/timer"
+      - "golangci-lint"
+      - "goreleaser"
+      - "glow"
+
 - name: Install goimports
   ansible.builtin.command: go install golang.org/x/tools/cmd/goimports@latest
   environment:
