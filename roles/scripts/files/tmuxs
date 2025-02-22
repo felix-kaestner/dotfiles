@@ -31,7 +31,7 @@ if [[ $# -eq 1 ]]; then
         help
         exit 2
     fi
-    dir=$1
+    dir="$(realpath "$1")"
 else
     dir="${DIR:-$HOME/Developer}/$(find "${DIR:-$HOME/Developer}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort --reverse | fzf --tmux --prompt 'Project> ')" || exit 0
 fi
