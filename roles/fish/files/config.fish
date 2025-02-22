@@ -11,6 +11,8 @@ test -n "$XDG_BIN_HOME"; or set -gx XDG_BIN_HOME "$HOME/.local/bin"
 
 set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
+test (uname) = Darwin; and set -gx CONTAINER_TOOL nctl
+
 if type -q nerdctl
     set -gx KIND_EXPERIMENTAL_PROVIDER nerdctl
 end
