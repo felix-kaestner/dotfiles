@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# docker: command line interface for invoking nerdctl or docker through lima
-# usage: docker [OPTIONS] COMMAND
+# nctl: command line interface for invoking nerdctl or docker through lima
+# usage: nctl [OPTIONS] COMMAND
 set -e
 
 if ! [ -x "$(command -v limactl)" ]; then
@@ -17,13 +17,6 @@ elif [ "$(limactl ls -f '{{ .Status }}' k8s 2>/dev/null)" = "Running" ]; then
     export LIMA_INSTANCE=k8s
     exec lima sudo CONTAINERD_NAMESPACE=k8s.io --preserve-env=SSH_AUTH_SOCK nerdctl "$@"
 else
-    for docker in $(type -a -p docker); do
-        if [ "$docker" != "$HOME/.local/bin/docker" ]; then
-            exec $docker "$@"
-            exit
-        fi
-    done
-
-    echo >&2 "no lima-vm instance running, execute 'limactl start [default|docker]' to start the desired instance."
+    echo >&2 "no lima-vm instance running, execute 'limactl start [default|docker|k8s]' to start the desired instance."
     exit 1
 fi
