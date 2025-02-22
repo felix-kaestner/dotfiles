@@ -13,8 +13,13 @@ set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 test (uname) = Darwin; and set -gx CONTAINER_TOOL nctl
 
-if type -q nerdctl
-    set -gx KIND_EXPERIMENTAL_PROVIDER nerdctl
+# set the default container runtime for kind
+# https://github.com/kubernetes-sigs/kind/blob/main/pkg/internal/runtime/runtime.go
+for tool in nerdctl podman docker nerdctl.lima
+    if type -q $tool
+        set -gx KIND_EXPERIMENTAL_PROVIDER $tool
+        break
+    end
 end
 
 # include brew shellenv
