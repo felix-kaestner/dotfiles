@@ -4,9 +4,10 @@
     name: "lima"
     state: present
 
-- name: Define Lima CLI arguments
+- name: Define Lima arguments
   ansible.builtin.set_fact:
-    lima_args: "--vm-type=vz --rosetta --mount='~/Developer:w' --mount-type=virtiofs --mount-inotify --memory=8"
+    # https://github.com/rancher-sandbox/rancher-desktop/blob/main/pkg/rancher-desktop/backend/lima.ts#L570-L573
+    lima_args: "--vm-type=vz --rosetta --mount=~/Developer:w --mount=/var/folders:w --mount-type=virtiofs --mount-inotify --memory=8"
 
 - name: Create "default" lima-vm instance
   ansible.builtin.shell: "limactl create {{ lima_args }} --name=default template://default 2>/dev/null || true"
