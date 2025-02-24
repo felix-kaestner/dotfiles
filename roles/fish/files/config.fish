@@ -2,6 +2,7 @@ set -gx LANG en_US.UTF-8
 
 set -gx EDITOR "nvim"
 set -gx GPG_TTY (tty)
+set -gx WATCH_INTERVAL 1
 
 # set XDG base directories
 test -n "$XDG_CONFIG_HOME"; or set -gx XDG_CONFIG_HOME "$HOME/.config"
