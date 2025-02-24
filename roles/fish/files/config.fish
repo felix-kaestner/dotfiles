@@ -109,6 +109,8 @@ if status is-interactive
 
     abbr --add dotdot --regex '^\.\.+$' --function _dotdot
 
+    abbr --add nrun 'nctl run --rm -it -w /workspace -v (pwd):/workspace'
+
     # GPG Settings - based on: https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/gpg-agent/gpg-agent.plugin.zsh#L12
     if test (gpgconf --list-options gpg-agent 2>/dev/null | awk -F: '$1=="enable-ssh-support" {print $10}') = 1
         set -e SSH_AGENT_PID
