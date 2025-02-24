@@ -86,6 +86,14 @@ if status is-interactive
     bind -M default \cf '~/.local/bin/tmuxs'
     bind -M insert \cf '~/.local/bin/tmuxs'
 
+    # Watch (Reload) last command
+    bind -M default \er 'w $history[1]'
+    bind -M insert \er 'w $history[1]'
+
+    # Hot-Reload last command when files change
+    bind -M default \ef 'wr . $history[1]'
+    bind -M insert \ef 'wr . $history[1]'
+
     # https://github.com/junegunn/fzf#setting-up-shell-integration
     fzf --fish | source
     set -gx FZF_ALT_C_OPTS "
