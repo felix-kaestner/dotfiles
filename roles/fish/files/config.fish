@@ -62,6 +62,8 @@ end
 
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
+test -f "$HOME/.kubectl.fish"; and source "$HOME/.kubectl.fish"
+
 if status is-interactive
     # https://fishshell.com/docs/current/interactive.html#configurable-greeting
     set -g fish_greeting

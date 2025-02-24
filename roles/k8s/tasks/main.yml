@@ -30,3 +30,8 @@
     dest: "{{ xdg_config_home }}/k9s/skins/catppuccin-mocha.yaml"
     mode: "0644"
 
+- name: Download kubectl aliases
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/felix-kaestner/kubectl-aliases/refs/heads/custom/.kubectl_aliases.fish"
+    dest: "{{ ansible_env.HOME }}/.kubectl.fish"
+    mode: "0644"
