@@ -16,6 +16,12 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end,
 })
 
+local kubernetes = "kubernetes"
+local file = vim.fn.expand("~/.cache/k8s-schemas/all.json")
+if vim.fn.filereadable(file) == 1 then
+    kubernetes = file
+end
+
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
     callback = function(args)
@@ -48,21 +54,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         -- Automatically discover kubernetes schema inside yaml files
         if client.name == "yamlls" then
-            local uri = nil
-            local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
-            for _, line in ipairs(lines) do
-                if line:match("^# yaml-language-server: $schema=") then
-                    uri = nil
-                    break
+            local res = client:request_sync("yaml/get/jsonSchema", { vim.uri_from_bufnr(args.buf) }, 500, args.buf)
+            if res and #res.result == 0 then
+                local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+                for _, line in ipairs(lines) do
+                    if line:match("^kind: ") then
+                        client:notify("json/schemaAssociations", { [kubernetes] = vim.uri_from_bufnr(args.buf) })
+                        break
+                    end
                 end
-                if uri == nil and line:match("^kind: ") then
-                    uri = vim.uri_from_bufnr(args.buf)
-                end
-            end
-
-            if uri ~= nil then
-                table.insert(client.settings.yaml.schemas.kubernetes, uri)
-                client:notify(vim.lsp.protocol.Methods.workspace_didChangeConfiguration, { settings = client.settings })
             end
         end
 
