@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# kschemas: extract json schema from the openapi spec of the kubernetes api server
+# usage: kschemas [DIRECTORY]
+
+help() {
+    echo >&2 "Usage: $(basename "$0") [DIRECTORY]
+
+Extracts JSON schemas from the OpenAPI spec of the Kubernetes API server.
+
+Options:
+  -h, --help    Show this help message and exit
+
+Arguments:
+  DIRECTORY     Directory to save the extracted schemas to (optional)
+
+Example:
+  $(basename "$0") # Extracts schemas to ~/.cache/k8s-schemas
+  $(basename "$0") ~/my/k8s/schemas"
+}
+
+if [[ $# -gt 1 || "$1" =~ ^(-h|--help)$ ]]; then
+    help
+    exit 0
+fi
+
+if [[ $# -eq 1 ]]; then
+    if [[ ! -d "$1" ]]; then
+        echo >&2 "'$1' is not a directory" ""
+        help
+        exit 2
+    fi
+    dir=$1
+else
+    dir="$HOME/.cache/k8s-schemas"
+fi
+
+if [ -x "$(command -v python3)" ]; then
+    PYTHON="python3"
+elif [ -x "$(command -v python)" ] && "$(python --version 2>&1)" | grep -q "^Python 3"; then
+    PYTHON="python"
+else
+    >&2 echo "No suitable Python 3.x interpreter found."
+    exit 1
+fi
+
+if ! [ -x "$(command -v openapi2jsonschema)" ]; then
+    VENV_PATH="$HOME/.venvs/openapi2jsonschema"
+
+    if [ ! -d "$VENV_PATH" ]; then
+        $PYTHON -m venv "$VENV_PATH"
+    fi
+
+    # shellcheck disable=SC1091
+    . "$VENV_PATH/bin/activate"
+
+    if ! [ -x "$(command -v openapi2jsonschema)" ]; then
+        pip install -q -U pip git+https://github.com/hectorm/openapi2jsonschema.git
+    fi
+fi
+
+file=$(mktemp)
+kubectl get --raw /openapi/v2 >"$file"
+openapi2jsonschema --kubernetes --stand-alone --expanded --output "$dir" "$file"
+rm -f "$file"
+
+# By default the generated schemas will trigger the following error in the YAML language server (https://github.com/redhat-developer/yaml-language-server/issues/998)
+#   "1. Matches multiple schemas when only one must validate."
+#
+# This is because multiple schemas will match the "oneOf" condition of the schema in the "all.json" file. This error is explicitly silenced for the builtin "kubernetes"
+# schema in the YAML language server (https://github.com/redhat-developer/vscode-yaml/issues/247#issuecomment-554393285) but not for other (manually added) schemas.
+# To avoid this error, we replace the "oneOf" condition from the generated schema with "anyOf". We use awk instead of set to avoid the inconsistency of the "sed -i" flag on macOS.
+awk '{gsub("oneOf","anyOf")}1' "$dir/all.json" >"$dir/all.json.swp"
+mv "$dir/all.json.swp" "$dir/all.json"
