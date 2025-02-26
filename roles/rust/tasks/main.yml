@@ -3,3 +3,10 @@
   ansible.builtin.shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --default-toolchain nightly
   args:
     creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+
+- name: Install Rust packages
+  community.general.cargo:
+    name:
+      - bottom
+      - zoxide
+    executable: "{{ ansible_env.HOME }}/.cargo/bin/cargo"
