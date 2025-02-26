@@ -17,6 +17,13 @@ function up --description 'Update all system packages'
         uv tool upgrade --all
     end
 
+    if type -q cargo; and test -f "$CARGO_HOME/.crates2.json"
+        set -l pkgs (cat $CARGO_HOME/.crates2.json | jq -r '.installs | keys[] | split(" ")[0]')
+        if test (count $pkgs) -gt 0
+            cargo install --locked $pkgs
+        end
+    end
+
     if type -q kubectl; and kubectl krew &>/dev/null
         kubectl krew update
         kubectl krew upgrade
