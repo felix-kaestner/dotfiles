@@ -97,6 +97,9 @@ if status is-interactive
     bind -M default \ef 'wr . $history[1]'
     bind -M insert \ef 'wr . $history[1]'
 
+    # https://github.com/ajeetdsouza/zoxide#configuration
+    zoxide init --cmd j fish | source
+
     # https://github.com/junegunn/fzf#setting-up-shell-integration
     fzf --fish | source
     set -gx FZF_ALT_C_OPTS "
