@@ -20,3 +20,9 @@
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Install tldr
+  ansible.builtin.shell: pnpm install --global tldr
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
