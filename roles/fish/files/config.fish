@@ -47,7 +47,8 @@ fish_add_path "$GEM_HOME/bin"
 fish_add_path "$HOME/.krew/bin"
 
 # set PATH so it includes user's cargo bin if it exists
-fish_add_path "$HOME/.cargo/bin"
+set -gx CARGO_HOME "$HOME/.cargo"
+fish_add_path "$CARGO_HOME/bin"
 
 # set PATH so it includes user's symfony bin directory if it exists
 fish_add_path "$HOME/.symfony/bin"
