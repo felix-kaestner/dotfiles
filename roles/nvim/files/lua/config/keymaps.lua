@@ -75,6 +75,9 @@ end, { desc = "Toggle diagnostic virtual lines" })
 -- Shorthand to launch Git pane
 vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
 
+-- Keybinding to toggle line wrapping
+vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>set wrap!<cr>", { desc = "[T]oggle [W]rap" })
+
 -- Quickly open the news file
 vim.keymap.set("n", "<leader>N", "<cmd>edit $VIMRUNTIME/doc/news.txt<cr>", { desc = "[N]ews" })
 
