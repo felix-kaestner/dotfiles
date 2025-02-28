@@ -57,9 +57,10 @@ fish_add_path "$HOME/.symfony/bin"
 fish_add_path "$HOME/.flutter/bin"
 
 # set PATH so it includes the bin directory of gnu-sed if it exists
-if test -x "/opt/homebrew/opt/gnu-sed/libexec/gnubin/sed"
-    fish_add_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
-end
+fish_add_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+
+# set PATH so it includes the bin directory of the ruby version installed via brew if it exists
+fish_add_path "/opt/homebrew/opt/ruby/bin"
 
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
