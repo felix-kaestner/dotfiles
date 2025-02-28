@@ -97,6 +97,10 @@ if status is-interactive
     bind -M default \ef 'wr . $history[1]'
     bind -M insert \ef 'wr . $history[1]'
 
+    # Pipe last command to tailspin
+    bind -M default \et 'commandline -i "$history[1] &| tspin"'
+    bind -M insert \et 'commandline -i "$history[1] &| tspin"'
+
     # https://github.com/ajeetdsouza/zoxide#configuration
     zoxide init --cmd j fish | source
 

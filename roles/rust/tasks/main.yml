@@ -8,5 +8,6 @@
   community.general.cargo:
     name:
       - bottom
+      - tailspin
       - zoxide
     executable: "{{ ansible_env.HOME }}/.cargo/bin/cargo"
