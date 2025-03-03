@@ -1,73 +1,202 @@
-#!/usr/bin/env bash
-# kschemas: extract json schema from the openapi spec of the kubernetes api server
-# usage: kschemas [DIRECTORY]
+#!/usr/bin/env python3
+# Copyright 2025 Felix Kästner
+# SPDX-License-Identifier: Apache-2.0
+#
+# This file contains code derived from [openapi2jsonschema](https://github.com/instrumenta/openapi2jsonschema),
+# Copyright (C) 2017 Gareth Rushgrove, licensed under the Apache 2.0 license.
+import json
+import os
+import os.path
+import sys
+import subprocess
+from typing import Any, Dict, cast
 
-help() {
-    echo >&2 "Usage: $(basename "$0") [DIRECTORY]
+
+def help_message():
+    script_name = os.path.basename(sys.argv[0])
+    print(
+        f"""Usage: {script_name}
 
 Extracts JSON schemas from the OpenAPI spec of the Kubernetes API server.
 
 Options:
   -h, --help    Show this help message and exit
 
-Arguments:
-  DIRECTORY     Directory to save the extracted schemas to (optional)
-
 Example:
-  $(basename "$0") # Extracts schemas to ~/.cache/k8s-schemas
-  $(basename "$0") ~/my/k8s/schemas"
-}
+  {script_name}  # Extracts schemas to ~/.cache/k8s-schemas
+""",
+        file=sys.stderr,
+    )
 
-if [[ $# -gt 1 || "$1" =~ ^(-h|--help)$ ]]; then
-    help
-    exit 0
-fi
 
-if [[ $# -eq 1 ]]; then
-    if [[ ! -d "$1" ]]; then
-        echo >&2 "'$1' is not a directory" ""
-        help
-        exit 2
-    fi
-    dir=$1
-else
-    dir="$HOME/.cache/k8s-schemas"
-fi
+def fetch_json(path: str) -> Dict[str, Any]:
+    try:
+        res = subprocess.run(["kubectl", "get", "--raw", path], check=True, text=True, capture_output=True)
+        return json.loads(res.stdout)
+    except Exception as e:
+        print(f"Error fetching {path}: {e}", file=sys.stderr)
+        sys.exit(1)
 
-if [ -x "$(command -v python3)" ]; then
-    PYTHON="python3"
-elif [ -x "$(command -v python)" ] && "$(python --version 2>&1)" | grep -q "^Python 3"; then
-    PYTHON="python"
-else
-    >&2 echo "No suitable Python 3.x interpreter found."
-    exit 1
-fi
 
-if ! [ -x "$(command -v openapi2jsonschema)" ]; then
-    VENV_PATH="$HOME/.venvs/openapi2jsonschema"
+def change_dict_values(d: Dict[str, Any]) -> Dict[str, Any]:
+    new = {}
+    try:
+        is_nullable = False
+        for k, v in d.items():
+            if k == "default" and not v:
+                continue
+            if k == "nullable":
+                is_nullable = True
+            new_v = v
+            if isinstance(v, dict):
+                new_v = change_dict_values(v)
+                if "allOf" in new_v and isinstance(new_v["allOf"], list) and len(new_v["allOf"]) == 1:
+                    new_v.update(new_v['allOf'][0])
+                    del new_v['allOf']
+            elif isinstance(v, list):
+                new_v = list()
+                for x in v:
+                    new_v.append(change_dict_values(x))
+            elif isinstance(v, str):
+                if k == "$ref":
+                    new_v = "_definitions.json%s" % v.replace("#/components/schemas/", "#/definitions/")
+            else:
+                new_v = v
+            new[k] = new_v
+        if is_nullable and "type" in new:
+            if not isinstance(new["type"], list):
+                new["type"] = [new["type"]]
+            new["type"].append("null")
+        return new
+    except AttributeError:
+        return d
 
-    if [ ! -d "$VENV_PATH" ]; then
-        $PYTHON -m venv "$VENV_PATH"
-    fi
 
-    # shellcheck disable=SC1091
-    . "$VENV_PATH/bin/activate"
+def replace_int_or_string(d: Dict[str, Any]) -> Dict[str, Any]:
+    new = {}
+    try:
+        for k, v in d.items():
+            new_v = v
+            if isinstance(v, dict):
+                if "format" in v and v["format"] == "int-or-string":
+                    new_v = {"oneOf": [{"type": "string"}, {"type": "integer"}]}
+                else:
+                    new_v = replace_int_or_string(v)
+            elif isinstance(v, list):
+                new_v = list()
+                for x in v:
+                    new_v.append(replace_int_or_string(x))
+            else:
+                new_v = v
+            new[k] = new_v
+        return new
+    except AttributeError:
+        return d
 
-    if ! [ -x "$(command -v openapi2jsonschema)" ]; then
-        pip install -q -U pip git+https://github.com/hectorm/openapi2jsonschema.git
-    fi
-fi
 
-file=$(mktemp)
-kubectl get --raw /openapi/v2 >"$file"
-openapi2jsonschema --kubernetes --stand-alone --expanded --output "$dir" "$file"
-rm -f "$file"
+def allow_null_optional_fields(d: Dict[str, Any], parent=None, grand_parent=None, key=None):
+    new = {}
+    try:
+        for k, v in d.items():
+            new_v = v
+            if isinstance(v, dict):
+                new_v = allow_null_optional_fields(v, d, parent, k)
+            elif isinstance(v, list):
+                new_v = list()
+                for x in v:
+                    new_v.append(allow_null_optional_fields(x, v, parent, k))
+            elif isinstance(v, str):
+                is_non_null_type = k == "type" and v != "null"
+                is_required_field = grand_parent and "required" in grand_parent and key in grand_parent["required"]
+                if is_non_null_type and not is_required_field:
+                    new_v = [v, "null"]
+            new[k] = new_v
+        return new
+    except AttributeError:
+        return d
 
-# By default the generated schemas will trigger the following error in the YAML language server (https://github.com/redhat-developer/yaml-language-server/issues/998)
-#   "1. Matches multiple schemas when only one must validate."
-#
-# This is because multiple schemas will match the "oneOf" condition of the schema in the "all.json" file. This error is explicitly silenced for the builtin "kubernetes"
-# schema in the YAML language server (https://github.com/redhat-developer/vscode-yaml/issues/247#issuecomment-554393285) but not for other (manually added) schemas.
-# To avoid this error, we replace the "oneOf" condition from the generated schema with "anyOf". We use awk instead of set to avoid the inconsistency of the "sed -i" flag on macOS.
-awk '{gsub("oneOf","anyOf")}1' "$dir/all.json" >"$dir/all.json.swp"
-mv "$dir/all.json.swp" "$dir/all.json"
+
+def main() -> None:
+    if len(sys.argv) > 1 and sys.argv[1] in ("-h", "--help"):
+        help_message()
+        sys.exit(0)
+
+    output = os.path.expanduser("~/.cache/k8s-schemas-new")
+    if not os.path.exists(output):
+        os.makedirs(output)
+
+    print("Fetching API discovery from /openapi/v3", file=sys.stdout)
+    api_discovery: Dict[str, Any] = fetch_json("/openapi/v3")
+
+    components: Dict[str, Any] = {}
+    for path_name, path_info in api_discovery.get("paths", {}).items():
+        path_info = cast(Dict[str, Any], path_info)
+        if "serverRelativeURL" in path_info:
+            relative_url: str = path_info["serverRelativeURL"]
+
+            print(f"Fetching schema from /{path_name}", file=sys.stdout)
+            schema: Dict[str, Any] = fetch_json(relative_url)
+
+            if "components" in schema and "schemas" in schema["components"]:
+                for component_name, component in schema["components"]["schemas"].items():
+                    if component_name not in components:
+                        components[component_name] = component
+
+    types: Dict[str, Any] = {}
+    for title, component in components.items():
+        kind = title.split(".")[-1].lower()
+        version = title.split(".")[-2].lower()
+
+        if title.startswith("io.k8s"):
+            group = title.split(".")[-3].lower()
+        else:
+            group = ".".join(title.split(".")[:-2][::-1]).lower()
+
+        if group in ["core", "api"]:
+            full_name = "%s-%s" % (kind, version)
+        else:
+            full_name = "%s-%s-%s" % (kind, group, version)
+
+        print(f"Processing {title}", file=sys.stdout)
+        specification = cast(Dict[str, Any], component)
+        specification["$schema"] = "http://json-schema.org/draft-07/schema#"
+        specification.setdefault("type", "object")
+
+        if title.split(".")[3] == "pkg" and title.split(".")[2] == "kubernetes":
+            print("%s not currently supported, due to use of pkg namespace" % title, file=sys.stderr)
+            sys.exit(1)
+
+        updated = change_dict_values(specification)
+        specification = updated
+
+        if "additionalProperties" in specification:
+            updated = change_dict_values(specification["additionalProperties"])
+            specification["additionalProperties"] = updated
+
+        if "properties" in specification:
+            updated = replace_int_or_string(specification["properties"])
+            updated = allow_null_optional_fields(updated)
+            specification["properties"] = updated
+
+        with open("%s/%s.json" % (output, full_name), "w", newline="\n") as schema_file:
+            json.dump(specification, schema_file, indent=2)
+
+        types[title] = specification
+
+    contents = {"anyOf": []}
+    definitions = {"definitions": {}}
+    for title, specification in types.items():
+        contents["anyOf"].append({"$ref": "_definitions.json#/definitions/%s" % title})
+        definitions["definitions"][title] = specification
+
+    print("Writing combined schema file", file=sys.stdout)
+    with open("%s/all.json" % output, "w", newline="\n") as all_file:
+        json.dump(contents, all_file, indent=2)
+
+    print("Writing definitions file", file=sys.stdout)
+    with open("%s/_definitions.json" % output, "w", newline="\n") as definitions_file:
+        json.dump(definitions, definitions_file, indent=2)
+
+
+if __name__ == "__main__":
+    main()
