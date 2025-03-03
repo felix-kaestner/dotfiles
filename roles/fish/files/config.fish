@@ -56,7 +56,8 @@ fish_add_path "$HOME/.symfony/bin"
 # set PATH so it includes user's flutter bin directory if it exists
 fish_add_path "$HOME/.flutter/bin"
 
-# set PATH so it includes the bin directory of gnu-sed if it exists
+# set PATH so it includes the bin directories of GNU utilities installed via brew if they exist
+fish_add_path "/opt/homebrew/opt/make/libexec/gnubin"
 fish_add_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
 
 # set PATH so it includes the bin directory of the ruby version installed via brew if it exists
