@@ -121,7 +121,7 @@ def main() -> None:
         help_message()
         sys.exit(0)
 
-    output = os.path.expanduser("~/.cache/k8s-schemas-new")
+    output = os.path.expanduser("~/.cache/k8s-schemas")
     if not os.path.exists(output):
         os.makedirs(output)
 
