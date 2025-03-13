@@ -23,6 +23,20 @@
       - "goreleaser"
       - "glow"
 
+- name: Get GOOS environment variable
+  ansible.builtin.command: go env GOOS
+  register: goos
+
+- name: Get GOARCH environment variable
+  ansible.builtin.command: go env GOARCH
+  register: goarch
+
+- name: Download kubebuilder
+  ansible.builtin.get_url:
+    url: "https://go.kubebuilder.io/dl/latest/{{ goos.stdout }}/{{ goarch.stdout }}"
+    dest: "{{ ansible_env.HOME }}/.local/bin/kubebuilder"
+    mode: "0755"
+
 - name: Install goimports
   ansible.builtin.command: go install golang.org/x/tools/cmd/goimports@latest
   environment:
