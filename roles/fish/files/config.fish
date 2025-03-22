@@ -142,9 +142,13 @@ if status is-interactive
 
     gpgconf --launch gpg-agent
 
+    # automatically set LIMA_INSTANCE to running lima-vm
+    if type -q limactl; and type -q jq; and string match -q "Running" (limactl ls -f '{{ .Status }}' 2>/dev/null)
+        set -gx LIMA_INSTANCE (limactl ls --json | jq -r '. | select(.status == "Running") | .name' 2>/dev/null)
+    end
+
     # automatically expose docker host through in lima-vm
     if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' docker 2>/dev/null)
-        set -gx LIMA_INSTANCE docker
         set -gx DOCKER_HOST (limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
         set -gx TESTCONTAINERS_HOST_OVERRIDE (limactl shell docker ip a show lima0 | awk '/inet / {sub("/.*",""); print $2}')
         set -gx TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE /var/run/docker.sock
@@ -152,9 +156,9 @@ if status is-interactive
 
     set -gx --path KUBECONFIG "$HOME/.kube/config"
     if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' k8s 2>/dev/null)
-        set -gx LIMA_INSTANCE k8s
         set -p KUBECONFIG (limactl list "k8s" --format "{{.Dir}}/copied-from-guest/kubeconfig.yaml")
     end
+
     if type -q u8s; and test -f "$HOME/.config/SAPCC/u8s/.kube/config"
         set -p KUBECONFIG "$HOME/.config/SAPCC/u8s/.kube/config"
     end
