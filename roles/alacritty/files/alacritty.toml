@@ -5,7 +5,7 @@ import = [ "theme.toml" ]
 size = 14
 
 [font.normal]
-family = "JetBrainsMono Nerd Font"
+family = "GeistMono Nerd Font Mono"
 
 [window]
 decorations = "None"
