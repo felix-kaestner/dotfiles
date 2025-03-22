@@ -84,6 +84,9 @@ vim.g.netrw_altv = 1 -- Split right
 vim.g.netrw_localcopydircmd = "cp -r" -- Enable recursive copy of directories.
 
 -- See: https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#borders
+-- Recently https://github.com/neovim/neovim/pull/31074 added support for defining
+-- vim.opt.winborder = "single" to set the default border for all floating windows.
+-- However setting this option doesn't play nice with telescope, so we stick with this.
 local fn = vim.lsp.util.open_floating_preview
 ---@diagnostic disable-next-line: duplicate-set-field
 vim.lsp.util.open_floating_preview = function(contents, syntax, opts, ...)
