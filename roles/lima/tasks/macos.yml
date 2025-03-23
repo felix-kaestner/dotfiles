@@ -17,3 +17,9 @@
 
 - name: Create "k8s" lima-vm instance
   ansible.builtin.shell: "limactl create {{ lima_args }} --name=k8s template://k8s 2>/dev/null || true"
+
+- name: Enable nested virtualization and ssh agent forwarding for vz lima instances
+  ansible.builtin.shell: |
+    for vm in default docker k8s; do
+        limactl edit --set '.ssh.forwardAgent=true | .nestedVirtualization=true' $vm
+    done
