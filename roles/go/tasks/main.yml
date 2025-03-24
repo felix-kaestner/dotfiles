@@ -22,6 +22,7 @@
       - "golangci-lint"
       - "goreleaser"
       - "glow"
+      - "fx"
 
 - name: Get GOOS environment variable
   ansible.builtin.command: go env GOOS
