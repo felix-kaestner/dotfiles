@@ -149,3 +149,9 @@ vim.api.nvim_create_autocmd("BufRead", {
         })
     end,
 })
+
+vim.api.nvim_create_autocmd("VimResized", {
+    group = vim.api.nvim_create_augroup("auto-resize", { clear = true }),
+    pattern = "*",
+    command = "normal! <C-w>=",
+})
