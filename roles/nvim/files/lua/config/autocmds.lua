@@ -155,3 +155,20 @@ vim.api.nvim_create_autocmd("VimResized", {
     pattern = "*",
     command = "normal! <C-w>=",
 })
+
+-- Support for v0.11 'vim.opt.winborder' in telescope
+-- See: https://github.com/nvim-telescope/telescope.nvim/issues/3436
+vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("telescope-winborder", { clear = true }),
+    pattern = "TelescopeFindPre",
+    callback = function()
+        local border = vim.opt.winborder:get()
+        vim.opt_local.winborder = "none"
+        vim.api.nvim_create_autocmd("WinLeave", {
+            once = true,
+            callback = function()
+                vim.opt_local.winborder = border
+            end,
+        })
+    end,
+})
