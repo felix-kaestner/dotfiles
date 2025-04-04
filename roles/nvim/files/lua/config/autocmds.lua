@@ -135,6 +135,8 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("BufRead", {
+    group = vim.api.nvim_create_augroup("last-position", { clear = true }),
+    pattern = "*",
     callback = function(opts)
         vim.api.nvim_create_autocmd("BufWinEnter", {
             once = true,

@@ -86,6 +86,7 @@ vim.g.netrw_localcopydircmd = "cp -r" -- Enable recursive copy of directories.
 -- [[ Window ]]
 vim.opt.winborder = "rounded"
 
+-- [[ Commands ]]
 vim.api.nvim_create_user_command("Script", function(opts)
     local path = vim.fn.expand("~/.local/bin/" .. opts.args)
     vim.fn.writefile({ "#!/usr/bin/env bash" }, path)
