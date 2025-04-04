@@ -45,6 +45,9 @@ Thumbs.db
 # Folder config file
 Desktop.ini
 
+# Claude Code
+CLAUDE.md
+
 # Vim
 .swp
 .swo
