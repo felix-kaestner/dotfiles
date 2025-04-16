@@ -1,7 +1,8 @@
 ---
-- name: Install pam-reattach, GNU sed and GNU watch
+- name: Install curl, pam-reattach, GNU sed and GNU watch
   community.general.homebrew:
     name:
+      - "curl"
       - "pam-reattach"
       - "gnu-sed"
       - "watch"
