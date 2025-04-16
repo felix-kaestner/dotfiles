@@ -68,9 +68,9 @@
           - arc
           - chatgpt
           - claude
-          - enpass
-          - notion
           - monitorcontrol
+          - notion
+          - ollama
           - tidal
           - todoist
         state: present
