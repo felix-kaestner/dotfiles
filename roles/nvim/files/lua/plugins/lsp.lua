@@ -172,6 +172,7 @@ return {
                 "delve",
                 -- Linter
                 "codespell",
+                "shellcheck",
                 "ruff",
                 -- Formatter
                 "shfmt",
