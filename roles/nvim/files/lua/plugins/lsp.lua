@@ -15,6 +15,8 @@ return {
         ---@class Opts
         opts = {
             servers = {
+                bashls = {},
+
                 gopls = {
                     gopls = {
                         gofumpt = true,
