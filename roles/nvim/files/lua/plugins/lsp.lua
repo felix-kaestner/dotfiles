@@ -159,6 +159,11 @@ return {
             if vim.fn.executable("dart") == 1 then
                 require("lspconfig").dartls.setup({})
             end
+
+            -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#tilt_ls
+            if vim.fn.executable("tilt") == 1 then
+                require("lspconfig").tilt_ls.setup({})
+            end
         end,
     },
 
