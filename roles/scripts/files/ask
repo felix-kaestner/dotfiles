@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import re
+import sys
+import threading
+from itertools import cycle
+from time import sleep
+from urllib import request, error
+
+def show_spinner():
+    spinner = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+    i = cycle(spinner)
+    while True:
+        sys.stdout.write(' Thinking ' + next(i) + '\r')
+        sys.stdout.flush()
+        sleep(0.1)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Prompt a LLM for a response.')
+    parser.add_argument('prompt', nargs='+', help='The prompt or question to ask the model')
+    parser.add_argument('--model', default="qwen2.5-coder:14b", help='The name of the model to use (default: qwen2.5-coder:14b)')
+    args = parser.parse_args()
+
+    data = {
+        "model": args.model,
+        "prompt": ' '.join(args.prompt),
+        "stream": False
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+
+    req = request.Request(
+        url="http://localhost:11434/api/generate",
+        data=json.dumps(data).encode('utf-8'),
+        headers=headers
+    )
+
+    spinner = threading.Thread(target=show_spinner, daemon=True)
+    spinner.start()
+    try:
+        with request.urlopen(req) as response:
+            spinner.join(0.1)
+            output = response.read().decode('utf-8')
+            output = json.loads(output)
+            output = output['response']
+            output = re.sub(r'<think>.*?</think>', '', output, flags=re.DOTALL)
+            print(output)
+    except error.HTTPError as e:
+        print(f"HTTP error: {e.code} - {e.reason}")
+        sys.exit(1)
+    except error.URLError as e:
+        print(f"URL error: {e.reason}")
+        sys.exit(1)
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
