@@ -1,4 +1,10 @@
 aliases:
-  dp: deployments
-  np: networkpolicies
-  sec: v1/secrets
+  cm: configmap
+  dep: deployment
+  ing: ingress
+  no: nodes
+  ns: namespaces
+  po: pods
+  sec: secret
+  sts: statefulset
+  svc: service
