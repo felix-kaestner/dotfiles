@@ -29,7 +29,7 @@ vim.keymap.set("n", "<C-P>", "<cmd>tabprevious<cr>")
 vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 
 -- Buffers
-vim.keymap.set("n", "<leader>bd", "<cmd>bd!<cr>", { desc = "[B]uffer [D]elete" })
+vim.keymap.set("n", "<leader>bd", "<cmd>bd!<cr>", { desc = "[B]buffer [D]elete" })
 
 -- Paste over without replacing default register
 vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
@@ -73,16 +73,13 @@ vim.keymap.set("n", "<leader>vl", function()
 end, { desc = "Toggle diagnostic virtual lines" })
 
 -- Shorthand to launch Git pane
-vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]ane" })
-
--- Keybinding to toggle line wrapping
-vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>set wrap!<cr>", { desc = "[T]oggle [W]rap" })
+vim.keymap.set("n", "<leader>gp", "<cmd>0Git<cr>", { desc = "[G]it [P]and" })
 
 -- Quickly open the news file
 vim.keymap.set("n", "<leader>N", "<cmd>edit $VIMRUNTIME/doc/news.txt<cr>", { desc = "[N]ews" })
 
 -- Shorthand to insert \(.*\) in command mode
-vim.keymap.set("c", "<F1>", [[\(.*\)]], { noremap = true, silent = true })
+vim.keymap.set("c", "<A-a>", [[\(.*\)]], { noremap = true, silent = true })
 
 -- Exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
