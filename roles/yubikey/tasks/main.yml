@@ -1,0 +1,13 @@
+---
+- name: Install YubiKey Manager CLI
+  ansible.builtin.package:
+    name: "{{ 'ykman' if ansible_system == 'Darwin' else 'yubikey-manager' }}"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install Yubico Authenticator & YubiKey Manager on MacOS
+  when: ansible_system == "Darwin"
+  community.general.homebrew_cask:
+    name:
+      - yubico-authenticator
+      - yubico-yubikey-manager

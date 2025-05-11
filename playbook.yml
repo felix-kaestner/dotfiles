@@ -58,6 +58,7 @@
     - tree-sitter
     - uv
     - vault
+    - yubikey
 
   tasks:
     - name: Install Homebrew casks
