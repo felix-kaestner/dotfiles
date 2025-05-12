@@ -12,157 +12,39 @@ return {
             -- SchemaStore catalog for jsonls and yamlls
             "b0o/schemastore.nvim",
         },
-        ---@class Opts
         opts = {
-            servers = {
-                bashls = {},
-
-                gopls = {
-                    gopls = {
-                        gofumpt = true,
-                        staticcheck = true,
-                        semanticTokens = true,
-                        usePlaceholders = true,
-                        completeUnimported = true,
-                        analyses = {
-                            shadow = true,
-                            unusedwrite = true,
-                            unusedparams = true,
-                            unusedvariable = true,
-                        },
-                        codelenses = {
-                            test = true,
-                            gc_details = true,
-                        },
-                        hints = {
-                            constantValues = true,
-                        },
-                    },
-                },
-
-                golangci_lint_ls = {},
-
-                rust_analyzer = {},
-
-                jsonls = {
-                    json = {
-                        validate = { enable = true },
-                    },
-                },
-
-                lua_ls = {
-                    Lua = {
-                        format = { enable = false },
-                        telemetry = { enable = false },
-                        workspace = { checkThirdParty = false },
-                    },
-                },
-
-                pyright = {
-                    pyright = {
-                        disableOrganizeImports = true,
-                    },
-                },
-
-                terraformls = {
-                    experimentalFeatures = {
-                        validateOnSave = true,
-                        prefillRequiredFields = true,
-                    },
-                },
-
-                ts_ls = {},
-
-                yamlls = {
-                    redhat = { telemetry = { enabled = false } },
-                    yaml = {
-                        -- https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.32.1-standalone-strict/all.json
-                        schemas = { kubernetes = { "k8s**.yaml", "kube*/*.yaml" } },
-                        -- disable built-in schema store support to use SchemaStore.nvim
-                        schemaStore = { enable = false, url = "" },
-                    },
-                },
+            ensure_installed = {
+                "bashls",
+                "gopls",
+                "golangci_lint_ls",
+                "jsonls",
+                "lua_ls",
+                "pyright",
+                "rust_analyzer",
+                "terraformls",
+                "ts_ls",
+                "yamlls",
             },
         },
-        ---@param opts Opts
         config = function(_, opts)
-            local capabilities = require("blink.cmp").get_lsp_capabilities({}, true)
-
             -- Setup mason-lspconfig so it can manage external tooling
             require("mason-lspconfig").setup({
-                ensure_installed = vim.tbl_keys(opts.servers),
-
-                handlers = {
-                    function(server_name)
-                        require("lspconfig")[server_name].setup({
-                            settings = opts.servers[server_name],
-                            capabilities = capabilities,
-                        })
-                    end,
-
-                    ["gopls"] = function()
-                        local settings = opts.servers.gopls
-
-                        if vim.fn.executable("go") == 1 then
-                            local Job = require("plenary.job")
-                            Job:new({
-                                command = "go",
-                                args = { "list", "-m", "-f", "'{{.Path}}'" },
-                                on_exit = function(job, code)
-                                    if code ~= 0 then
-                                        return
-                                    end
-
-                                    -- See: https://github.com/golang/tools/blob/master/gopls/doc/settings.md#local-string
-                                    local module = table.concat(job:result()):gsub("'", "")
-                                    settings.gopls["local"] = module
-                                end,
-                            }):sync()
-                        end
-
-                        require("lspconfig").gopls.setup({
-                            settings = settings,
-                            capabilities = capabilities,
-                        })
-                    end,
-
-                    ["jsonls"] = function()
-                        local settings = opts.servers.jsonls
-
-                        settings.json.schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), settings.json.schemas or {})
-
-                        require("lspconfig").jsonls.setup({
-                            settings = settings,
-                            capabilities = capabilities,
-                        })
-                    end,
-
-                    ["yamlls"] = function()
-                        local settings = opts.servers.yamlls
-
-                        settings.yaml.schemas = vim.tbl_deep_extend("force", require("schemastore").yaml.schemas(), settings.yaml.schemas or {})
-
-                        require("lspconfig").yamlls.setup({
-                            settings = settings,
-                            capabilities = capabilities,
-                        })
-                    end,
-                },
+                ensure_installed = opts.ensure_installed,
             })
 
             -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#sourcekit
             if vim.fn.executable("sourcekit-lsp") == 1 then
-                require("lspconfig").sourcekit.setup({})
+                vim.lsp.enable("sourcekit")
             end
 
             -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#dartls
             if vim.fn.executable("dart") == 1 then
-                require("lspconfig").dartls.setup({})
+                vim.lsp.enable("dartls")
             end
 
             -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md#tilt_ls
             if vim.fn.executable("tilt") == 1 then
-                require("lspconfig").tilt_ls.setup({})
+                vim.lsp.enable("tilt_ls")
             end
         end,
     },
