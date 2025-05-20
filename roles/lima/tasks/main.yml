@@ -1,8 +1,17 @@
 ---
-- name: Include macOS tasks
-  when: ansible_system == "Darwin"
-  ansible.builtin.include_tasks: macos.yml
+- name: Install Lima
+  community.general.homebrew:
+    name: "lima"
+    state: present
 
-- name: Include Linux tasks
-  when: ansible_system == "Linux"
-  ansible.builtin.include_tasks: linux.yml
+- name: Create "default" lima-vm instance
+  ansible.builtin.shell: "limactl create --vm-type=vz --rosetta --mount=~/Developer:w --mount=/var/folders:w --mount=/private/var/folders:w --mount-type=virtiofs --mount-inotify --memory=16 --tty=false --name=default https://raw.githubusercontent.com/felix-kaestner/lima-templates/refs/heads/main/docker-k8s.yaml 2>/dev/null || true"
+
+- name: Create "docker" executable
+  ansible.builtin.copy:
+    content: |
+      #!/bin/sh
+      set -eu
+      exec lima docker "$@"
+    dest: "{{ ansible_env.HOME }}/.local/bin/docker"
+    mode: "0755"

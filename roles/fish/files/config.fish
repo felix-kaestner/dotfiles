@@ -12,17 +12,6 @@ test -n "$XDG_BIN_HOME"; or set -gx XDG_BIN_HOME "$HOME/.local/bin"
 
 set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
-test (uname) = Darwin; and set -gx CONTAINER_TOOL nctl
-
-# set the default container runtime for kind
-# https://github.com/kubernetes-sigs/kind/blob/main/pkg/internal/runtime/runtime.go
-for tool in nerdctl podman docker nerdctl.lima
-    if type -q $tool
-        set -gx KIND_EXPERIMENTAL_PROVIDER $tool
-        break
-    end
-end
-
 # include brew shellenv
 if test -x "/opt/homebrew/bin/brew"
     /opt/homebrew/bin/brew shellenv | source
@@ -133,8 +122,6 @@ if status is-interactive
 
     abbr --add dotdot --regex '^\.\.+$' --function _dotdot
 
-    abbr --add nrun 'nctl run --rm -it -w /workspace -v (pwd):/workspace'
-
     # GPG Settings - based on: https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/gpg-agent/gpg-agent.plugin.zsh#L12
     if test (gpgconf --list-options gpg-agent 2>/dev/null | awk -F: '$1=="enable-ssh-support" {print $10}') = 1
         set -e SSH_AGENT_PID
@@ -145,24 +132,13 @@ if status is-interactive
 
     gpgconf --launch gpg-agent
 
-    # automatically set LIMA_INSTANCE to running lima-vm
-    if type -q limactl; and type -q jq; and string match -q "Running" (limactl ls -f '{{ .Status }}' 2>/dev/null)
-        set -gx LIMA_INSTANCE (limactl ls --json | jq -r '. | select(.status == "Running") | .name' 2>/dev/null)
-    end
-
-    # automatically expose docker host through in lima-vm
-    if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' docker 2>/dev/null)
-        set -gx DOCKER_HOST (limactl list docker --format 'unix://{{.Dir}}/sock/docker.sock')
-        set -gx TESTCONTAINERS_HOST_OVERRIDE (limactl shell docker ip a show lima0 | awk '/inet / {sub("/.*",""); print $2}')
-        set -gx TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE /var/run/docker.sock
-    end
-
     set -gx --path KUBECONFIG "$HOME/.kube/config"
-    if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' k8s 2>/dev/null)
-        set -p KUBECONFIG (limactl list "k8s" --format "{{.Dir}}/copied-from-guest/kubeconfig.yaml")
+    if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' default 2>/dev/null)
+        set -gx DOCKER_HOST (limactl list default --format 'unix://{{.Dir}}/sock/docker.sock')
+        set -a KUBECONFIG (limactl list default --format '{{.Dir}}/copied-from-guest/kubeconfig.yaml')
     end
 
-    if type -q u8s; and test -f "$HOME/.config/SAPCC/u8s/.kube/config"
-        set -p KUBECONFIG "$HOME/.config/SAPCC/u8s/.kube/config"
+    if test -f "$HOME/.config/SAPCC/u8s/.kube/config"
+        set -a KUBECONFIG "$HOME/.config/SAPCC/u8s/.kube/config"
     end
 end

@@ -41,9 +41,9 @@
     - helm
     - jq
     - k8s
-    - lima
+    - role: lima
+      when: ansible_system == "Darwin"
     - role: macos
-      tags: macos
       when: ansible_system == "Darwin"
     - minikube
     - node
