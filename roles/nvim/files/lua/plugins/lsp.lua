@@ -4,14 +4,8 @@ return {
     -- Language Server Configuration
     {
         "neovim/nvim-lspconfig",
-        event = { "BufReadPost", "BufNewFile" },
-        dependencies = {
-            "saghen/blink.cmp",
-            "williamboman/mason-lspconfig.nvim",
-
-            -- SchemaStore catalog for jsonls and yamlls
-            "b0o/schemastore.nvim",
-        },
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = { "williamboman/mason-lspconfig.nvim" },
         opts = {
             ensure_installed = {
                 "bashls",
@@ -147,6 +141,9 @@ return {
             },
         },
     },
+
+    -- SchemaStore catalog for jsonls and yamlls
+    { "b0o/schemastore.nvim", lazy = true },
 
     -- Additional LuaLS configuration for Neovim config and plugin development
     {
