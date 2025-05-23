@@ -29,6 +29,10 @@ function up --description 'Update all system packages'
         kubectl krew upgrade
     end
 
+    if type -q helm
+        helm plugin ls | tail -n +2 | awk '{print $1}'| xargs helm plugin update
+    end
+
     if type -q u8s
         u8s sync
         u8s update
