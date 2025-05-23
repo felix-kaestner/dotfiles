@@ -4,3 +4,6 @@
     name: "helm"
     state: present
   become: "{{ ansible_system == 'Linux' }}"
+
+- name: Install helm-diff plugin
+  ansible.builtin.shell: "helm plugin ls | grep -q diff || helm plugin install https://github.com/databus23/helm-diff"
