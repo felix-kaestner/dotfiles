@@ -2,7 +2,7 @@ function k --wraps kubectl --description 'alias k=kubectl'
     switch $argv[1]
         case dbg
             set -l pod $argv[2]
-            set -l container (k pod-containers $pod)
+            set -l container (k containers $pod)
             switch (count $container)
                 case 0
                     echo "No running container found in pod $pod" >&2
@@ -30,7 +30,7 @@ function k --wraps kubectl --description 'alias k=kubectl'
             wait $pid
         case cluster-name
             command kubectl config view --minify -o jsonpath='{.clusters[].name}'
-        case pod-containers
+        case containers
             command kubectl get pod $argv[2..-1] -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
         case '*'
             command kubectl $argv
