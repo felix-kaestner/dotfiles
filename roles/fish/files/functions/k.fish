@@ -12,7 +12,7 @@ function k --wraps kubectl --description 'alias k=kubectl'
                 case '*'
                     set container (printf "%s\n" $container | fzf --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
             end
-            command kubectl debug -ti --profile=general --image=busybox:1.37.0 --target="$container" $argv[2..-1]
+            command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
         case dashboard
             if not command kubectl get namespace kubernetes-dashboard &>/dev/null; or not command kubectl get service -n kubernetes-dashboard kubernetes-dashboard-web &>/dev/null
                 echo "Kubernetes dashboard deployment not found. Please follow the instructions on https://github.com/kubernetes/dashboard?tab=readme-ov-file#installation." >&2
