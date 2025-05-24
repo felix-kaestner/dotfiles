@@ -185,3 +185,10 @@ vim.api.nvim_create_autocmd("BufRead", {
         end
     end,
 })
+
+vim.api.nvim_create_autocmd("BufRead", {
+    pattern = "Tiltfile",
+    callback = function()
+        vim.bo.filetype = "tiltfile"
+    end,
+})
