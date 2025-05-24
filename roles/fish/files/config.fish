@@ -59,12 +59,6 @@ test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/lo
 
 test -f "$HOME/.kubectl.fish"; and source "$HOME/.kubectl.fish"
 
-if test (uname) = Linux
-    function open --description 'Open a file or URL in the default application'
-        xdg-open $argv
-    end
-end
-
 if status is-interactive
     # https://fishshell.com/docs/current/interactive.html#configurable-greeting
     set -g fish_greeting
