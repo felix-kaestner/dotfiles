@@ -12,6 +12,7 @@ return {
                 "gopls",
                 "golangci_lint_ls",
                 "jsonls",
+                "helm_ls",
                 "lua_ls",
                 "pyright",
                 "rust_analyzer",

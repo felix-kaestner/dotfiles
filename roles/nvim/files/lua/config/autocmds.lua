@@ -174,3 +174,14 @@ vim.api.nvim_create_autocmd("User", {
         })
     end,
 })
+
+vim.api.nvim_create_autocmd("BufRead", {
+    pattern = "**/templates/**",
+    callback = function(args)
+        local path = vim.fn.fnamemodify(args.file, ":p")
+        local dir = path:match("(.*)/templates/.*")
+        if dir and vim.fn.filereadable(dir .. "/Chart.yaml") == 1 then
+            vim.bo.filetype = "helm"
+        end
+    end,
+})
