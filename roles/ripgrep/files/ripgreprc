@@ -6,3 +6,6 @@
 
 # Searches case insensitively.
 --smart-case
+
+# Suppress error messages related to reading files
+--no-messages
