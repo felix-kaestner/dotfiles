@@ -54,4 +54,7 @@ CLAUDE.md
 .*.swp
 .*.swo
 
+# Cache
+.helm_ls_cache
+
 # vim: ft=gitignore
