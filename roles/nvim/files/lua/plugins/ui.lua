@@ -9,7 +9,7 @@ return {
         "nvim-lualine/lualine.nvim",
         opts = {
             options = {
-                theme = "catppuccin-mocha",
+                theme = "auto",
                 globalstatus = true,
                 icons_enabled = true,
                 section_separators = "",
@@ -40,6 +40,7 @@ return {
         ---@module 'catppuccin'
         ---@type CatppuccinOptions
         opts = {
+            flavour = "auto",
             integrations = {
                 blink_cmp = true,
                 copilot_vim = true,
@@ -53,7 +54,7 @@ return {
         },
         config = function(_, opts)
             require("catppuccin").setup(opts)
-            vim.cmd.colorscheme("catppuccin-mocha")
+            vim.cmd.colorscheme("catppuccin")
         end,
     },
 
