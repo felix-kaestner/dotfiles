@@ -1,6 +1,6 @@
 k9s:
   ui:
-    skin: catppuccin-mocha
+    skin: transparent
     enableMouse: true
     logoless: true
   noExitOnCtrlC: true

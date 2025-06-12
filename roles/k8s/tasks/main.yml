@@ -24,10 +24,10 @@
     state: directory
     mode: "0755"
 
-- name: Download Catppuccin theme for k9s
+- name: Download transparent theme for k9s
   ansible.builtin.get_url:
-    url: "https://raw.githubusercontent.com/catppuccin/k9s/refs/heads/main/dist/catppuccin-mocha.yaml"
-    dest: "{{ xdg_config_home }}/k9s/skins/catppuccin-mocha.yaml"
+    url: "https://raw.githubusercontent.com/derailed/k9s/refs/heads/master/skins/transparent.yaml"
+    dest: "{{ xdg_config_home }}/k9s/skins/transparent.yaml"
     mode: "0644"
 
 - name: Download kubectl aliases
