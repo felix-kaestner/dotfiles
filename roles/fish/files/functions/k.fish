@@ -2,16 +2,7 @@ function k --wraps kubectl --description 'alias k=kubectl'
     switch $argv[1]
         case dbg
             set -l pod $argv[2]
-            set -l container (k containers $pod)
-            switch (count $container)
-                case 0
-                    echo "No running container found in pod $pod" >&2
-                    return 1
-                case 1
-                    set container $container[1]
-                case '*'
-                    set container (printf "%s\n" $container | fzf --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
-            end
+            set -l container (k containers $pod | fzf --select-1 --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
             command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
         case dashboard
             if not command kubectl get namespace kubernetes-dashboard &>/dev/null; or not command kubectl get service -n kubernetes-dashboard kubernetes-dashboard-web &>/dev/null
