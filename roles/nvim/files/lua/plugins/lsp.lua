@@ -59,6 +59,7 @@ return {
                 "shellcheck",
                 "ruff",
                 -- Formatter
+                "autopep8",
                 "shfmt",
                 "stylua",
             },
@@ -103,7 +104,7 @@ return {
                     if vim.fs.root(bufnr, { "ruff.toml", ".ruff.toml" }) ~= nil then
                         return { "ruff_fix", "ruff_format", "ruff_organize_imports" }
                     else
-                        return { lsp_format = "never" }
+                        return { "autopep8", lsp_format = "never" }
                     end
                 end,
                 ["*"] = function(bufnr)
