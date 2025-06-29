@@ -5,6 +5,11 @@ function fish_kube_prompt --description 'Prompt function for k8s'
         return 1
     end
 
+    if set -q U8S_CONTEXT; and set -q U8S_NAMESPACE
+        echo -n " [⎈ $U8S_CONTEXT|$U8S_NAMESPACE]"
+        return 0
+    end
+
     set -l --path conf $KUBECONFIG
     if test (count $conf) -eq 0
         set -a conf "$HOME/.kube/config"
