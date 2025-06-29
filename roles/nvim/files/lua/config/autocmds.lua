@@ -134,6 +134,13 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "gitcommit",
+    callback = function()
+        vim.opt_local.colorcolumn = "+1"
+    end,
+})
+
 vim.api.nvim_create_autocmd("BufRead", {
     group = vim.api.nvim_create_augroup("last-position", { clear = true }),
     pattern = "*",
