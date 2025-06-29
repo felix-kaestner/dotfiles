@@ -18,9 +18,10 @@ function fish_kube_prompt --description 'Prompt function for k8s'
     for file in $conf
         if test -r "$file"
             if not set -q __kubeconfig_timestamp; or test (date -r "$file" +%s) -gt "$__kubeconfig_timestamp"
-                set -l ctx (kubectl ctx --current 2>/dev/null)
+                set -l ctx (kubectl config current-context 2>/dev/null)
                 if test $status -eq 0
-                    set -g __kube_prompt " [⎈ $ctx|$(kubectl ns --current)]"
+                    set -l ns (kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null; or echo 'default')
+                    set -g __kube_prompt " [⎈ $ctx|$ns]"
                 else
                     set -e __kube_prompt
                 end
