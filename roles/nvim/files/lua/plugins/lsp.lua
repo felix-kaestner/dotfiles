@@ -60,6 +60,7 @@ return {
                 "ruff",
                 -- Formatter
                 "autopep8",
+                "prettier",
                 "shfmt",
                 "stylua",
             },
@@ -99,6 +100,7 @@ return {
             formatters_by_ft = {
                 sh = { "shfmt" },
                 lua = { "stylua" },
+                markdown = { "prettier" },
                 go = { lsp_format = "prefer" },
                 python = function(bufnr)
                     if vim.fs.root(bufnr, { "ruff.toml", ".ruff.toml" }) ~= nil then
