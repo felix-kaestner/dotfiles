@@ -8,6 +8,7 @@ from itertools import cycle
 from time import sleep
 from urllib import request, error
 
+
 def show_spinner():
     spinner = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
     i = cycle(spinner)
@@ -20,7 +21,7 @@ def show_spinner():
 def main():
     parser = argparse.ArgumentParser(description='Prompt a LLM for a response.')
     parser.add_argument('prompt', nargs='+', help='The prompt or question to ask the model')
-    parser.add_argument('--model', default="qwen2.5-coder:14b", help='The name of the model to use (default: qwen2.5-coder:14b)')
+    parser.add_argument('--model', default="gemma3:4b", help='The name of the model to use (default: gemma3:4b)')
     args = parser.parse_args()
 
     data = {
