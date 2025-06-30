@@ -21,6 +21,7 @@ return {
             { "<F5>", "<cmd>lua require('dap').continue()<cr>", desc = "Debug: Start/Continue" },
             { "<F7>", "<cmd>lua require('dapui').toggle()<cr>", desc = "Debug: Show Last Session" },
             { "<F10>", "<cmd>lua require('dap').terminate()<cr>", desc = "Debug: Terminate" },
+            { "<F12>", "<cmd>lua require('dap').run_last()<cr>", desc = "Debug: Run Last Configuration" },
             -- Breakpoints
             { "<leader>b", "<cmd>lua require('dap').toggle_breakpoint()<cr>", desc = "Debug: Toggle Breakpoint" },
             { "<leader>B", "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))<cr>", desc = "Debug: Breakpoint Condition" },
