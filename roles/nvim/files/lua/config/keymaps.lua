@@ -106,3 +106,16 @@ vim.keymap.set("n", "<leader>co", function()
         vim.cmd.cclose()
     end
 end)
+
+-- Toggle between source and test *.go file
+vim.keymap.set("n", "<A-t>", function()
+    local file = vim.fn.expand("%:p")
+    if file:match("_test.go$") then
+        file = file:gsub("_test.go$", ".go")
+    elseif file:match("%.go$") then
+        file = file:gsub("%.go$", "_test.go")
+    else
+        return
+    end
+    vim.cmd("edit " .. file)
+end)
