@@ -4,7 +4,7 @@ return {
     -- Debug Adapter Protocol
     {
         "mfussenegger/nvim-dap",
-        dependencies = { "rcarriga/nvim-dap-ui" },
+        dependencies = { "rcarriga/nvim-dap-ui", "leoluz/nvim-dap-go", "mfussenegger/nvim-dap-python" },
         config = function()
             local dap, dapui = require("dap"), require("dapui")
             dapui.setup()
