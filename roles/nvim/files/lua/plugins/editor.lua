@@ -63,7 +63,7 @@ return {
             require("telescope").load_extension("harpoon")
         end,
         keys = {
-            { "<C-m>", "<cmd>lua require('harpoon'):list():add()<cr>", desc = "[Harpoon] [M]ark File" },
+            { "<leader>m", "<cmd>lua require('harpoon'):list():add()<cr>", desc = "[Harpoon] [M]ark File" },
             { "<C-h>", "<cmd>lua require('harpoon').ui:toggle_quick_menu(require('harpoon'):list())<cr>", desc = "[Harpoon] Open Menu" },
             { "<leader>k", "<cmd>lua require('harpoon'):list():prev({ ui_nav_wrap = true })<cr>", desc = "[Harpoon] Navigate Previous" },
             { "<leader>j", "<cmd>lua require('harpoon'):list():next({ ui_nav_wrap = true })<cr>", desc = "[Harpoon] Navigate Next" },
