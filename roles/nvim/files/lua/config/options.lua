@@ -30,6 +30,10 @@ vim.opt.breakindent = true
 -- Disable line wrapping
 vim.wo.wrap = false
 
+-- Set defaults for when 'indent_size' is 'unset' in .editorconfig
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+
 -- Save undo history
 vim.opt.undofile = true
 vim.opt.swapfile = false
