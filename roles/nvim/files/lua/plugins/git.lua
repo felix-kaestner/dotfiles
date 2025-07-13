@@ -51,6 +51,7 @@ return {
                 map("n", "<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
                 map("n", "<leader>hd", gitsigns.diffthis, "Diff Buffer")
                 map("n", "<leader>hb", gitsigns.blame_line, "Blame Line")
+                map("n", "<leader>hc", gitsigns.show_commit, "Hunk Commit")
                 map("n", "<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
 
                 map("v", "<leader>hs", function()
