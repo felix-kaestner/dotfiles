@@ -1,6 +1,6 @@
 set -gx LANG en_US.UTF-8
 
-set -gx EDITOR "nvim"
+set -gx EDITOR nvim
 set -gx GPG_TTY (tty)
 set -gx WATCH_INTERVAL 1
 
@@ -13,7 +13,7 @@ test -n "$XDG_BIN_HOME"; or set -gx XDG_BIN_HOME "$HOME/.local/bin"
 set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 # include brew shellenv
-if test -x "/opt/homebrew/bin/brew"
+if test -x /opt/homebrew/bin/brew
     /opt/homebrew/bin/brew shellenv | source
 end
 
@@ -46,14 +46,14 @@ fish_add_path "$HOME/.symfony/bin"
 fish_add_path "$HOME/.flutter/bin"
 
 # set PATH so it includes bin directory of curl installed via brew if it exists
-fish_add_path "/opt/homebrew/opt/curl/bin"
+fish_add_path /opt/homebrew/opt/curl/bin
 
 # set PATH so it includes the bin directories of GNU utilities installed via brew if they exist
-fish_add_path "/opt/homebrew/opt/make/libexec/gnubin"
-fish_add_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+fish_add_path /opt/homebrew/opt/make/libexec/gnubin
+fish_add_path /opt/homebrew/opt/gnu-sed/libexec/gnubin
 
 # set PATH so it includes the bin directory of the ruby version installed via brew if it exists
-fish_add_path "/opt/homebrew/opt/ruby/bin"
+fish_add_path /opt/homebrew/opt/ruby/bin
 
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
@@ -125,7 +125,7 @@ if status is-interactive
     gpgconf --launch gpg-agent
 
     set -gx --path KUBECONFIG "$HOME/.kube/config"
-    if type -q limactl; and string match -q "Running" (limactl ls -f '{{ .Status }}' default 2>/dev/null)
+    if type -q limactl; and string match -q Running (limactl ls -f '{{ .Status }}' default 2>/dev/null)
         set -gx DOCKER_HOST (limactl list default --format 'unix://{{.Dir}}/sock/docker.sock')
         set -a KUBECONFIG (limactl list default --format '{{.Dir}}/copied-from-guest/kubeconfig.yaml')
     end

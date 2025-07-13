@@ -1,6 +1,6 @@
 function rm --wraps rm --description 'Remove directory entries; uses trash on MacOS'
     if test (uname) = Darwin
-        argparse --min-args=1 -x f,i 'd' 'f' 'i' 'r' -- $argv; or return
+        argparse --min-args=1 -x f,i d f i r -- $argv; or return
         for f in $argv
             if not test -e $f
                 echo "Error: File or directory '$f' does not exist." >&2

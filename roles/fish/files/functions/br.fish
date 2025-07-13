@@ -4,7 +4,7 @@ function br --description 'Launch a timer to take a break for 10 minutes and not
         return 1
     end
 
-    timer 10m -n "Break"
+    timer 10m -n Break
     if test $status -eq 0
         _notify "Break is over!" "Get back to work 🫡"
     end

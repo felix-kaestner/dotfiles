@@ -30,7 +30,7 @@ function up --description 'Update all system packages'
     end
 
     if type -q helm
-        helm plugin ls | tail -n +2 | awk '{print $1}'| xargs helm plugin update
+        helm plugin ls | tail -n +2 | awk '{print $1}' | xargs helm plugin update
     end
 
     if type -q u8s

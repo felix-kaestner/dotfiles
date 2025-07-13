@@ -4,7 +4,7 @@ function wo --description 'Launch a timer to work for 50 minutes and notify when
         return 1
     end
 
-    timer 50m -n "Work"
+    timer 50m -n Work
     if test $status -eq 0
         _notify "Work Timer is up!" "Take a Break 😊"
     end
