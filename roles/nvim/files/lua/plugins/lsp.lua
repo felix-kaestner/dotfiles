@@ -102,6 +102,7 @@ return {
                 lua = { "stylua" },
                 markdown = { "prettier" },
                 go = { lsp_format = "prefer" },
+                fish = { "fish_indent" },
                 python = function(bufnr)
                     if vim.fs.root(bufnr, { "ruff.toml", ".ruff.toml" }) ~= nil then
                         return { "ruff_fix", "ruff_format", "ruff_organize_imports" }
