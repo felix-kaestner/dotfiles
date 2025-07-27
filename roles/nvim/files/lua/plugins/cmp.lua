@@ -23,7 +23,7 @@ return {
             },
             completion = {
                 accept = {
-                    auto_brackets = { enabled = false },
+                    auto_brackets = { enabled = true },
                 },
                 menu = {
                     auto_show = function(ctx)
