@@ -9,6 +9,7 @@
 *.7z
 *.rar
 *.gz
+*.tgz
 *.bzip
 *.xz
 *.lzma
