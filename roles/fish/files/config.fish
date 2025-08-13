@@ -1,3 +1,5 @@
+set -gx TZ Europe/Berlin
+set -gx GENERIC_TIMEZONE Europe/Berlin
 set -gx LANG en_US.UTF-8
 
 set -gx EDITOR nvim
