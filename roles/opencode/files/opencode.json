@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "catppuccin",
+  "model": "github-copilot/claude-sonnet-4",
+  "disabled_providers": [
+    "anthropic",
+    "gemini",
+    "openai"
+  ],
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "gpt-oss:20b": {
+          "name": "gpt-oss:20b"
+        }
+      }
+    }
+  }
+}
