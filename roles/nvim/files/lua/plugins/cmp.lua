@@ -13,7 +13,7 @@ return {
         ---@type blink.cmp.Config
         opts = {
             appearance = {
-                nerd_font_variant = "normal",
+                nerd_font_variant = "mono",
             },
             keymap = {
                 preset = "default",
