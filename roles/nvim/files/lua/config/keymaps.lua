@@ -22,6 +22,10 @@ vim.keymap.set("n", "<Down>", "<C-w>j")
 vim.keymap.set("n", "<Left>", "<C-w>h")
 vim.keymap.set("n", "<Right>", "<C-w>l")
 
+-- Resize
+vim.keymap.set("n", "+", ":vertical resize +5<CR>")
+vim.keymap.set("n", "_", ":vertical resize -5<CR>")
+
 -- Tabs
 vim.keymap.set("n", "<C-T>", "<cmd>tabnew<cr>")
 vim.keymap.set("n", "<C-N>", "<cmd>tabnext<cr>")
