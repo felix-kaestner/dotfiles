@@ -75,6 +75,14 @@ vim.opt.spelllang = "en_us"
 -- Preview substitutions live
 vim.opt.inccommand = "split"
 
+-- [[ Diagnostics ]]
+vim.diagnostic.config({
+    underline = true,
+    virtual_text = true,
+    severity_sort = true,
+    float = { border = "rounded", source = "if_many" },
+})
+
 -- [[ Folds ]]
 vim.opt.foldlevel = 16
 vim.opt.foldmethod = "expr"
