@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# ghopen: Open the GitHub Repository of the current tmux session
+# usage: ghopen
+
+help() {
+    echo >&2 "Usage: $(basename "$0")
+
+Open the GitHub Repository of the currently active tmux session
+
+Options:
+  -h, --help        Show this help message and exit
+
+Example:
+  $(basename "$0")"
+}
+
+if [[ $# -gt 0 || "$*" =~ (-h|--help) ]]; then
+    help
+    exit 0
+fi
+
+if [ -z "$TMUX" ]; then
+    echo "This script must be run from inside a TMUX session." >&2
+    exit 1
+fi
+
+cd "$(tmux run "echo #{pane_start_path}")" || exit 1
+
+url=$(git remote get-url origin 2>/dev/null | sed -E 's#(git@|https://)([^/:]+)[:/]#https://\2/#;s#\.git$##')
+if [ -z "$url" ]; then
+    echo "No git repository found for the current session." >&2
+    exit 1
+fi
+
+if command -v open >/dev/null 2>&1; then
+    open "$url"
+elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$url"
+else
+    echo "Could not find a command to open URLs (open or xdg-open)." >&2
+    exit 1
+fi
