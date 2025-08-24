@@ -5,6 +5,8 @@
 {% if git_signingkey %}
 	gpgsign = true
 	signingkey = {{ git_signingkey }}
+[tag]
+	gpgsign = true
 {% else %}
 	gpgsign = false
 {% endif %}
