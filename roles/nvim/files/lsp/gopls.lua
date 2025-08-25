@@ -7,7 +7,6 @@ local M = {
             usePlaceholders = true,
             completeUnimported = true,
             analyses = {
-                shadow = true,
                 unusedwrite = true,
                 unusedparams = true,
                 unusedvariable = true,
