@@ -102,6 +102,15 @@ vim.keymap.set("n", "<leader>tt", function()
     vim.cmd("botright terminal")
 end)
 
+-- Quickly run a command in a new split terminal
+vim.keymap.set("n", "<leader>tp", function()
+    vim.ui.input({ prompt = "$ " }, function(input)
+        if input and input ~= "" then
+            vim.cmd("split | terminal " .. input)
+        end
+    end)
+end, { desc = "[T]erminal [P]rompt" })
+
 -- Open/Close Quicklist
 vim.keymap.set("n", "<leader>co", function()
     if vim.fn.getqflist({ winid = 0 }).winid == 0 then
