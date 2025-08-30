@@ -42,7 +42,7 @@ return {
             { "<leader>sf", "<cmd>Telescope find_files<cr>", desc = "[S]earch [F]iles" },
             -- Search
             { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "[S]earch [H]elp" },
-            { "<leader>sm", "<cmd>Telescope man_pages<cr>", desc = "[S]earch [M]an Pages" },
+            { "<leader>sm", "<cmd>Telescope marks<cr>", desc = "[S]earch [M]arks" },
             { "<leader>sw", "<cmd>Telescope grep_string<cr>", desc = "[S]earch [W]ord" },
             { "<leader>sg", "<cmd>Telescope live_grep<cr>", desc = "[S]earch by [G]rep" },
             { "<leader>sd", "<cmd>Telescope diagnostics<cr>", desc = "[S]earch [D]iagnostics" },
