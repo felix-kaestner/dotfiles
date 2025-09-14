@@ -1,5 +1,6 @@
 ---
 - name: Install opencode
+  when: ansible_system == "Darwin"
   community.general.homebrew:
     name: "sst/tap/opencode"
     state: present
