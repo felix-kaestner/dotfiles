@@ -41,6 +41,9 @@ vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP', { desc = "[P]aste w/o yanking"
 -- Delete without yanking to default register (using void register)
 vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "[D]elete w/o yanking" })
 
+-- Yank the entire buffer to default register
+vim.keymap.set("n", "<leader>y", "<cmd>%y<cr>", { desc = "[Y]ank Buffer" })
+
 -- Stay in visual mode while indenting
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
