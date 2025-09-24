@@ -59,6 +59,8 @@ fish_add_path /opt/homebrew/opt/ruby/bin
 
 test -f "$XDG_CONFIG_HOME/fish/local.fish"; and source "$XDG_CONFIG_HOME/fish/local.fish"
 
+test -f "$HOME/.fzf/fzf-git.fish"; and source "$HOME/.fzf/fzf-git.fish"
+
 test -f "$HOME/.kubectl.fish"; and source "$HOME/.kubectl.fish"
 
 if status is-interactive
