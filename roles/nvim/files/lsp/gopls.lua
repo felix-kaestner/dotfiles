@@ -10,6 +10,7 @@ local M = {
                 unusedwrite = true,
                 unusedparams = true,
                 unusedvariable = true,
+                ST1001 = false, -- https://staticcheck.dev/docs/checks#ST1001
             },
             codelenses = {
                 test = true,
