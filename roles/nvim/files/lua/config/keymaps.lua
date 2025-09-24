@@ -35,8 +35,11 @@ vim.keymap.set("n", "<C-X>", "<cmd>tabclose<cr>")
 -- Buffers
 vim.keymap.set("n", "<leader>bd", "<cmd>bd!<cr>", { desc = "[B]buffer [D]elete" })
 
--- Paste over without replacing default register
-vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP')
+-- Paste over without replacing default register (using void register)
+vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP', { desc = "[P]aste w/o yanking" })
+
+-- Delete without yanking to default register (using void register)
+vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "[D]elete w/o yanking" })
 
 -- Stay in visual mode while indenting
 vim.keymap.set("v", "<", "<gv")
