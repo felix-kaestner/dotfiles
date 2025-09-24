@@ -11,6 +11,7 @@
 	ca = commit --amend
 	ce = commit --amend --no-edit
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	rc = rebase --continue
 	undo = reset --soft HEAD^
 [core]
 	editor = nvim
