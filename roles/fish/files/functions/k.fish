@@ -23,6 +23,8 @@ function k --wraps kubectl --description 'alias k=kubectl'
             command kubectl config view --minify -o jsonpath='{.clusters[].name}'
         case containers
             command kubectl get pod $argv[2..-1] -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
+        case rf
+            command kubectl patch $argv[2..-1] -p '[{"op":"remove","path":"/metadata/finalizers"}]' --type=json
         case '*'
             command kubectl $argv
     end

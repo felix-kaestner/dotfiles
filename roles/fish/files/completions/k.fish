@@ -6,6 +6,7 @@ complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a tree -d "Show sub-re
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a cond -d "View Kubernetes resource conditions"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a ctx -d "Switch to context"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a ns -d "Switch to namespace"
+complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a rf -d "Remove finalizers"
 
 complete -c k -n "__fish_seen_subcommand_from dbg" -xa "(k get pod -o name | awk -F '/' '{print \$2}')"
 complete -c k -n "__fish_seen_subcommand_from containers" -xa "(k get pod -o name | awk -F '/' '{print \$2}')"
@@ -20,3 +21,4 @@ complete -c k -n "__fish_seen_subcommand_from ctx" -s h -l help -d "Show help me
 complete -c k -n "__fish_seen_subcommand_from ns" -s c -l current -d "Show current context"
 complete -c k -n "__fish_seen_subcommand_from ns" -s h -l help -d "Show help message"
 complete -c k -n "__fish_seen_subcommand_from ns" -f -a "(k get namespace -o name | awk -F '/' '{print \$2}')"
+complete -c k -n '__fish_seen_subcommand_from rf' -xa "(complete -C (string replace 'k rf' 'kubectl get' (commandline)) | awk '{print \$1}')"
