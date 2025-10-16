@@ -21,9 +21,9 @@ return {
             local telescope = require("telescope")
             telescope.setup({
                 defaults = require("telescope.themes").get_ivy({
-                    layout_config = {
-                        height = 0.5,
-                    },
+                    borderchars = { "", "", "", "", "", "", "", "" },
+                    layout_config = { width = 0.99, height = 0.99, prompt_position = "top" },
+                    layout_strategy = "horizontal",
                 }),
                 extensions = {
                     ["fzf"] = {},
@@ -54,6 +54,7 @@ return {
             { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "[G]it [C]ommits" },
             { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "[G]it [B]ranches" },
             { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "[G]it [S]tatus" },
+            { "<leader>gh", "<cmd>Telescope git_bcommits<cr>", desc = "[G]it [H]istory" },
         },
     },
 
