@@ -39,7 +39,7 @@ vim.keymap.set("n", "<leader>bd", "<cmd>bd!<cr>", { desc = "[B]buffer [D]elete" 
 vim.keymap.set({ "x", "v" }, "<leader>p", '"_dP', { desc = "[P]aste w/o yanking" })
 
 -- Delete without yanking to default register (using void register)
-vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "[D]elete w/o yanking" })
+vim.keymap.set({ "n", "v" }, "<leader>D", '"_d', { desc = "[D]elete w/o yanking" })
 
 -- Yank the entire buffer to default register
 vim.keymap.set("n", "<leader>y", "<cmd>%y<cr>", { desc = "[Y]ank Buffer" })
