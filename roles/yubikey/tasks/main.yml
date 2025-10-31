@@ -11,3 +11,9 @@
     name:
       - yubico-authenticator
       - yubico-yubikey-manager
+
+- name: Install Yubilock
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: felix-kaestner/yubilock/yubilock
+    state: present
