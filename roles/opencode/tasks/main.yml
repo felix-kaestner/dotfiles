@@ -1,9 +1,9 @@
 ---
 - name: Install opencode
-  when: ansible_system == "Darwin"
-  community.general.homebrew:
-    name: "sst/tap/opencode"
-    state: present
+  ansible.builtin.shell: pnpm install --global opencode-ai
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
 
 - name: Create symbolic link for config
   ansible.builtin.file:
