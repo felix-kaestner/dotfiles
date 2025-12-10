@@ -11,6 +11,9 @@ vim.g.maplocalleader = "\\"
 vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
+-- Automatically read file when it has been changed from the outside
+vim.opt.autoread = true
+
 -- Make line numbers default
 vim.opt.number = true
 
