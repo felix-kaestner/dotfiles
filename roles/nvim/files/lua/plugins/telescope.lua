@@ -54,7 +54,7 @@ return {
             { "<leader>gc", "<cmd>Telescope git_commits<cr>", desc = "[G]it [C]ommits" },
             { "<leader>gb", "<cmd>Telescope git_branches<cr>", desc = "[G]it [B]ranches" },
             { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "[G]it [S]tatus" },
-            { "<leader>gh", "<cmd>Telescope git_bcommits<cr>", desc = "[G]it [H]istory" },
+            { "<leader>gC", "<cmd>Telescope git_bcommits<cr>", desc = "[G]it History" },
         },
     },
 
