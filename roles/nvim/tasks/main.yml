@@ -1,11 +1,70 @@
 ---
-- name: Include macOS tasks
-  when: ansible_system == "Darwin"
-  ansible.builtin.include_tasks: macos.yml
+- name: Find existing neovim installation
+  ansible.builtin.find:
+    paths: "/usr/local"
+    patterns: "**nvim**"
+    file_type: any
+    recurse: true
+  register: nvim_files
 
-- name: Include Linux tasks
-  when: ansible_system == "Linux"
-  ansible.builtin.include_tasks: linux.yml
+- name: Remove existing neovim installation
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ nvim_files.files | map(attribute='path') }}"
+  become: true
+
+- name: Install build prerequisites on macOS
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name:
+      - "ninja"
+      - "cmake"
+      - "gettext"
+      - "curl"
+      - "git"
+
+- name: Install build prerequisites on Ubuntu
+  when: ansible_distribution == "Ubuntu"
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - ninja-build
+      - cmake
+      - gettext
+      - curl
+      - git
+  become: true
+
+- name: Install build prerequisites on Fedora
+  when: ansible_distribution == "Fedora"
+  ansible.builtin.dnf:
+    name:
+      - make
+      - gcc
+      - glibc-gconv-extra
+      - ninja-build
+      - cmake
+      - gettext
+      - curl
+      - git
+  become: true
+
+- name: Ensure neovim git checkout
+  ansible.builtin.git:
+    repo: "https://github.com/neovim/neovim.git"
+    dest: "{{ ansible_env.HOME }}/.neovim"
+    version: nightly
+    force: true
+    depth: 1
+
+- name: Build neovim from source
+  community.general.make:
+    chdir: "{{ ansible_env.HOME }}/.neovim"
+    target: install
+    params:
+      CMAKE_BUILD_TYPE: Release
+  become: true
 
 - name: Create symbolic link for config
   ansible.builtin.file:

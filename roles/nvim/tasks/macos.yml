@@ -1,8 +1,0 @@
----
-- name: Install neovim
-  community.general.homebrew:
-    name:
-      - "tree-sitter"
-      - "utf8proc"
-      - "neovim"
-    state: head # Install latest version from Git
