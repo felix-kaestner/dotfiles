@@ -95,6 +95,9 @@ if status is-interactive
     bind -M default \ef 'wr . $history[1]'
     bind -M insert \ef 'wr . $history[1]'
 
+    # Append " | yq" to the command line
+    bind -M default \eq 'fish_commandline_append " &| yq"'
+    bind -M insert \eq 'fish_commandline_append " &| yq"'
 
     # https://github.com/ajeetdsouza/zoxide#configuration
     zoxide init --cmd j fish | source
