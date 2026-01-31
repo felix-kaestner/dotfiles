@@ -5,7 +5,7 @@
     state: present
 
 - name: Create "default" lima-vm instance
-  ansible.builtin.shell: "limactl create --vm-type=vz --rosetta --mount=~/Developer:w --mount=/var/folders:w --mount=/private/var/folders:w --mount-type=virtiofs --memory=16 --tty=false --set '.ssh.forwardAgent=true' --set '.nestedVirtualization=true' --name=default https://raw.githubusercontent.com/felix-kaestner/lima-templates/refs/heads/main/docker-k8s.yaml 2>/dev/null || true"
+  ansible.builtin.shell: "limactl create --vm-type=vz --network=vzNAT --rosetta --mount=~/Developer:w --mount=/var/folders:w --mount=/private/var/folders:w --mount-type=virtiofs --mount-inotify --memory=16 --tty=false --set '.ssh.forwardAgent=true' --set '.nestedVirtualization=true' --name=default https://raw.githubusercontent.com/felix-kaestner/lima-templates/refs/heads/main/docker-k8s.yaml 2>/dev/null || true"
 
 - name: Create "docker" executable
   ansible.builtin.copy:
