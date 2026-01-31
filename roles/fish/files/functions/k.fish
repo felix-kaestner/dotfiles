@@ -1,4 +1,32 @@
 function k --wraps kubectl --description 'alias k=kubectl'
+    argparse --ignore-unknown 'd/device=' 's/device-serial=' 'a/aggregate=' 'r/routed-vlan=' 'e/evi=' 'v/vrf=' -- $argv; or return
+
+    # Label Selectors from https://github.com/ironcore-dev/network-operator/blob/main/api/core/v1alpha1/groupversion_info.go
+    set -l label_selector
+    if set -ql _flag_device
+        set -a label_selector "networking.metal.ironcore.dev/device-name=$_flag_device"
+    end
+    if set -ql _flag_device_serial
+        set -a label_selector "networking.metal.ironcore.dev/device-serial=$_flag_device_serial"
+    end
+    if set -ql _flag_aggregate
+        set -a label_selector "networking.metal.ironcore.dev/aggregate-name=$_flag_aggregate"
+    end
+    if set -ql _flag_routed_vlan
+        set -a label_selector "networking.metal.ironcore.dev/routed-vlan-name=$_flag_routed_vlan"
+    end
+    if set -ql _flag_evi
+        set -a label_selector "networking.metal.ironcore.dev/evi-name=$_flag_evi"
+    end
+    if set -ql _flag_vrf
+        set -a label_selector "networking.metal.ironcore.dev/vrf-name=$_flag_vrf"
+    end
+
+    if test (count $label_selector) -gt 0
+        set -l selector_string (string join ',' $label_selector)
+        set argv -l $selector_string $argv
+    end
+
     switch $argv[1]
         case dbg
             set -l pod $argv[2]
