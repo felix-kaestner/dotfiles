@@ -20,5 +20,33 @@
         }
       }
     }
+  },
+  "mcp": {
+    "sequential-thinking": {
+      "type": "local",
+      "command": [ "npx", "-y", "@modelcontextprotocol/server-sequential-thinking" ]
+    },
+    "git": {
+      "type": "local",
+      "command": [ "uvx", "mcp-server-git" ]
+    },
+    "filesystem": {
+      "type": "local",
+      "command": [ "npx", "-y", "@modelcontextprotocol/server-filesystem", "~/Developer" ]
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      }
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_MCP_TOKEN}"
+      }
+    },
   }
 }
