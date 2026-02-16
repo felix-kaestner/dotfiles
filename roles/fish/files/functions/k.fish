@@ -33,19 +33,19 @@ function k --wraps kubectl --description 'alias k=kubectl'
             set -l container (k containers $pod | fzf --select-1 --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
             command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
         case dashboard
-            if not command kubectl get namespace kubernetes-dashboard &>/dev/null; or not command kubectl get service -n kubernetes-dashboard kubernetes-dashboard-web &>/dev/null
-                echo "Kubernetes dashboard deployment not found. Please follow the instructions on https://github.com/kubernetes/dashboard?tab=readme-ov-file#installation." >&2
+            if not command kubectl get service -n kube-system headlamp &>/dev/null
+                echo "Kubernetes dashboard deployment not found. Please follow the instructions on https://headlamp.dev/docs/latest/installation/in-cluster." >&2
                 return 1
             end
-            command kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443 &>/dev/null &
+            command kubectl -n kube-system port-forward svc/headlamp 8000:80 &>/dev/null &
             set -l pid $last_pid
             function cleanup --on-signal INT --on-signal TERM --inherit-variable pid
                 kill -9 $pid
                 functions -e cleanup
                 return 130
             end
-            echo "Serving dashboard on https://localhost:8443. Press Ctrl+C to stop port-forwarding and exit."
-            open "https://localhost:8443"
+            echo "Serving dashboard on http://localhost:8000 Press Ctrl+C to stop port-forwarding and exit."
+            open "http://localhost:8000"
             wait $pid
         case cluster-name
             command kubectl config view --minify -o jsonpath='{.clusters[].name}'
