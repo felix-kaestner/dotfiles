@@ -1,5 +1,5 @@
 function k --wraps kubectl --description 'alias k=kubectl'
-    argparse --ignore-unknown 'd/device=' 's/device-serial=' 'a/aggregate=' 'r/routed-vlan=' 'e/evi=' 'v/vrf=' -- $argv; or return
+    argparse --ignore-unknown 'd/device=' 's/device-serial=' 'a/aggregate=' 'r/routed-vlan=' 'e/evi=' 'v/vrf=' 'S/service=' 'g/support-group=' -- $argv; or return
 
     # Label Selectors from https://github.com/ironcore-dev/network-operator/blob/main/api/core/v1alpha1/groupversion_info.go
     set -l label_selector
@@ -20,6 +20,14 @@ function k --wraps kubectl --description 'alias k=kubectl'
     end
     if set -ql _flag_vrf
         set -a label_selector "networking.metal.ironcore.dev/vrf-name=$_flag_vrf"
+    end
+
+    # Label Selectors from https://github.com/sapcc/helm-charts
+    if set -ql _flag_service
+        set -a label_selector "ccloud/service=$_flag_service"
+    end
+    if set -ql _flag_support_group
+        set -a label_selector "ccloud/support-group=$_flag_support_group"
     end
 
     if test (count $label_selector) -gt 0
