@@ -61,6 +61,10 @@ function k --wraps kubectl --description 'alias k=kubectl'
             command kubectl get pod $argv[2..-1] -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
         case rf
             command kubectl patch $argv[2..-1] -p '[{"op":"remove","path":"/metadata/finalizers"}]' --type=json
+        case pause
+            command kubectl annotate $argv[2..-1] networking.metal.ironcore.dev/paused=true --overwrite
+        case unpause
+            command kubectl annotate $argv[2..-1] networking.metal.ironcore.dev/paused-
         case '*'
             command kubectl $argv
     end
