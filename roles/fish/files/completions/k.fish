@@ -26,3 +26,15 @@ complete -c k -n "__fish_seen_subcommand_from ns" -f -a "(k get namespace -o nam
 complete -c k -n '__fish_seen_subcommand_from rf' -xa "(complete -C (string replace 'k rf' 'kubectl get' (commandline)) | awk '{print \$1}')"
 complete -c k -n '__fish_seen_subcommand_from pause' -xa "(complete -C (string replace 'k pause' 'kubectl get' (commandline)) | awk '{print \$1}')"
 complete -c k -n '__fish_seen_subcommand_from unpause' -xa "(complete -C (string replace 'k unpause' 'kubectl get' (commandline)) | awk '{print \$1}')"
+
+# Label selector shorthands from https://github.com/ironcore-dev/network-operator
+complete -c k -s d -l device -d "Filter by device name"
+complete -c k -s s -l device-serial -d "Filter by device serial"
+complete -c k -s a -l aggregate -d "Filter by aggregate interface name"
+complete -c k -s r -l routed-vlan -d "Filter by routed-vlan interface name"
+complete -c k -s e -l evi -d "Filter by evi name"
+complete -c k -s v -l vrf -d "Filter by vrf name"
+
+# Label selector shorthands from https://github.com/sapcc/helm-charts
+complete -c k -s S -l service -d "Filter by SAP Cloud Infrastructure service"
+complete -c k -s g -l support-group -d "Filter by SAP Cloud Infrastructure support-group"
