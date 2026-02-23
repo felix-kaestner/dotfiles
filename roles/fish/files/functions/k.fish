@@ -52,6 +52,8 @@ function k --wraps kubectl --description 'alias k=kubectl'
                 functions -e cleanup
                 return 130
             end
+            echo "Kubernetes dashboard token copied to clipboard."
+            kubectl create token headlamp -n kube-system | pbcopy
             echo "Serving dashboard on http://localhost:8000 Press Ctrl+C to stop port-forwarding and exit."
             open "http://localhost:8000"
             wait $pid
