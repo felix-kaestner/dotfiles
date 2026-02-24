@@ -1,0 +1,17 @@
+---
+- name: Install raycast
+  community.general.homebrew_cask:
+    name: "raycast"
+    state: present
+
+- name: Ensure XDG_CONFIG_HOME exists
+  ansible.builtin.file:
+    path: "{{ xdg_config_home }}/raycast/ai"
+    state: directory
+    mode: "0755"
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/providers.yaml"
+    dest: "{{ xdg_config_home }}/raycast/ai/providers.yaml"
+    state: link

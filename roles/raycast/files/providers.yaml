@@ -1,0 +1,46 @@
+providers:
+  - id: sap_hai_proxy
+    name: "SAP AI Core"
+    base_url: "http://localhost:6655/litellm/v1"
+    api_keys:
+      anthropic: 00000000-0000-0000-0000-000000000000
+    models:
+      - id: anthropic--claude-4.5-opus
+        name: "Claude Opus 4.5"
+        context: 200000
+        provider: anthropic
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: gemini-2.5-pro
+        name: "Gemini 2.5 Pro"
+        context: 1048576
+        provider: gemini
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: true
+      - id: gpt-5
+        name: "GPT-5"
+        context: 400000
+        provider: openai
+        abilities:
+          temperature:
+            supported: true
+          vision:
+            supported: true
+          system_message:
+            supported: true
+          tools:
+            supported: true

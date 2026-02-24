@@ -51,6 +51,8 @@
     - opencode
     - pass
     - qmk
+    - role: raycast
+      when: ansible_system == "Darwin"
     - ripgrep
     - rust
     - scripts
