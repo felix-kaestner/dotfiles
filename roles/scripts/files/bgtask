@@ -1,0 +1,327 @@
+#!/usr/bin/env bash
+# bgtask: minimal background task manager
+# usage: bgtask <command> [options]
+# shellcheck disable=SC2059
+
+set -eu
+
+BGTASK_DIR="${BGTASK_DIR:-$HOME/.bgtask}"
+
+help() {
+    echo >&2 "Usage: $(basename "$0") <command> [options]
+
+A minimal background task manager.
+
+Commands:
+  run <name> <command>    Run a command in the background with the given name
+  list, ls                List all running tasks
+  stop <name>             Stop a running task
+  log [-f] <name>         Show the output log of a task (-f to follow)
+  status <name>           Check if a task is running
+  clean                   Remove completed/dead task entries
+
+Options:
+  -h, --help              Show this help message and exit
+
+Environment:
+  BGTASK_DIR              Directory for task management (default: ~/.bgtask)
+
+Examples:
+  $(basename "$0") run mytask 'sleep 60 && echo done'
+  $(basename "$0") list
+  $(basename "$0") log mytask
+  $(basename "$0") stop mytask"
+}
+
+init_dir() {
+    mkdir -p "$BGTASK_DIR"
+}
+
+task_dir() {
+    echo "$BGTASK_DIR/$1"
+}
+
+is_running() {
+    local name="$1"
+    local tdir
+    tdir="$(task_dir "$name")"
+
+    if [[ ! -f "$tdir/pid" ]]; then
+        return 1
+    fi
+
+    local pid
+    pid="$(cat "$tdir/pid")"
+
+    if kill -0 "$pid" 2>/dev/null; then
+        return 0
+    fi
+
+    return 1
+}
+
+cmd_run() {
+    if [[ $# -lt 2 ]]; then
+        echo >&2 "Error: run requires a name and command"
+        echo >&2 "Usage: $(basename "$0") run <name> <command>"
+        exit 1
+    fi
+
+    local name="$1"
+    shift
+    local cmd="$*"
+
+    # Validate name (alphanumeric, underscore, hyphen only)
+    if [[ ! "$name" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        echo >&2 "Error: task name must be alphanumeric (with _ and - allowed)"
+        exit 1
+    fi
+
+    init_dir
+    local tdir
+    tdir="$(task_dir "$name")"
+
+    # Check if task already exists and is running
+    if is_running "$name"; then
+        echo >&2 "Error: task '$name' is already running (pid: $(cat "$tdir/pid"))"
+        exit 1
+    fi
+
+    # Clean up old task directory if exists
+    rm -rf "$tdir"
+    mkdir -p "$tdir"
+
+    # Store command for reference
+    echo "$cmd" >"$tdir/cmd"
+    date -Iseconds >"$tdir/started"
+
+    # Run command in background, redirecting stdout/stderr to log file
+    # nohup ensures the process survives if the terminal closes
+    nohup bash -c '
+        eval "'"${cmd//\"/\\\"}"'"
+        echo $? > "'"$tdir"'/exitcode"
+    ' >"$tdir/log" 2>&1 &
+
+    local pid=$!
+    echo "$pid" >"$tdir/pid"
+
+    echo "Started task '$name' with pid $pid"
+    echo "Log file: $tdir/log"
+}
+
+cmd_list() {
+    init_dir
+
+    local format="%-20s %-10s %-20s %s\n"
+
+    printf "$format" "NAME" "PID" "STARTED" "COMMAND"
+    printf "$format" "----" "---" "-------" "-------"
+
+    for tdir in "$BGTASK_DIR"/*/; do
+        [[ -d "$tdir" ]] || continue
+
+        local name
+        name="$(basename "$tdir")"
+        local pid=""
+        local started=""
+        local cmd=""
+        local status=""
+
+        [[ -f "$tdir/pid" ]] && pid="$(cat "$tdir/pid")"
+        [[ -f "$tdir/started" ]] && started="$(cat "$tdir/started")"
+        [[ -f "$tdir/cmd" ]] && cmd="$(cat "$tdir/cmd")"
+
+        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+            status="$pid"
+        elif [[ -f "$tdir/exitcode" ]]; then
+            status="exit:$(cat "$tdir/exitcode")"
+        else
+            status="dead"
+        fi
+
+        # Truncate long commands
+        if [[ ${#cmd} -gt 40 ]]; then
+            cmd="${cmd:0:37}..."
+        fi
+
+        # Format started time (just show time portion if today)
+        if [[ -n "$started" ]]; then
+            started="${started:0:19}"
+        fi
+
+        printf "$format" "$name" "$status" "$started" "$cmd"
+    done
+}
+
+cmd_stop() {
+    if [[ $# -lt 1 ]]; then
+        echo >&2 "Error: stop requires a task name"
+        echo >&2 "Usage: $(basename "$0") stop <name>"
+        exit 1
+    fi
+
+    local name="$1"
+    local tdir
+    tdir="$(task_dir "$name")"
+
+    if [[ ! -d "$tdir" ]]; then
+        echo >&2 "Error: task '$name' not found"
+        exit 1
+    fi
+
+    if [[ ! -f "$tdir/pid" ]]; then
+        echo >&2 "Error: no pid file for task '$name'"
+        exit 1
+    fi
+
+    local pid
+    pid="$(cat "$tdir/pid")"
+
+    if ! kill -0 "$pid" 2>/dev/null; then
+        echo "Task '$name' is not running (pid $pid)"
+        return 0
+    fi
+
+    # Kill the process - children will receive SIGTERM
+    kill -TERM "$pid" 2>/dev/null || true
+
+    # Wait briefly and force kill if still running
+    sleep 0.5
+    if kill -0 "$pid" 2>/dev/null; then
+        kill -KILL "$pid" 2>/dev/null || true
+    fi
+
+    echo "Stopped task '$name' (pid $pid)"
+}
+
+cmd_log() {
+    local follow=false
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+        -f | --follow)
+            follow=true
+            shift
+            ;;
+        -*)
+            echo >&2 "Error: unknown option '$1'"
+            exit 1
+            ;;
+        *) break ;;
+        esac
+    done
+
+    if [[ $# -lt 1 ]]; then
+        echo >&2 "Error: log requires a task name"
+        echo >&2 "Usage: $(basename "$0") log [-f] <name>"
+        exit 1
+    fi
+
+    local name="$1"
+    local tdir
+    tdir="$(task_dir "$name")"
+
+    if [[ ! -d "$tdir" ]]; then
+        echo >&2 "Error: task '$name' not found"
+        exit 1
+    fi
+
+    if [[ ! -f "$tdir/log" ]]; then
+        echo >&2 "Error: no log file for task '$name'"
+        exit 1
+    fi
+
+    if [[ "$follow" == true ]]; then
+        tail -f "$tdir/log"
+    else
+        cat "$tdir/log"
+    fi
+}
+
+cmd_status() {
+    if [[ $# -lt 1 ]]; then
+        echo >&2 "Error: status requires a task name"
+        echo >&2 "Usage: $(basename "$0") status <name>"
+        exit 1
+    fi
+
+    local name="$1"
+    local tdir
+    tdir="$(task_dir "$name")"
+
+    if [[ ! -d "$tdir" ]]; then
+        echo >&2 "Error: task '$name' not found"
+        exit 1
+    fi
+
+    echo "Task: $name"
+    echo "Directory: $tdir"
+
+    if [[ -f "$tdir/cmd" ]]; then
+        echo "Command: $(cat "$tdir/cmd")"
+    fi
+
+    if [[ -f "$tdir/started" ]]; then
+        echo "Started: $(cat "$tdir/started")"
+    fi
+
+    if [[ -f "$tdir/pid" ]]; then
+        local pid
+        pid="$(cat "$tdir/pid")"
+        echo "PID: $pid"
+
+        if kill -0 "$pid" 2>/dev/null; then
+            echo "Status: running"
+        elif [[ -f "$tdir/exitcode" ]]; then
+            echo "Status: exited (code: $(cat "$tdir/exitcode"))"
+        else
+            echo "Status: dead"
+        fi
+    fi
+}
+
+cmd_clean() {
+    init_dir
+    local cleaned=0
+
+    for tdir in "$BGTASK_DIR"/*/; do
+        [[ -d "$tdir" ]] || continue
+
+        local name
+        name="$(basename "$tdir")"
+
+        if ! is_running "$name"; then
+            rm -rf "$tdir"
+            echo "Cleaned up task '$name'"
+            ((cleaned++)) || true
+        fi
+    done
+
+    if [[ $cleaned -eq 0 ]]; then
+        echo "No completed tasks to clean"
+    else
+        echo "Cleaned $cleaned task(s)"
+    fi
+}
+
+# Main entry point
+if [[ $# -eq 0 || "$1" =~ ^(-h|--help)$ ]]; then
+    help
+    exit 0
+fi
+
+command="$1"
+shift
+
+case "$command" in
+run) cmd_run "$@" ;;
+list | ls) cmd_list "$@" ;;
+stop) cmd_stop "$@" ;;
+log) cmd_log "$@" ;;
+status) cmd_status "$@" ;;
+clean) cmd_clean "$@" ;;
+*)
+    echo >&2 "Error: unknown command '$command'"
+    help
+    exit 1
+    ;;
+esac
