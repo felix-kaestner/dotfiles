@@ -1,7 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "share": "disabled",
-  "theme": "catppuccin",
   "model": "sap-ai-core/anthropic--claude-4.5-opus",
   "disabled_providers": [
     "anthropic",
