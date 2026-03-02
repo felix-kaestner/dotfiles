@@ -68,7 +68,6 @@
       when: ansible_system == "Darwin"
       community.general.homebrew_cask:
         name:
-          - arc
           - chatgpt
           - claude
           - monitorcontrol
@@ -76,6 +75,7 @@
           - ollama
           - tidal
           - todoist
+          - zen
         state: present
 
     - name: Create symbolic links for ~/.* files
