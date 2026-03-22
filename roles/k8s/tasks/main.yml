@@ -7,8 +7,14 @@
   when: ansible_system == "Linux"
   ansible.builtin.include_tasks: linux.yml
 
+- name: Install kubectx + kubens
+  ansible.builtin.package:
+    name: "kubectx"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
+
 - name: Install plugins through krew
-  ansible.builtin.command: "kubectl krew install cond ctx foreach ns tree"
+  ansible.builtin.command: "kubectl krew install cond foreach tree"
   environment:
     PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
 
