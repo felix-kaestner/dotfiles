@@ -13,6 +13,7 @@
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	rc = rebase --continue
 	undo = reset --soft HEAD^
+	sync = !git pull origin $(git symbolic-ref --short refs/remotes/origin/HEAD | sed 's|origin/||')
 [core]
 	editor = nvim
 	autocrlf = input
