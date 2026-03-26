@@ -70,6 +70,7 @@
         name:
           - chatgpt
           - claude
+          - claude-code
           - monitorcontrol
           - notion
           - obsidian
