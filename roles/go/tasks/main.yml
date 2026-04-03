@@ -38,6 +38,12 @@
     dest: "{{ ansible_env.HOME }}/.local/bin/kubebuilder"
     mode: "0755"
 
+- name: Install kubebuilder fish completion
+  ansible.builtin.command: "kubebuilder completion fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/kubebuilder.fish"
+  environment:
+    GOPATH: "{{ ansible_env.HOME }}/.go"
+    PATH: "{{ ansible_env.HOME }}/.go/bin:{{ ansible_env.PATH }}"
+
 - name: Install goimports
   ansible.builtin.command: go install golang.org/x/tools/cmd/goimports@latest
   environment:
