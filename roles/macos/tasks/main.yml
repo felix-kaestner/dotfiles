@@ -8,6 +8,11 @@
       - "watch"
     state: present
 
+- name: Install taproom
+  community.general.homebrew:
+    name: "gromgit/brewtils/taproom"
+    state: present
+
 - name: Ensure /etc/pam.d/sudo_local exists
   ansible.builtin.copy:
     src: "{{ role_path }}/files/sudo_local"
