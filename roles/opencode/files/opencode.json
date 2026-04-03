@@ -49,5 +49,9 @@
         "Authorization": "Bearer {env:GITHUB_MCP_TOKEN}"
       }
     },
+    "sap-mcp-server-pplx": {
+      "type": "remote",
+      "url": "https://sap-mcp-server-pplx.internal.cfapps.eu12-002.hana.ondemand.com/mcp"
+    }
   }
 }
