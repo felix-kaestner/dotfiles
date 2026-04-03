@@ -46,6 +46,7 @@
     - role: macos
       when: ansible_system == "Darwin"
     - minikube
+    - mkcert
     - node
     - nvim
     - opencode

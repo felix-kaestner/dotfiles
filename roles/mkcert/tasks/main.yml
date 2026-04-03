@@ -1,0 +1,6 @@
+---
+- name: Install mkcert
+  ansible.builtin.package:
+    name: "mkcert"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
