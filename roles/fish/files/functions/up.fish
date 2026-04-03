@@ -6,6 +6,7 @@ function up --description 'Update all system packages'
 
     if type -q pnpm
         pnpm self-update
+        pnpm dlx skills update -g
     end
 
     if type -q rustup
