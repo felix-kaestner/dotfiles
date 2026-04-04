@@ -63,6 +63,49 @@ function k --wraps kubectl --description 'alias k=kubectl'
             command kubectl get pod $argv[2..-1] -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
         case rf
             command kubectl patch $argv[2..-1] -p '[{"op":"remove","path":"/metadata/finalizers"}]' --type=json
+        case p12
+            argparse --ignore-unknown 'password=' -- $argv[2..-1]; or return
+
+            set -l name $argv[1]
+            if test -z "$name"
+                echo "Usage: k p12 <secret-name> [--password <pass>] [kubectl flags]" >&2
+                return 1
+            end
+
+            set -l password ""
+            if set -ql _flag_password
+                set password $_flag_password
+            end
+
+            set -l tmpdir (mktemp -d)
+
+            set -l secret (command kubectl get secret $name $argv[2..-1] -o json 2>&1)
+            or begin
+                echo "Failed to get secret '$name': $secret" >&2
+                rm -rf $tmpdir
+                return 1
+            end
+
+            echo $secret | command jq -r '.data["tls.crt"]' | base64 -d >$tmpdir/tls.crt
+            echo $secret | command jq -r '.data["tls.key"]' | base64 -d >$tmpdir/tls.key
+
+            set -l openssl_args -export -inkey $tmpdir/tls.key -in $tmpdir/tls.crt -passout pass:$password
+
+            set -l has_ca (echo $secret | command jq -r '.data["ca.crt"] // empty')
+            if test -n "$has_ca"
+                echo $secret | command jq -r '.data["ca.crt"]' | base64 -d >$tmpdir/ca.crt
+                set -a openssl_args -certfile $tmpdir/ca.crt
+            end
+
+            command openssl pkcs12 $openssl_args -out $name.p12
+            or begin
+                echo "Failed to create PKCS#12 file." >&2
+                rm -rf $tmpdir
+                return 1
+            end
+
+            rm -rf $tmpdir
+            echo "Created $name.p12"
         case pause
             command kubectl annotate $argv[2..-1] networking.metal.ironcore.dev/paused=true --overwrite
         case unpause
