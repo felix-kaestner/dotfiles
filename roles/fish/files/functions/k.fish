@@ -40,23 +40,6 @@ function k --wraps kubectl --description 'alias k=kubectl'
             set -l pod $argv[2]
             set -l container (k containers $pod | fzf --select-1 --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
             command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
-        case dashboard
-            if not command kubectl get service -n kube-system headlamp &>/dev/null
-                echo "Kubernetes dashboard deployment not found. Please follow the instructions on https://headlamp.dev/docs/latest/installation/in-cluster." >&2
-                return 1
-            end
-            command kubectl -n kube-system port-forward svc/headlamp 8000:80 &>/dev/null &
-            set -l pid $last_pid
-            function cleanup --on-signal INT --on-signal TERM --inherit-variable pid
-                kill -9 $pid
-                functions -e cleanup
-                return 130
-            end
-            echo "Kubernetes dashboard token copied to clipboard."
-            kubectl create token headlamp -n kube-system | pbcopy
-            echo "Serving dashboard on http://localhost:8000 Press Ctrl+C to stop port-forwarding and exit."
-            open "http://localhost:8000"
-            wait $pid
         case cluster-name
             command kubectl config view --minify -o jsonpath='{.clusters[].name}'
         case containers

@@ -1,5 +1,4 @@
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a dbg -d "Debug a pod"
-complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a dashboard -d "Open dashboard"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a cluster-name -d "Print cluster name"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a containers -d "Print name(s) of the container(s) within a pod"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a tree -d "Show sub-resources of the Kubernetes object"
