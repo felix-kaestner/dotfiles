@@ -3,6 +3,12 @@ require("config.options")
 require("config.keymaps")
 require("config.autocmds")
 
+-- Auto-correct common typos (insert-mode abbreviations)
+local wordlist = vim.fn.stdpath("config") .. "/wordlist"
+if vim.fn.filereadable(wordlist) == 1 then
+    vim.cmd("source " .. wordlist)
+end
+
 -- Source existing ~/.vim/vimrc.local file if present
 local vimrc = vim.fn.expand("~/.vim/vimrc.local")
 if vim.fn.filereadable(vimrc) == 1 then
