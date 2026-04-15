@@ -22,6 +22,7 @@
       - "golangci-lint"
       - "goreleaser"
       - "glow"
+      - "oras"
       - "fx"
 
 - name: Get GOOS environment variable
