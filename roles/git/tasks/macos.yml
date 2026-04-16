@@ -3,3 +3,12 @@
   community.general.homebrew:
     name: gh
     state: present
+
+- name: Install Github CLI extensions
+  ansible.builtin.shell: >
+    gh extension install "{{ item }}"
+  loop:
+    - github/gh-stack
+
+- name: Alias `gh stack` as `gs`
+  ansible.builtin.shell: "gh stack alias"
