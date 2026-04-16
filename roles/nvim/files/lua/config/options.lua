@@ -105,3 +105,8 @@ vim.api.nvim_create_user_command("Script", function(opts)
     vim.fn.setfperm(path, "rwxr-xr-x")
     vim.cmd("edit " .. path)
 end, { nargs = 1 })
+
+-- Workaround for https://github.com/tpope/vim-fugitive/issues/2441#issuecomment-4240457814
+vim.api.nvim_create_user_command("Browse", function(opts)
+    vim.fn.system({ "open", opts.fargs[1] })
+end, { nargs = 1 })
