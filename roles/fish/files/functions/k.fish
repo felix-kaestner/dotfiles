@@ -1,5 +1,5 @@
 function k --wraps kubectl --description 'alias k=kubectl'
-    argparse --ignore-unknown 'd/device=' 's/device-serial=' 'a/aggregate=' 'r/routed-vlan=' 'e/evi=' 'v/vrf=' 'S/service=' 'g/support-group=' -- $argv; or return
+    argparse --ignore-unknown --stop-nonopt 'd/device=' 's/device-serial=' 'a/aggregate=' 'r/routed-vlan=' 'e/evi=' 'v/vrf=' 'S/service=' 'g/support-group=' -- $argv; or return
 
     # Label Selectors from https://github.com/ironcore-dev/network-operator/blob/main/api/core/v1alpha1/groupversion_info.go
     set -l label_selector
