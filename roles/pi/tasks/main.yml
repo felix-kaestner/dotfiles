@@ -1,0 +1,19 @@
+---
+- name: Install pi-coding-agent
+  ansible.builtin.shell: pnpm install --global @mariozechner/pi-coding-agent
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Ensure ~/.pi exists
+  when: ansible_system == "Darwin"
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.pi"
+    state: directory
+    mode: "0755"
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ ansible_env.HOME }}/.pi/agent"
+    state: link

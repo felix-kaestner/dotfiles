@@ -51,6 +51,7 @@
     - nvim
     - opencode
     - pass
+    - pi
     - qmk
     - role: raycast
       when: ansible_system == "Darwin"
