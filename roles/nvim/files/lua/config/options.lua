@@ -110,3 +110,13 @@ end, { nargs = 1 })
 vim.api.nvim_create_user_command("Browse", function(opts)
     vim.fn.system({ "open", opts.fargs[1] })
 end, { nargs = 1 })
+
+vim.api.nvim_create_user_command("Fd", function(opts)
+    local cmd = vim.fn.system("fd " .. opts.args)
+    local lines = vim.split(vim.trim(cmd), "\n", { trimempty = true })
+    local items = vim.tbl_map(function(path)
+        return { filename = path }
+    end, lines)
+    vim.fn.setqflist({}, " ", { title = "fd " .. opts.args, items = items })
+    vim.cmd.cfirst()
+end, { nargs = "*", desc = "Run fd and populate the quickfix list" })
