@@ -183,11 +183,12 @@ def main() -> None:
 
         types[title] = specification
 
-    contents = {"anyOf": []}
-    definitions = {"definitions": {}}
+    contents = {"$schema": "http://json-schema.org/draft-07/schema#", "anyOf": []}
+    definitions = {"$schema": "http://json-schema.org/draft-07/schema#", "definitions": {}}
     for title, specification in types.items():
         contents["anyOf"].append({"$ref": "_definitions.json#/definitions/%s" % title})
-        definitions["definitions"][title] = specification
+        def_entry = {k: v for k, v in specification.items() if k != "$schema"}
+        definitions["definitions"][title] = def_entry
 
     print("Writing combined schema file", file=sys.stdout)
     with open("%s/all.json" % output, "w", newline="\n") as all_file:
