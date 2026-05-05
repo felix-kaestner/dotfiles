@@ -30,6 +30,7 @@
   roles:
     - role: alacritty
       when: ansible_system == "Darwin"
+    - claude
     - entr
     - fd
     - fish

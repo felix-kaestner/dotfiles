@@ -1,0 +1,48 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "00000000-0000-0000-0000-000000000000",
+    "ANTHROPIC_BASE_URL": "http://localhost:6655/anthropic/",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-latest",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-latest",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-latest",
+    "ANTHROPIC_MODEL": "claude-opus-latest",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1"
+  },
+  "includeCoAuthoredBy": false,
+  "permissions": {
+    "allow": [
+      "Bash(git commit *)",
+      "Bash(git * main)",
+      "Bash(* --version)",
+      "Bash(* --help *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Bash(git push *)",
+      "Bash(rm *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "claude-opus-latest",
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": false,
+  "skipAutoPermissionPrompt": true,
+  "gitAttribution": false,
+  "theme": "dark-ansi"
+}
