@@ -5,8 +5,8 @@ providers:
     api_keys:
       anthropic: 00000000-0000-0000-0000-000000000000
     models:
-      - id: anthropic--claude-4.5-opus
-        name: "Claude Opus 4.5"
+      - id: anthropic--claude-opus-latest
+        name: "Claude Opus (Latest)"
         context: 200000
         provider: anthropic
         abilities:
