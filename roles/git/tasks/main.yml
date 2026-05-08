@@ -22,6 +22,18 @@
     state: present
   become: "{{ ansible_system == 'Linux' }}"
 
+- name: Ensure ~/.git-hooks/signoff exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.git-hooks/signoff"
+    state: directory
+    mode: "0755"
+
+- name: Create symlink for prepare-commit-msg hook
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/prepare-commit-msg"
+    dest: "{{ ansible_env.HOME }}/.git-hooks/signoff/prepare-commit-msg"
+    state: link
+
 - name: Include macOS tasks
   when: ansible_system == "Darwin"
   ansible.builtin.include_tasks: macos.yml

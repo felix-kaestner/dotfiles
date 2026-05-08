@@ -48,4 +48,11 @@
 	pushInsteadOf = https://github.com/
 [include]
 	path = ./config.local
+# Signed-off-by: activate signoff hook for work GitHub orgs
+[includeIf "hasconfig:remote.*.url:git@github.com:ironcore-dev/**"]
+	path = ./config.signoff
+[includeIf "hasconfig:remote.*.url:git@github.com:cobaltcore-dev/**"]
+	path = ./config.signoff
+[includeIf "hasconfig:remote.*.url:git@github.com:cloudoperators/**"]
+	path = ./config.signoff
 # vim: noet ts=4 sw=4 sts=0 ft=gitconfig
