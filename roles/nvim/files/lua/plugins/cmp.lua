@@ -62,8 +62,8 @@ return {
         end,
         keys = {
             { "<C-K>", 'copilot#Accept("")', mode = "i", expr = true, replace_keycodes = false },
-            { "<C-[>", "copilot#Previous()", mode = "i", expr = true },
-            { "<C-]>", "copilot#Next()", mode = "i", expr = true },
+            { "<M-[>", "copilot#Previous()", mode = "i", expr = true },
+            { "<M-]>", "copilot#Next()", mode = "i", expr = true },
         },
     },
 }
