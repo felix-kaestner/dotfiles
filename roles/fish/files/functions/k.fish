@@ -39,7 +39,11 @@ function k --wraps kubectl --description 'alias k=kubectl'
         case dbg
             set -l pod $argv[2]
             set -l container (k containers $pod | fzf --select-1 --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
-            command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
+            set -l image "library/busybox:1.37"
+            if test -n "$OS_REGION_NAME"; and test -n "$OS_AUTH_URL"
+                set image "keppel.$OS_REGION_NAME.cloud.sap/ccloud-dockerhub-mirror/library/busybox:1.37"
+            end
+            command kubectl debug -ti --profile=general --share-processes --image=$image --target="$container" $argv[2..-1]
         case cluster-name
             command kubectl config view --minify -o jsonpath='{.clusters[].name}{"\n"}'
         case containers
