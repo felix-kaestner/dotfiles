@@ -41,7 +41,7 @@ function k --wraps kubectl --description 'alias k=kubectl'
             set -l container (k containers $pod | fzf --select-1 --height ~100% --header 'Select a container to debug' --prompt 'Container> ' || return 130)
             command kubectl debug -ti --profile=general --share-processes --image=busybox:1.37.0 --target="$container" $argv[2..-1]
         case cluster-name
-            command kubectl config view --minify -o jsonpath='{.clusters[].name}'
+            command kubectl config view --minify -o jsonpath='{.clusters[].name}{"\n"}'
         case containers
             command kubectl get pod $argv[2..-1] -o jsonpath='{range .spec.containers[*]}{.name}{"\n"}{end}'
         case rf
