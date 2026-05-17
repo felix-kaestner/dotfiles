@@ -26,3 +26,15 @@
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Install ntn
+  ansible.builtin.shell: pnpm install --global ntn
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Install ntn fish completion
+  ansible.builtin.shell: "ntn completions fish > {{ ansible_env.HOME }}/.local/share/fish/vendor_completions.d/ntn.fish"
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
