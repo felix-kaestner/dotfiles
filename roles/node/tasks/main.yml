@@ -44,3 +44,9 @@
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: Install playwright-cli
+  ansible.builtin.shell: pnpm install --global @playwright/cli
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
