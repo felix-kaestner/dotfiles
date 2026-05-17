@@ -24,7 +24,7 @@ fish_add_path "$HOME/.local/bin"
 
 # set PATH so it includes pnpm home if it exists
 set -gx PNPM_HOME "$HOME/.local/share/pnpm"
-fish_add_path "$PNPM_HOME"
+fish_add_path "$PNPM_HOME/bin"
 
 # set PATH so it includes golang's user bin if it exists
 set -gx GOPATH "$HOME/.go"
