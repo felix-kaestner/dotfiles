@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# genpw: generate a random password
+# usage: genpw [-l length] [-a]
+
+help() {
+    echo >&2 "Usage: $(basename "$0") [-l length] [-a]
+
+Generate a random password by sampling bytes from /dev/urandom.
+Always mixes lowercase letters, uppercase letters, and numbers;
+special characters are included by default and can be disabled
+with -a/--alnum.
+
+Options:
+  -l, --length <n>  Password length in characters (default: 30)
+  -a, --alnum       Restrict output to alphanumeric characters
+  -h, --help        Show this help message and exit
+
+Example:
+  $(basename "$0")               # 30-char password with symbols
+  $(basename "$0") -l 16         # 16-char password with symbols
+  $(basename "$0") -l 64 -a      # 64-char alphanumeric password"
+}
+
+length=30
+charset='A-Za-z0-9!@#$%^&*()-_=+[]{}<>?'
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -l | --length)
+        length="$2"
+        shift 2
+        ;;
+    -a | --alnum)
+        charset='A-Za-z0-9'
+        shift
+        ;;
+    -h | --help)
+        help
+        exit 0
+        ;;
+    *)
+        echo "$(basename "$0"): unknown option '$1'" >&2
+        help
+        exit 1
+        ;;
+    esac
+done
+
+if ! [[ "$length" =~ ^[0-9]+$ ]] || [[ "$length" -lt 1 ]]; then
+    echo "$(basename "$0"): length must be a positive integer" >&2
+    exit 1
+fi
+
+LC_ALL=C tr -dc "$charset" </dev/urandom | head -c "$length"
+echo
