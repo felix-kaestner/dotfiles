@@ -3,9 +3,9 @@
     "ANTHROPIC_AUTH_TOKEN": "00000000-0000-0000-0000-000000000000",
     "ANTHROPIC_BASE_URL": "http://localhost:6655/anthropic/",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-latest",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-latest",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "anthropic--claude-4.6-opus",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-latest",
-    "ANTHROPIC_MODEL": "claude-opus-latest",
+    "ANTHROPIC_MODEL": "anthropic--claude-4.6-opus",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1"
