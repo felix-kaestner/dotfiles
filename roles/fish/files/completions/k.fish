@@ -7,6 +7,7 @@ complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a ctx -d "Switch to co
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a ns -d "Switch to namespace"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a p12 -d "Create PKCS#12 file from TLS secret"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a rf -d "Remove finalizers"
+complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a image -d "Print container image(s)"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a pause -d "Pause reconciliation"
 complete -c k -n 'test (count (commandline -xpc)) -eq 1' -a unpause -d "Unpause reconciliation"
 
@@ -26,6 +27,8 @@ complete -c k -n "__fish_seen_subcommand_from ns" -f -a "(k get namespace -o nam
 complete -c k -n "__fish_seen_subcommand_from p12" -xa "(k get secret -o name | awk -F '/' '{print \$2}')"
 complete -c k -n "__fish_seen_subcommand_from p12" -l password -d "Password for the PKCS#12 file"
 complete -c k -n '__fish_seen_subcommand_from rf' -xa "(complete -C (string replace 'k rf' 'kubectl get' (commandline)) | awk '{print \$1}')"
+complete -c k -n '__fish_seen_subcommand_from image; and test (count (commandline -xpc)) -eq 2' -xa "deployment statefulset daemonset pod"
+complete -c k -n '__fish_seen_subcommand_from image; and test (count (commandline -xpc)) -ge 3' -xa "(kubectl get (commandline -xpc)[3] -o name 2>/dev/null | awk -F '/' '{print \$2}')"
 complete -c k -n '__fish_seen_subcommand_from pause' -xa "(complete -C (string replace 'k pause' 'kubectl get' (commandline)) | awk '{print \$1}')"
 complete -c k -n '__fish_seen_subcommand_from unpause' -xa "(complete -C (string replace 'k unpause' 'kubectl get' (commandline)) | awk '{print \$1}')"
 

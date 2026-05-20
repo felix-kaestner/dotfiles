@@ -93,6 +93,8 @@ function k --wraps kubectl --description 'alias k=kubectl'
 
             rm -rf $tmpdir
             echo "Created $name.p12"
+        case image
+            command kubectl get $argv[2..-1] -o yaml | yq '.spec.template.spec.containers[].image // .spec.containers[].image'
         case pause
             command kubectl annotate $argv[2..-1] networking.metal.ironcore.dev/paused=true --overwrite
         case unpause
