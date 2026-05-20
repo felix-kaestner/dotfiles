@@ -6,7 +6,11 @@ function up --description 'Update all system packages'
 
     if type -q pnpm
         pnpm self-update
-        pnpm dlx skills update -g
+        if type -q gh; and gh auth status -h github.com &>/dev/null
+            GH_TOKEN=(gh auth token -h github.com) pnpm dlx skills update -g
+        else
+            pnpm dlx skills update -g
+        end
     end
 
     if type -q rustup
@@ -31,7 +35,7 @@ function up --description 'Update all system packages'
     end
 
     if type -q helm
-        helm plugin ls | tail -n +2 | awk '{print $1}' | xargs helm plugin update
+        helm plugin ls | tail -n +2 | awk '{print $1}' | parallel --will-cite 'helm plugin update {}'
     end
 
     if type -q u8s
@@ -44,8 +48,6 @@ function up --description 'Update all system packages'
     end
 
     for bin in ~/.go/bin/*
-        set -l mod (go version -m "$bin" | awk '/path/ {print $2;exit}')
-        printf "\e[1;36m=> go install %s@latest\e[0m\n" "$mod"
-        go install "$mod@latest"
-    end
+        go version -m "$bin" | awk '/path/ {print $2;exit}'
+    end | parallel --will-cite 'printf "\e[1;36m=> go install {}@latest\e[0m\n" && go install {}@latest'
 end
