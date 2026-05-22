@@ -50,3 +50,38 @@
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+# https://skills.sh
+- name: Install skills CLI
+  ansible.builtin.shell: pnpm install --global skills
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+
+- name: "Install skills"
+  ansible.builtin.shell: >
+    skills add "https://github.com/{{ item.repo }}" {{ '--skill "' + item.skill + '"' if item.skill is defined else '' }} -g -a universal claude-code pi antigravity -y
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
+  loop:
+    - { repo: "anthropics/skills", skill: "doc-coauthoring" }
+    - { repo: "anthropics/skills", skill: "pdf" }
+    - { repo: "anthropics/skills", skill: "docx" }
+    - { repo: "anthropics/skills", skill: "pptx" }
+    - { repo: "anthropics/skills", skill: "xlsx" }
+    - { repo: "anthropics/skills", skill: "skill-creator" }
+    - { repo: "vercel-labs/skills", skill: "find-skills" }
+    - { repo: "vercel-labs/agent-browser", skill: "agent-browser" }
+    - { repo: "github/awesome-copilot", skill: "git-commit" }
+    - { repo: "github/awesome-copilot", skill: "excalidraw-diagram-generator" }
+    - { repo: "github/awesome-copilot", skill: "refactor" }
+    - { repo: "github/awesome-copilot", skill: "github-issues" }
+    - { repo: "github/awesome-copilot", skill: "memory-merger" }
+    - { repo: "microsoft/playwright-cli", skill: "playwright-cli" }
+    - { repo: "mattpocock/skills", skill: "caveman" }
+    - { repo: "mattpocock/skills", skill: "grill-me" }
+    - { repo: "samber/cc-skills-golang" }
+    - { repo: "kepano/obsidian-skills" }
+    - { repo: "github/gh-stack" }
+    - { repo: "makenotion/skills" }
