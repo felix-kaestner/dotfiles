@@ -52,6 +52,8 @@
     - nvim
     - role: obsidian
       when: ansible_system == "Darwin"
+    - role: notion
+      when: ansible_system == "Darwin"
     - opencode
     - pass
     - pi
@@ -76,7 +78,6 @@
           - chatgpt
           - mattermost
           - monitorcontrol
-          - notion
           - ollama
           - signal
           - tidal
