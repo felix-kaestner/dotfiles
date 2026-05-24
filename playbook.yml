@@ -50,6 +50,8 @@
     - mkcert
     - node
     - nvim
+    - role: obsidian
+      when: ansible_system == "Darwin"
     - opencode
     - pass
     - pi
@@ -77,7 +79,6 @@
           - mattermost
           - monitorcontrol
           - notion
-          - obsidian
           - ollama
           - signal
           - opencode-desktop
