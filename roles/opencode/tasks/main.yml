@@ -1,5 +1,11 @@
 ---
-- name: Install opencode
+- name: Install OpenCode Desktop
+  when: ansible_system == "Darwin"
+  community.general.homebrew_cask:
+    name: "opencode-desktop"
+    state: present
+
+- name: Install OpenCode TUI
   ansible.builtin.shell: pnpm install --global opencode-ai
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
