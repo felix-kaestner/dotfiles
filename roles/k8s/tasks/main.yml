@@ -18,6 +18,16 @@
   environment:
     PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
 
+- name: Add kubectl-secret krew index
+  ansible.builtin.command: "kubectl krew index add kubectl-secret https://github.com/felix-kaestner/kubectl-secret.git"
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+
+- name: Install kubectl-secret plugin
+  ansible.builtin.command: "kubectl krew install kubectl-secret/secret"
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+
 - name: Create symbolic link for config
   ansible.builtin.file:
     src: "{{ role_path }}/files/k9s"
