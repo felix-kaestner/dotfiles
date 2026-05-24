@@ -1,4 +1,12 @@
 ---
+- name: Install Claude Desktop & Claude Code on macOS
+  when: ansible_system == "Darwin"
+  community.general.homebrew_cask:
+    name:
+      - claude
+      - claude-code
+    state: present
+
 - name: Ensure ~/.claude exists
   ansible.builtin.file:
     path: "{{ ansible_env.HOME }}/.claude"

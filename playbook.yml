@@ -74,8 +74,6 @@
       community.general.homebrew_cask:
         name:
           - chatgpt
-          - claude
-          - claude-code
           - mattermost
           - monitorcontrol
           - notion
