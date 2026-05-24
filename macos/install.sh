@@ -18,7 +18,7 @@ killall Dock
 defaults write NSGlobalDomain "KeyRepeat" -int "2"
 defaults write NSGlobalDomain "InitialKeyRepeat" -int "15"
 
-defaults write com.apple.screencapture "location" -string "~/Pictures/Screenshots"
+defaults write com.apple.screencapture "location" -string "$HOME/Pictures/Screenshots"
 
 killall SystemUIServer
 
