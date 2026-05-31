@@ -55,6 +55,10 @@ CLAUDE.md
 # opencode
 AGENTS.md
 
+# Environment
+.env
+.env.*
+
 # Vim
 .swp
 .swo
