@@ -47,13 +47,9 @@ Thumbs.db
 Desktop.ini
 
 # Claude Code
-CLAUDE.md
 **/.claude/settings.local.json
 **/docs/plans/
 **/docs/superpowers/
-
-# opencode
-AGENTS.md
 
 # Environment
 .env
