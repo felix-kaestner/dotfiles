@@ -4,7 +4,7 @@ function envsource --description 'Source environment variables from a .env file'
         return 1
     end
 
-    for line in (cat $argv | grep -v '^#')
+    for line in (cat $argv | grep -v '^#' | grep -v '^$')
         set item (string split -m 1 '=' $line)
         set -gx $item[1] $item[2]
     end
