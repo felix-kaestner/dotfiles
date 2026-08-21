@@ -38,6 +38,8 @@
     - fzf
     - git
     - go
+    - role: ghostty
+      when: ansible_system == "Darwin"
     - gpg
     - helm
     - role: herdr

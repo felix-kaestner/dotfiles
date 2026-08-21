@@ -1,0 +1,16 @@
+---
+- name: Install ghostty
+  community.general.homebrew_cask:
+    name: "ghostty"
+    state: present
+
+- name: Install chafa (for image preview)
+  community.general.homebrew:
+    name: "chafa"
+    state: present
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ ansible_env.HOME }}/Library/Application Support/com.mitchellh.ghostty"
+    state: link

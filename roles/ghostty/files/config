@@ -1,0 +1,59 @@
+# This is the configuration file for Ghostty.
+#
+# Run `ghostty +show-config --default --docs` to view a list of
+# all available config options and their default values.
+#
+# Additionally, each config option is also explained in detail
+# on Ghostty's website, at https://ghostty.org/docs/config.
+
+# Appearance
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+mouse-hide-while-typing = true
+
+# Font
+font-size = 14
+font-style-italic = false
+font-family = GeistMono Nerd Font Mono
+
+# Window
+maximize = true
+
+# Selection
+copy-on-select = clipboard
+
+# Hints
+link-url = true
+
+# Surface
+unfocused-split-opacity = 0.5
+quit-after-last-window-closed = true
+
+# Keybindings
+macos-option-as-alt = "right"
+
+keybind = alt+arrow_left=unbind
+keybind = alt+arrow_right=unbind
+
+keybind = ctrl+b>c=new_tab
+keybind = ctrl+b>n=next_tab
+keybind = ctrl+b>p=previous_tab
+keybind = ctrl+b>x=close_surface
+keybind = ctrl+b>\=new_split:right
+keybind = ctrl+b>minus=new_split:down
+keybind = ctrl+b>ctrl+h=goto_split:left
+keybind = ctrl+b>ctrl+j=goto_split:down
+keybind = ctrl+b>ctrl+k=goto_split:up
+keybind = ctrl+b>ctrl+l=goto_split:right
+keybind = ctrl+b>equal=equalize_splits
+keybind = ctrl+b>z=toggle_split_zoom
+
+keybind = ctrl+b>1=goto_tab:1
+keybind = ctrl+b>2=goto_tab:2
+keybind = ctrl+b>3=goto_tab:3
+keybind = ctrl+b>4=goto_tab:4
+keybind = ctrl+b>5=goto_tab:5
+keybind = ctrl+b>6=goto_tab:6
+keybind = ctrl+b>7=goto_tab:7
+keybind = ctrl+b>8=goto_tab:8
+
+keybind = global:cmd+grave_accent=toggle_quick_terminal
