@@ -69,7 +69,11 @@
     - { repo: "microsoft/playwright-cli", skill: "playwright-cli" }
     - { repo: "mattpocock/skills", skill: "caveman" }
     - { repo: "mattpocock/skills", skill: "grill-me" }
+    - { repo: "mattpocock/skills", skill: "handoff" }
     - { repo: "samber/cc-skills-golang" }
     - { repo: "kepano/obsidian-skills" }
     - { repo: "github/gh-stack" }
     - { repo: "makenotion/skills" }
+    - { repo: "nutlope/hallmark" }
+    - { repo: "ogulcancelik/herdr" }
+    - { repo: "Leonxlnx/taste-skill" }
