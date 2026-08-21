@@ -1,4 +1,15 @@
 {
+  "alwaysThinkingEnabled": false,
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "ponytail@ponytail": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "ruby-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "00000000-0000-0000-0000-000000000000",
     "ANTHROPIC_BASE_URL": "http://localhost:6655/anthropic/",
@@ -6,11 +17,45 @@
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "anthropic--claude-4.6-opus",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-latest",
     "ANTHROPIC_MODEL": "anthropic--claude-4.6-opus",
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "DISABLE_TELEMETRY": "1"
+    "DISABLE_TELEMETRY": "1",
+    "OTEL_EXPORTER_OTLP_METRICS_ENDPOINT": "http://localhost:6655/otel/v1/metrics",
+    "OTEL_EXPORTER_OTLP_PROTOCOL": "http/protobuf",
+    "OTEL_METRICS_EXPORTER": "otlp"
+  },
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "repo": "DietrichGebert/ponytail",
+        "source": "github"
+      }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "repo": "obra/superpowers-marketplace",
+        "source": "github"
+      }
+    }
+  },
+  "gitAttribution": false,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/I753012/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
   },
   "includeCoAuthoredBy": false,
+  "model": "anthropic--claude-4.6-opus",
   "permissions": {
     "allow": [
       "Bash(git commit *)",
@@ -18,33 +63,13 @@
       "Bash(* --version)",
       "Bash(* --help *)"
     ],
+    "defaultMode": "auto",
     "deny": [
       "Read(./.env)",
       "Bash(git push *)",
       "Bash(rm *)"
-    ],
-    "defaultMode": "auto"
+    ]
   },
-  "model": "claude-opus-latest",
-  "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "ruby-lsp@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "superpowers-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "obra/superpowers-marketplace"
-      }
-    }
-  },
-  "alwaysThinkingEnabled": false,
-  "theme": "dark-ansi",
   "skipAutoPermissionPrompt": true,
-  "gitAttribution": false
+  "theme": "dark-ansi"
 }
