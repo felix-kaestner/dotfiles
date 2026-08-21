@@ -1,0 +1,4 @@
+[session]
+command = "env ZDOTDIR=${XDG_CONFIG_HOME:-$HOME/.config}/asciinema zsh"
+add_marker_key = "^x"
+# vim: ft=toml
