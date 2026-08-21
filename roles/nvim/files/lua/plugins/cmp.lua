@@ -4,8 +4,10 @@ return {
     -- Autocompletion
     {
         "saghen/blink.cmp",
-        dependencies = { "rafamadriz/friendly-snippets" },
-        build = "cargo build --release",
+        dependencies = { "rafamadriz/friendly-snippets", "saghen/blink.lib" },
+        build = function()
+            require("blink.cmp").build():pwait()
+        end,
         cond = function()
             return vim.fn.executable("cargo") == 1
         end,
