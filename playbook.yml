@@ -40,6 +40,8 @@
     - go
     - gpg
     - helm
+    - role: herdr
+      when: ansible_system == "Darwin"
     - jq
     - k8s
     - role: lima

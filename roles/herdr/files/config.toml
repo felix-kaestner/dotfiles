@@ -1,0 +1,30 @@
+onboarding = false
+# herdr configuration: ~/.config/herdr/config.toml
+
+[theme]
+name = "catppuccin"
+dark_name = "catppuccin"
+light_name = "catppuccin-latte"
+auto_switch = true
+
+[keys]
+prefix = "ctrl+j"
+goto = "prefix+s"
+settings = "prefix+shift+s"
+open_worktree = "prefix+shift+w"
+split_vertical = "prefix+\\"
+
+[ui]
+prompt_new_tab_name = false
+show_agent_labels_on_pane_borders = true
+sidebar_start_collapsed = true
+sidebar_collapsed_mode = "hidden"
+pane_gaps = false
+pane_borders = false
+pane_scrollbars = false
+
+[ui.toast]
+delivery = "system"
+
+[experimental]
+pane_history = true

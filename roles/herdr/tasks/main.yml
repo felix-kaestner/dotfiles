@@ -1,0 +1,11 @@
+---
+- name: Install herdr
+  community.general.homebrew:
+    name: "herdr"
+    state: present
+
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/herdr"
+    state: link
