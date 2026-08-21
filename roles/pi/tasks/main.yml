@@ -1,6 +1,6 @@
 ---
 - name: Install pi-coding-agent
-  ansible.builtin.shell: pnpm install --global @mariozechner/pi-coding-agent
+  ansible.builtin.shell: pnpm install --global @earendil-works/pi-coding-agent
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
