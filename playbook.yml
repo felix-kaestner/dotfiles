@@ -89,6 +89,7 @@
           - signal
           - tidal
           - todoist
+          - typewhisper/tap/typewhisper
           - zen
         state: present
 
