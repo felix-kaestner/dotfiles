@@ -80,6 +80,7 @@
       when: ansible_system == "Darwin"
       community.general.homebrew_cask:
         name:
+          - alcove
           - chatgpt
           - mattermost
           - monitorcontrol
