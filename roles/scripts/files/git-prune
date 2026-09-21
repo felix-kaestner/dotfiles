@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# git-prune: delete local branches with a gone origin upstream
+# usage: git-prune [--dry-run]
+
+set -euo pipefail
+
+help() {
+    echo >&2 "Usage: $(basename "$0") [--dry-run]
+
+Fetch origin, then delete local branches whose origin upstream was removed.
+Branches checked out in any worktree and branches without an origin upstream
+are kept.
+
+Options:
+  --dry-run        List branches that would be deleted, delete nothing
+  -h, --help       Show this help message and exit
+
+Example:
+  $(basename "$0") --dry-run"
+}
+
+die() {
+    echo >&2 "git-prune: $1"
+    exit 1
+}
+
+DRY_RUN=false
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --dry-run) DRY_RUN=true ;;
+    -h | --help)
+        help
+        exit 0
+        ;;
+    *) die "unknown option '$1'" ;;
+    esac
+    shift
+done
+
+git rev-parse --git-dir >/dev/null 2>&1 || die "not a git repository"
+git remote get-url origin >/dev/null 2>&1 || die "no origin remote"
+git fetch --prune origin || die "failed to fetch origin"
+
+worktree_branches=$(git worktree list --porcelain | sed -n 's|^branch refs/heads/||p')
+
+while IFS= read -r branch; do
+    grep -qxF "$branch" <<<"$worktree_branches" && continue
+
+    upstream=$(git for-each-ref --format='%(upstream)' "refs/heads/$branch")
+    [[ "$upstream" == refs/remotes/origin/* ]] || continue
+    git rev-parse --verify --quiet "$upstream" >/dev/null && continue
+
+    if [[ "$DRY_RUN" == true ]]; then
+        echo "would delete: $branch"
+    else
+        git branch -D "$branch" >/dev/null
+        echo "✓ deleted branch $branch"
+    fi
+done < <(git for-each-ref --format='%(refname:lstrip=2)' refs/heads/)
