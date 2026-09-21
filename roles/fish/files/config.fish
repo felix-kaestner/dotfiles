@@ -137,6 +137,10 @@ if status is-interactive
         set -a KUBECONFIG (limactl list default --format '{{.Dir}}/copied-from-guest/kubeconfig.yaml')
     end
 
+    if test -f "$HOME/.kube/config.homelab"
+        set -a KUBECONFIG "$HOME/.kube/config.homelab"
+    end
+
     if test -f "$HOME/.config/SAPCC/u8s/.kube/config"
         set -a KUBECONFIG "$HOME/.config/SAPCC/u8s/.kube/config"
     end
