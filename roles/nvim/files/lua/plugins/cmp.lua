@@ -27,19 +27,19 @@ return {
                 accept = {
                     auto_brackets = { enabled = true },
                 },
-                menu = {
-                    auto_show = function(ctx)
-                        return ctx.mode ~= "cmdline"
-                    end,
-                },
+                menu = { auto_show = true },
                 list = {
-                    selection = {
-                        auto_insert = function(ctx)
-                            return ctx.mode == "cmdline"
-                        end,
-                    },
+                    selection = { auto_insert = false },
                 },
                 documentation = { auto_show = true },
+            },
+            cmdline = {
+                completion = {
+                    menu = { auto_show = false },
+                    list = {
+                        selection = { auto_insert = true },
+                    },
+                },
             },
             sources = {
                 default = { "lazydev", "lsp", "path", "snippets", "buffer" },
