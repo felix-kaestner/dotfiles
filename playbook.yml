@@ -81,6 +81,7 @@
       community.general.homebrew_cask:
         name:
           - alcove
+          - bitwarden
           - chatgpt
           - mattermost
           - monitorcontrol
