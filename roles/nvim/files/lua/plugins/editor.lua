@@ -10,6 +10,9 @@ return {
     -- Add/change/delete surrounding characters
     "tpope/vim-surround",
 
+    -- Continously save and restore sessions
+    "tpope/vim-obsession",
+
     -- Neovim lua library
     { "nvim-lua/plenary.nvim", lazy = true },
 
