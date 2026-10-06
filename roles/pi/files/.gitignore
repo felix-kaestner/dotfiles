@@ -1,5 +1,8 @@
 extensions/
 git/
+npm/
 sessions/
 skills/
+auth.json
 mcp-*.json
+models-*.json

@@ -2,10 +2,9 @@
   "packages": [
     "git:github.com/DietrichGebert/ponytail",
     "git:github.com/obra/superpowers",
-    "npm:pi-web-access",
-    "npm:pi-mcp-adapter@2.0.0"
+    "npm:pi-web-access"
   ],
-  "lastChangelogVersion": "0.86.1",
+  "lastChangelogVersion": "1.0.4",
   "defaultProvider": "sap-ai-core",
   "defaultModel": "gpt-5.6-sol",
   "terminal": {
@@ -14,5 +13,9 @@
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "medium",
   "quietStartup": true,
-  "theme": "light/dark"
+  "theme": "light/dark",
+  "extensions": [
+    "+builtin:mcp",
+    "+builtin:tool-search"
+  ]
 }

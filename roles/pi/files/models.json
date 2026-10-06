@@ -107,7 +107,7 @@
     },
     "hetzner": {
       "api": "openai-completions",
-      "apiKey": "HETZNER_INFERENCE_TOKEN",
+      "apiKey": "${HETZNER_INFERENCE_TOKEN}",
       "baseUrl": "https://inference.hetzner.com/api/v1",
       "models": [
         {
@@ -165,6 +165,62 @@
       },
       "models": [
         {
+          "contextWindow": 262144,
+          "id": "Aleph-Alpha/Kolibri-1",
+          "input": [
+            "text"
+          ],
+          "maxTokens": 262144,
+          "name": "Kolibri 1",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          }
+        },
+        {
+          "contextWindow": 262144,
+          "id": "Qwen/Qwen3.8-27B",
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 131072,
+          "name": "Qwen3.8 27B",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": null,
+            "xhigh": "xhigh",
+            "max": null
+          }
+        },
+        {
+          "contextWindow": 262144,
+          "id": "Qwen/Qwen3.8-Flash-Next",
+          "input": [
+            "text",
+            "image"
+          ],
+          "maxTokens": 131072,
+          "name": "Qwen3.8 Flash Next",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": "medium",
+            "high": null,
+            "xhigh": "xhigh",
+            "max": null
+          }
+        },
+        {
           "contextWindow": 1048576,
           "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
           "input": [
@@ -172,7 +228,15 @@
           ],
           "maxTokens": 384000,
           "name": "DeepSeek V4 Flash 0731",
-          "reasoning": true
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          }
         },
         {
           "contextWindow": 256000,
@@ -201,7 +265,15 @@
           ],
           "maxTokens": 131072,
           "name": "GLM-5.3",
-          "reasoning": true
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          }
         }
       ]
     }

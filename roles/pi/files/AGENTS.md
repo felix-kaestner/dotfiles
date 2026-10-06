@@ -10,10 +10,13 @@
 - Never push to a remote — the user handles all remote operations
 - Always stage files with explicit paths (`git add ./path/to/file`) — never use `git add -A`, `git add .`, or `git add <directory>`
 
-## pi-web-access
+## Safety Rules
 
-When calling `get_search_content`:
+- NEVER read: `.env`, `*.pem`, `credentials*`, `secrets*`, `*.key`
 
-- With `findText`, omit both `offset` and `limit`.
-- For paginated content, use `offset` and `limit` without `findText`.
-- Never retry an “Incompatible find options” error with the same arguments.
+## Research and Verification
+
+- Treat recalled knowledge as an unverified hypothesis, not a fact.
+- Cite current sources when making factual assumptions or recommendations.
+- Research in this order: inspect the codebase, consult Context7 for library documentation, use `fetch_content` on official documentation when Context7 is incomplete, then use `web_search` through pi-web-access for discovery and current facts.
+- Cross-check important claims with authoritative sources and state uncertainty when verification is incomplete.
