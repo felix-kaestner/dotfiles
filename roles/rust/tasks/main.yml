@@ -11,6 +11,4 @@
       - bottom
       - tailspin
       - zoxide
-      - llmfit
-      - modelsdev
     executable: "{{ ansible_env.HOME }}/.cargo/bin/cargo"
