@@ -63,8 +63,6 @@
     - pass
     - pi
     - qmk
-    - role: raycast
-      when: ansible_system == "Darwin"
     - ripgrep
     - rust
     - scripts
@@ -86,6 +84,7 @@
           - monitorcontrol
           - ollama
           - openlogi
+          - raycast
           - tidal
           - todoist
           - zen
