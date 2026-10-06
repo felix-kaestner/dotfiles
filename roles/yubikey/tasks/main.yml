@@ -5,6 +5,12 @@
     state: present
   become: "{{ ansible_system == 'Linux' }}"
 
+- name: Install yubico-piv-tool
+  when: ansible_system == "Darwin"
+  community.general.homebrew:
+    name: yubico-piv-tool
+    state: present
+
 - name: Install Yubico Authenticator & YubiKey Manager on MacOS
   when: ansible_system == "Darwin"
   community.general.homebrew_cask:
