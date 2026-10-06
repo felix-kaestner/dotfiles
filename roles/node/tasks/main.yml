@@ -77,3 +77,4 @@
     - { repo: "nutlope/hallmark" }
     - { repo: "ogulcancelik/herdr" }
     - { repo: "Leonxlnx/taste-skill" }
+    - { repo: "typesafe-ai/skills" }
