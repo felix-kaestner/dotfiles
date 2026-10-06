@@ -47,6 +47,10 @@ function up --description 'Update all system packages'
         hammer update
     end
 
+    if type -q pi
+        pi update --all
+    end
+
     for bin in ~/.go/bin/*
         go version -m "$bin" | awk '/path/ {print $2;exit}'
     end | parallel --will-cite 'printf "\e[1;36m=> go install {}@latest\e[0m\n" && go install {}@latest'
