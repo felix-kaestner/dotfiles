@@ -71,6 +71,7 @@
     - tree-sitter
     - uv
     - vault
+    - yq
     - yubikey
 
   tasks:

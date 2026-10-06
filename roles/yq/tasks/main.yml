@@ -1,0 +1,6 @@
+---
+- name: Install yq
+  ansible.builtin.package:
+    name: "yq"
+    state: present
+  become: "{{ ansible_system == 'Linux' }}"
