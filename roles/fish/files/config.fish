@@ -16,6 +16,7 @@ set -gx RIPGREP_CONFIG_PATH "$XDG_CONFIG_HOME/ripgrep/ripgreprc"
 
 set -gx BUZZ_RELAY_URL (security find-generic-password -a $USER -s buzz-relay-url -w 2>/dev/null)
 set -gx BUZZ_PRIVATE_KEY (security find-generic-password -a $USER -s buzz-private-key -w 2>/dev/null)
+set -gx CONTEXT7_API_KEY (security find-generic-password -a $USER -s context7 -w 2>/dev/null)
 
 # include brew shellenv
 if test -x /opt/homebrew/bin/brew
