@@ -1,0 +1,6 @@
+---
+- name: Install hunk
+  ansible.builtin.shell: pnpm install --global hunkdiff
+  environment:
+    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
+    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"

@@ -46,6 +46,7 @@
     - role: herdr
       when: ansible_system == "Darwin"
     - jq
+    - hunk
     - k8s
     - role: lima
       when: ansible_system == "Darwin"
