@@ -43,17 +43,15 @@ return {
 
                 -- Actions
                 map("n", "<leader>hr", gitsigns.reset_hunk, "Reset Hunk")
-                map("n", "<leader>hs", gitsigns.stage_hunk, "Stage Hunk")
-                map("n", "<leader>hu", gitsigns.undo_stage_hunk, "Undo Stage Hunk")
+                map("n", "<leader>hs", gitsigns.stage_hunk, "Stage / Unstage Hunk")
                 map("n", "<leader>hS", gitsigns.stage_buffer, "Stage Buffer")
                 map("n", "<leader>hR", gitsigns.reset_buffer, "Reset Buffer")
                 map("n", "<leader>hU", gitsigns.reset_buffer_index, "Reset Buffer Index")
                 map("n", "<leader>hp", gitsigns.preview_hunk, "Preview Hunk Inline")
                 map("n", "<leader>hd", gitsigns.diffthis, "Diff Buffer")
                 map("n", "<leader>hb", gitsigns.blame_line, "Blame Line")
-                map("n", "<leader>hc", gitsigns.show_commit, "Hunk Commit")
+                map("n", "<leader>hc", gitsigns.blame, "Blame / Commit Diff")
                 map("n", "<leader>tb", gitsigns.toggle_current_line_blame, "Toggle Current Line Blame")
-
                 map("v", "<leader>hs", function()
                     gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
                 end)
