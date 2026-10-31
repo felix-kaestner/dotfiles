@@ -50,3 +50,7 @@ defaults write -g NSUserKeyEquivalents -dict-add 'Top' '^~@\UF700'
 defaults write -g NSUserKeyEquivalents -dict-add 'Bottom' '^~@\UF701'
 defaults write -g NSUserKeyEquivalents -dict-add 'Left' '^~@\UF702'
 defaults write -g NSUserKeyEquivalents -dict-add 'Right' '^~@\UF703'
+
+# Enable macOS 27 inline emoji search
+sudo mkdir -p /Library/Preferences/FeatureFlags/Domain
+sudo defaults write /Library/Preferences/FeatureFlags/Domain/Stickers InlineEmojiSearch -dict Enabled -bool true
