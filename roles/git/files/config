@@ -47,6 +47,8 @@
 	required = true
 [url "ssh://git@github.com/"]
 	pushInsteadOf = https://github.com/
+[url "ssh://git@github.com/felix-kaestner"]
+	insteadOf = https://github.com/felix-kaestner
 [include]
 	path = ./config.local
 # Signed-off-by: activate signoff hook for work GitHub orgs
