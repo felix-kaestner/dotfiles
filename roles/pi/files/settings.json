@@ -1,21 +1,21 @@
 {
   "packages": [
-    "git:github.com/DietrichGebert/ponytail",
-    "git:github.com/obra/superpowers",
     "npm:pi-web-access"
   ],
-  "lastChangelogVersion": "1.0.4",
-  "defaultProvider": "sap-ai-core",
-  "defaultModel": "gpt-5.6-sol",
+  "lastChangelogVersion": "1.4.0",
+  "defaultProvider": "hai-proxy-openai",
+  "defaultModel": "gpt-5.6-terra",
   "terminal": {
     "showTerminalProgress": true
   },
   "enableInstallTelemetry": false,
   "defaultThinkingLevel": "medium",
-  "quietStartup": true,
+  "quietStartup": false,
   "theme": "light/dark",
   "extensions": [
     "+builtin:mcp",
     "+builtin:tool-search"
-  ]
+  ],
+  "hideThinkingBlock": true,
+  "tuiMode": "regular"
 }

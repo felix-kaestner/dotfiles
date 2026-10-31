@@ -33,12 +33,6 @@
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
 
-- name: Install playwright-cli
-  ansible.builtin.shell: pnpm install --global @playwright/cli
-  environment:
-    PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
-    PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
-
 # https://skills.sh
 - name: Install skills CLI
   ansible.builtin.shell: pnpm install --global skills
@@ -48,33 +42,10 @@
 
 - name: "Install skills"
   ansible.builtin.shell: >
-    skills add "https://github.com/{{ item.repo }}" {{ '--skill "' + item.skill + '"' if item.skill is defined else '' }} -g -a universal claude-code pi antigravity -y
+    skills add "https://github.com/{{ item.repo }}" {{ '--skill "' + item.skill + '"' if item.skill is defined else '' }} -g -a universal claude-code pi -y
   environment:
     PNPM_HOME: "{{ ansible_env.HOME }}/.local/share/pnpm"
     PATH: "{{ ansible_env.HOME }}/.local/share/pnpm:{{ ansible_env.PATH }}"
   loop:
-    - { repo: "anthropics/skills", skill: "doc-coauthoring" }
-    - { repo: "anthropics/skills", skill: "pdf" }
-    - { repo: "anthropics/skills", skill: "docx" }
-    - { repo: "anthropics/skills", skill: "pptx" }
-    - { repo: "anthropics/skills", skill: "xlsx" }
-    - { repo: "anthropics/skills", skill: "skill-creator" }
     - { repo: "vercel-labs/skills", skill: "find-skills" }
-    - { repo: "vercel-labs/agent-browser", skill: "agent-browser" }
-    - { repo: "github/awesome-copilot", skill: "git-commit" }
-    - { repo: "github/awesome-copilot", skill: "excalidraw-diagram-generator" }
-    - { repo: "github/awesome-copilot", skill: "refactor" }
-    - { repo: "github/awesome-copilot", skill: "github-issues" }
-    - { repo: "github/awesome-copilot", skill: "memory-merger" }
-    - { repo: "microsoft/playwright-cli", skill: "playwright-cli" }
-    - { repo: "mattpocock/skills", skill: "caveman" }
-    - { repo: "mattpocock/skills", skill: "grill-me" }
-    - { repo: "mattpocock/skills", skill: "handoff" }
-    - { repo: "samber/cc-skills-golang" }
-    - { repo: "kepano/obsidian-skills" }
-    - { repo: "github/gh-stack" }
-    - { repo: "makenotion/skills" }
-    - { repo: "nutlope/hallmark" }
-    - { repo: "ogulcancelik/herdr" }
-    - { repo: "Leonxlnx/taste-skill" }
-    - { repo: "typesafe-ai/skills" }
+    - { repo: "dietrichgebert/ponytail", skill: "ponytail" }
