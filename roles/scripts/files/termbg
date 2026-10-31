@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Print light or dark using the terminal's theme-reporting protocol.
+
+settings=$(stty -g </dev/tty) || exit 1
+trap 'stty "$settings" </dev/tty' EXIT
+
+stty raw -echo </dev/tty || exit 1
+printf '\e[?996n' >/dev/tty
+
+IFS= read -r -t 0.2 -dn response </dev/tty || exit 1
+
+case "$response" in
+    *$'\e[?997;1') theme=dark ;;
+    *$'\e[?997;2') theme=light ;;
+    *) exit 1 ;;
+esac
+
+# Restore normal newline handling before writing output to the terminal.
+stty "$settings" </dev/tty || exit 1
+trap - EXIT
+printf '%s\n' "$theme"
