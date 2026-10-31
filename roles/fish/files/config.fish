@@ -120,6 +120,16 @@ if status is-interactive
         --header 'Press CTRL-E to open file in $EDITOR'
         --color header:italic"
 
+    set -l fzf_color_scheme dark
+    if type -q termbg
+        set fzf_color_scheme (termbg 2>/dev/null)
+    end
+    if test "$fzf_color_scheme" = light
+        set -gx FZF_DEFAULT_OPTS "--color=light,bg+:#f0f2f4"
+    else
+        set -gx FZF_DEFAULT_OPTS "--color=dark"
+    end
+
     abbr --add dotdot --regex '^\.\.+$' --function _dotdot
 
     # GPG Settings - based on: https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/gpg-agent/gpg-agent.plugin.zsh#L12
