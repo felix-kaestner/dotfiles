@@ -16,6 +16,16 @@ vim.api.nvim_create_autocmd("TermOpen", {
     end,
 })
 
+-- [[ Session recording ]]
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = vim.api.nvim_create_augroup("session-recording", { clear = true }),
+    callback = function()
+        if not vim.g.this_obsession then
+            vim.cmd.Obsession()
+        end
+    end,
+})
+
 local kubernetes = "kubernetes"
 local file = vim.fn.expand("~/.cache/k8s-schemas/all.json")
 if vim.fn.filereadable(file) == 1 then

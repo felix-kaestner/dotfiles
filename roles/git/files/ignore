@@ -61,6 +61,9 @@ Desktop.ini
 .*.swp
 .*.swo
 
+# Session files from tpope/vim-obsession
+Session.vim
+
 # Cache
 .helm_ls_cache
 
