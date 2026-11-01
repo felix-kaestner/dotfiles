@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# rexs: launch or switch to a Rex session in a working directory
+# usage: rexs [DIRECTORY] [COMMAND...]
+
+# Find rex when running outside a terminal (e.g. from rex.exec in an action)
+if ! command -v rex &>/dev/null; then
+    for d in "$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS" /usr/local/bin; do
+        [[ -x "$d/rex" ]] && PATH="$d:$PATH" && break
+    done
+fi
+
+help() {
+    echo >&2 "Usage: $(basename "$0") [DIRECTORY]
+
+Launches or switches to a Rex session in the specified directory.
+If no directory is specified, it will use fzf to select one.
+The Rex session name will be based on the directory name.
+
+Options:
+  -h, --help    Show this help message and exit
+
+Arguments:
+  DIRECTORY     Working directory for Rex session (optional)
+  COMMAND...    Command to run in the session (optional)
+
+Example:
+  $(basename "$0")                       # Uses fzf to select a directory under ~/Developer
+  $(basename "$0") ~/projects/app
+  $(basename "$0") . claude              # New session in current dir + launch claude code
+  $(basename "$0") . pi -p 'Fix #322'"
+}
+
+if [[ "$1" =~ ^(-h|--help)$ ]]; then
+    help
+    exit 0
+fi
+
+if [[ $# -ge 1 ]]; then
+    if [[ ! -d "$1" ]]; then
+        echo >&2 "'$1' is not a directory" ""
+        help
+        exit 2
+    fi
+    dir="$(realpath "$1")"
+    shift
+else
+    dir="${DIR:-$HOME/Developer}/$(find "${DIR:-$HOME/Developer}" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sort --reverse | fzf --prompt 'Project> ')" || exit 0
+fi
+
+name=$(basename "$dir")
+
+session_id=$(rex ls --json | jq -r --arg name "$name" '.sessions[] | select(.label == $name) | .session_id' | head -n 1)
+
+if [[ -z $session_id && $# -gt 0 ]]; then
+    session_id=$(rex new "$name" -c "$dir" --keep-open --shell "$SHELL" --json -- "$@" | jq -er '.session_id') || exit 1
+elif [[ -z $session_id ]]; then
+    session_id=$(rex new "$name" -c "$dir" --json | jq -er '.session_id') || exit 1
+elif [[ $# -gt 0 ]]; then
+    window_id=$(rex run -s "$session_id" -c "$dir" --keep-open --shell "$SHELL" --json -- "$@" | jq -er '.window_id') || exit 1
+fi
+
+rex "do" session.select session_id="$session_id" ${window_id:+window_id="$window_id"}

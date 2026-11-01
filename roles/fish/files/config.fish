@@ -87,9 +87,14 @@ if status is-interactive
     bind -M default \ck accept-autosuggestion
     bind -M insert \ck accept-autosuggestion
 
-    # TMUX session utility
-    bind -M default \cf '~/.local/bin/tmuxs'
-    bind -M insert \cf '~/.local/bin/tmuxs'
+    # Session utility
+    if test "$TERM_PROGRAM" = rex
+        bind -M default \cf '~/.local/bin/rexs'
+        bind -M insert \cf '~/.local/bin/rexs'
+    else
+        bind -M default \cf '~/.local/bin/tmuxs'
+        bind -M insert \cf '~/.local/bin/tmuxs'
+    end
 
     # Watch (Reload) last command
     bind -M default \er 'w $history[1]'

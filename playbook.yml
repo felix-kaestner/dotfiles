@@ -64,6 +64,7 @@
     - pass
     - pi
     - qmk
+    - rex
     - ripgrep
     - rust
     - scripts

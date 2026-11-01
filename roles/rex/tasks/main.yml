@@ -1,0 +1,6 @@
+---
+- name: Create symbolic link for config
+  ansible.builtin.file:
+    src: "{{ role_path }}/files"
+    dest: "{{ xdg_config_home }}/rex"
+    state: link

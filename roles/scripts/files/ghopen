@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# ghopen: Open the GitHub Repository of the current tmux/herdr session
+# ghopen: Open the GitHub Repository of the current session
 # usage: ghopen
 
 help() {
     echo >&2 "Usage: $(basename "$0")
 
-Open the GitHub Repository of the currently active tmux or herdr session
+Open the GitHub Repository of the currently active Rex, tmux, or herdr session
 
 Options:
   -h, --help        Show this help message and exit
@@ -22,14 +22,20 @@ fi
 if [ -n "$TMUX" ]; then
     dir=$(tmux run "echo #{pane_start_path}")
 elif [ -n "$HERDR_ENV" ]; then
-    json=$(herdr pane current 2>/dev/null) &&
-        dir=$(echo "$json" | python3 -c "import sys,json; print(json.loads(sys.stdin.read())['result']['pane']['cwd'])") ||
-        dir="$PWD"
-else
-    dir="$PWD"
+    dir=$(herdr pane current 2>/dev/null | python3 -c "import sys,json; print(json.loads(sys.stdin.read())['result']['pane']['cwd'])")
+elif [ -n "$REX_SESSION" ]; then
+    # Find rex when running outside a terminal (e.g. from rex.exec in an action)
+    if ! command -v rex &>/dev/null; then
+        for d in "$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS" /usr/local/bin; do
+            [[ -x "$d/rex" ]] && PATH="$d:$PATH" && break
+        done
+    fi
+    dir=$(rex block call -s "$REX_SESSION" -b "$REX_BLOCK" pwd 2>/dev/null | python3 -c "import sys,json; print(json.loads(sys.stdin.read())['pwd'])")
+    # Strip file:// URL prefix if present (OSC 7 format: file://hostname/path)
+    [[ "$dir" == file://* ]] && dir="/${dir#file://*/}"
 fi
 
-cd "$dir" || exit 1
+cd "${dir:-$PWD}" || exit 1
 
 url=$(git remote get-url origin 2>/dev/null | sed -E 's#(git@|https://)([^/:]+)[:/]#https://\2/#;s#\.git$##')
 if [ -z "$url" ]; then
